@@ -1,56 +1,192 @@
 {% extends "base.html" %}
-{% block title %}SPO — Operator Manual &amp; Runbook // SP Sneak Peek OSINT{% endblock %}
-{% block header_title %}03.2 // OPERATOR MANUAL &amp; TACTICAL RUNBOOK{% endblock %}
+{% block title %}SP — Operator Manual &amp; Tactical Runbook // Sneak Peek OSINT{% endblock %}
+{% block breadcrumb %}SP // OPERATOR MANUAL &amp; TACTICAL RUNBOOK{% endblock %}
 
 {% block content %}
-<section class="cds-panel" style="border-left:4px solid var(--cds-primary);" aria-labelledby="manual-h1">
+<!-- ======================================================================
+     ROW 1: OPERATOR RUNBOOK TELEMETRY STRIP (4 WIDGETS)
+     ====================================================================== -->
+<section class="cds-grid-4 mb-4" aria-label="Operator Runbook Overview">
+  <article class="cds-tile cds-accent-purple">
+    <div class="cds-kpi-label">
+      <span>TACTICAL RUNBOOKS</span>
+      <span class="cds-tag cds-tag-purple">SOP v2.0</span>
+    </div>
+    <div class="cds-kpi-value">6 MODULES</div>
+    <div class="cds-kpi-sub mt-2">Corporate &bull; Infra &bull; SOCMINT &bull; Strix &bull; AI &bull; Cases</div>
+  </article>
+
+  <article class="cds-tile cds-accent-green">
+    <div class="cds-kpi-label">
+      <span>BASELINE MODE</span>
+      <span class="cds-tag cds-tag-green">ZERO-KEY</span>
+    </div>
+    <div class="cds-kpi-value text-success">OUT-OF-BOX</div>
+    <div class="cds-kpi-sub mt-2">Works immediately without paid API keys</div>
+  </article>
+
+  <article class="cds-tile cds-accent-blue">
+    <div class="cds-kpi-label">
+      <span>NEURAL CO-PILOT</span>
+      <span class="cds-tag cds-tag-blue">OLLAMA</span>
+    </div>
+    <div class="cds-kpi-value" style="font-size:20px;color:var(--dd-apm-text);">GRANITE 4.2</div>
+    <div class="cds-kpi-sub mt-2">eriktonon/granite4.2-uncensored</div>
+  </article>
+
+  <article class="cds-tile cds-accent-red">
+    <div class="cds-kpi-label">
+      <span>NETWORK SAFETY</span>
+      <span class="cds-tag cds-tag-red">ENFORCED</span>
+    </div>
+    <div class="cds-kpi-value" style="font-size:20px;">SSRFGUARD</div>
+    <div class="cds-kpi-sub mt-2">Blocks RFC1918, Loopback &amp; 192.168.3.1</div>
+  </article>
+</section>
+
+<!-- ======================================================================
+     ROW 2: STANDARD OPERATING PROCEDURES (6 RUNBOOK CARDS IN 2-COLUMN GRID)
+     ====================================================================== -->
+<section class="cds-panel cds-accent-purple mb-4" aria-labelledby="manual-h1">
   <div class="cds-panel-header">
     <div class="cds-panel-header-title">
-      <i data-lucide="book-open" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
-      <span>STANDARD OPERATING PROCEDURE // SPO v2.0</span>
+      <i data-lucide="book-open" style="width:15px;height:15px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+      <span>STANDARD OPERATING PROCEDURE // SP v2.0 FIELD MANUAL</span>
     </div>
-    <span class="cds-tag cds-tag-outline">RUNBOOK REFERENCE</span>
+    <span class="cds-tag cds-tag-purple">RUNBOOK REFERENCE</span>
   </div>
 
   <div class="cds-panel-body">
-    <h1 id="manual-h1" class="cds-page-h1"><strong>SPO v2.0</strong> Operator Field Manual</h1>
-    <p class="cds-lead">
-      Operational guide for executing corporate due diligence, infrastructure surface discovery, personal identity attribution, Strix DAST auditing, and local neural synthesis with <code class="mono">eriktonon/granite4.2-uncensored</code>.
-    </p>
-  </div>
-
-  <div class="cds-grid-2" style="border-left:none;border-right:none;border-bottom:none;">
-    <article class="cds-grid-cell" style="gap:10px;">
-      <div class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">RUNBOOK 01 // CORPORATE &amp; DOMAIN</div>
-      <h2 style="font-size:16px;font-weight:600;">Company &amp; Domain Investigation</h2>
-      <p style="font-size:13.5px;color:var(--cds-text-secondary);">
-        Navigate to <strong>Company &amp; Domain</strong> and submit a domain (e.g. <code class="mono">itau.com.br</code>) or a 14-digit CNPJ. For <code class="mono">.br</code> domains, SPO automatically extracts the registrant CNPJ via Registro.br RDAP and pivots into BrasilAPI/ReceitaWS to retrieve the corporate QSA (officers &amp; partners), share capital, CNAEs, Certificate Transparency subdomains, and official gazettes.
+    <div>
+      <h1 id="manual-h1" class="cds-page-h1"><strong>SP — Sneak Peek OSINT</strong> Operator Field Manual</h1>
+      <p class="cds-lead mt-1">
+        Step-by-step operational procedures for executing corporate due diligence, infrastructure surface discovery, personal &amp; email attribution across 73 networks, Strix DAST auditing, and local neural synthesis with <code class="mono">eriktonon/granite4.2-uncensored</code>.
       </p>
-    </article>
+    </div>
 
-    <article class="cds-grid-cell" style="gap:10px;">
-      <div class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">RUNBOOK 02 // INFRASTRUCTURE &amp; CVES</div>
-      <h2 style="font-size:16px;font-weight:600;">Server, IP &amp; Threat Intelligence</h2>
-      <p style="font-size:13.5px;color:var(--cds-text-secondary);">
-        Navigate to <strong>Servers &amp; Threat Intel</strong> and submit an IPv4 address or hostname. SPO queries Shodan InternetDB (free, zero API key required) for open TCP ports, CPE technologies, and CVEs, correlates ASN/ISP geolocation, and retrieves passive DNS history from AlienVault OTX and VirusTotal v3.
-      </p>
-    </article>
+    <div class="cds-grid-2 mt-2">
+      <!-- Runbook 01 -->
+      <article class="cds-tile cds-accent-purple" style="background:var(--dd-bg-surface-alt);justify-content:space-between;gap:10px;">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="mono text-xs font-bold text-blue">RUNBOOK 01 // CORPORATE &amp; DOMAIN</span>
+            <span class="cds-tag cds-tag-purple">/company-recon</span>
+          </div>
+          <h2 class="mt-1" style="font-size:15.5px;font-weight:700;">Company, Domain &amp; CNPJ/QSA Investigation</h2>
+          <p class="text-xs text-secondary mt-2" style="line-height:1.55;">
+            Navigate to <strong>Company &amp; Domain</strong> and submit a domain (e.g. <code class="mono">petrobras.com.br</code>) or a 14-digit CNPJ. For <code class="mono">.br</code> domains, SP automatically extracts the registrant CNPJ via Registro.br RDAP and pivots into BrasilAPI/ReceitaWS to retrieve the corporate QSA (officers &amp; partners), share capital, CNAEs, Certificate Transparency subdomains (<code class="mono">crt.sh</code>), and official gazettes.
+          </p>
+        </div>
+        <div>
+          <a href="{{ url_for('companyInvestigation') }}" class="cds-btn cds-btn-secondary cds-btn-sm">
+            <span>Open Company &amp; Domain Recon</span>
+            <i data-lucide="arrow-right" style="width:12px;height:12px;" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
 
-    <article class="cds-grid-cell" style="gap:10px;">
-      <div class="mono" style="font-size:11px;color:var(--cds-danger-text);font-weight:600;">RUNBOOK 03 // STRIX DAST &amp; PREVENTION</div>
-      <h2 style="font-size:16px;font-weight:600;">Strix Black-Box DAST &amp; Shift-Left Autofix</h2>
-      <p style="font-size:13.5px;color:var(--cds-text-secondary);">
-        Navigate to <strong>Strix DAST &amp; Security</strong> and enter an external domain or URL. Strix evaluates OWASP Top 10 HTTP defensive headers, TLS 1.3 cipher negotiation, exposed sensitive paths (<code class="mono">/.env</code>, <code class="mono">/.git/HEAD</code>), and DNS SPF/DMARC anti-spoofing policies, generating ready-to-apply Shift-Left code fixes.
-      </p>
-    </article>
+      <!-- Runbook 02 -->
+      <article class="cds-tile cds-accent-blue" style="background:var(--dd-bg-surface-alt);justify-content:space-between;gap:10px;">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="mono text-xs font-bold" style="color:var(--dd-apm-text);">RUNBOOK 02 // INFRASTRUCTURE &amp; CVES</span>
+            <span class="cds-tag cds-tag-blue">/server-intel</span>
+          </div>
+          <h2 class="mt-1" style="font-size:15.5px;font-weight:700;">Server, IP &amp; Threat Intelligence</h2>
+          <p class="text-xs text-secondary mt-2" style="line-height:1.55;">
+            Navigate to <strong>Servers &amp; Threat Intel</strong> and submit an external IPv4 address or hostname. SP queries Shodan InternetDB (free, zero API key required) for open TCP ports, CPE technologies, and CVEs, correlates ASN/ISP geolocation, and retrieves passive DNS history from AlienVault OTX and VirusTotal v3.
+          </p>
+        </div>
+        <div>
+          <a href="{{ url_for('searchServers') }}" class="cds-btn cds-btn-secondary cds-btn-sm">
+            <span>Open Server &amp; CVE Intel</span>
+            <i data-lucide="arrow-right" style="width:12px;height:12px;" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
 
-    <article class="cds-grid-cell" style="gap:10px;">
-      <div class="mono" style="font-size:11px;color:var(--cds-success-text);font-weight:600;">RUNBOOK 04 // NEURAL SECOPS AI</div>
-      <h2 style="font-size:16px;font-weight:600;">Ollama Granite 4.2 Uncensored Co-Pilot</h2>
-      <p style="font-size:13.5px;color:var(--cds-text-secondary);">
-        Navigate to <strong>Granite 4.2 SecOps AI</strong>, select any recorded reconnaissance or Strix scan from the dropdown, choose an operational mode (OSINT Correlation, Red Team Surface, CVE Triage, or Due Diligence), and run local inference via <code class="mono">eriktonon/granite4.2-uncensored</code>.
-      </p>
-    </article>
+      <!-- Runbook 03 -->
+      <article class="cds-tile cds-accent-green" style="background:var(--dd-bg-surface-alt);justify-content:space-between;gap:10px;">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="mono text-xs font-bold text-success">RUNBOOK 03 // SOCMINT, DATING &amp; EMAIL OSINT</span>
+            <span class="cds-tag cds-tag-green">/personal-trace</span>
+          </div>
+          <h2 class="mt-1" style="font-size:15.5px;font-weight:700;">Personal Handle, Dating &amp; Direct Email Trace</h2>
+          <p class="text-xs text-secondary mt-2" style="line-height:1.55;">
+            Navigate to <strong>Personal &amp; Social Trace</strong> and enter a username/handle, an email address, or both. SP probes <strong>73 platforms</strong> concurrently (Tinder, Badoo, OkCupid, Bumble, Happn, OnlyFans, Instagram, TikTok, Telegram, GitHub, Steam) and runs DNS MX/SPF validation, OpenPGP key lookup, GitHub commit email correlation, and breach dorks.
+          </p>
+        </div>
+        <div>
+          <a href="{{ url_for('personalInvestigation') }}" class="cds-btn cds-btn-secondary cds-btn-sm">
+            <span>Open Personal &amp; Email Trace</span>
+            <i data-lucide="arrow-right" style="width:12px;height:12px;" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- Runbook 04 -->
+      <article class="cds-tile cds-accent-red" style="background:var(--dd-bg-surface-alt);justify-content:space-between;gap:10px;">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="mono text-xs font-bold text-danger">RUNBOOK 04 // STRIX DAST &amp; PREVENTION</span>
+            <span class="cds-tag cds-tag-red">/security-audit</span>
+          </div>
+          <h2 class="mt-1" style="font-size:15.5px;font-weight:700;">Strix Black-Box DAST &amp; Shift-Left Autofix</h2>
+          <p class="text-xs text-secondary mt-2" style="line-height:1.55;">
+            Navigate to <strong>Strix DAST &amp; Security</strong> and enter an external domain or URL. Strix evaluates OWASP Top 10 HTTP defensive headers, TLS 1.3 cipher negotiation, exposed sensitive paths (<code class="mono">/.env</code>, <code class="mono">/.git/HEAD</code>), and DNS SPF/DMARC anti-spoofing policies, generating ready-to-apply Shift-Left code fixes.
+          </p>
+        </div>
+        <div>
+          <a href="{{ url_for('securityAudit') }}" class="cds-btn cds-btn-secondary cds-btn-sm">
+            <span>Open Strix Security Auditor</span>
+            <i data-lucide="arrow-right" style="width:12px;height:12px;" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- Runbook 05 -->
+      <article class="cds-tile cds-accent-amber" style="background:var(--dd-bg-surface-alt);justify-content:space-between;gap:10px;">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="mono text-xs font-bold text-warning">RUNBOOK 05 // NEURAL SECOPS AI</span>
+            <span class="cds-tag cds-tag-amber">/granite-ai</span>
+          </div>
+          <h2 class="mt-1" style="font-size:15.5px;font-weight:700;">Ollama Granite 4.2 Uncensored Co-Pilot</h2>
+          <p class="text-xs text-secondary mt-2" style="line-height:1.55;">
+            Navigate to <strong>Granite 4.2 SecOps AI</strong>, select any recorded reconnaissance or Strix scan from the dropdown, choose an operational playbook (OSINT Correlation, Offensive/Defensive Pentest Triage, or Executive Dossier), and run local inference via <code class="mono">eriktonon/granite4.2-uncensored</code>.
+          </p>
+        </div>
+        <div>
+          <a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-secondary cds-btn-sm">
+            <span>Open Granite 4.2 Co-Pilot</span>
+            <i data-lucide="arrow-right" style="width:12px;height:12px;" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- Runbook 06 -->
+      <article class="cds-tile cds-accent-purple" style="background:var(--dd-bg-surface-alt);justify-content:space-between;gap:10px;">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="mono text-xs font-bold text-blue">RUNBOOK 06 // EVIDENCE VAULT &amp; API KEYS</span>
+            <span class="cds-tag cds-tag-purple">/projects &bull; /api-keys</span>
+          </div>
+          <h2 class="mt-1" style="font-size:15.5px;font-weight:700;">Case Dossiers &amp; SQLite Credential Vault</h2>
+          <p class="text-xs text-secondary mt-2" style="line-height:1.55;">
+            Group scans into named Investigation Cases in <strong>Investigation Cases</strong> (<code class="mono">/projects</code>) for one-click JSON bundle export, or configure optional Shodan, VirusTotal v3, GitHub PAT, and custom Ollama endpoints in <strong>API Keys &amp; Vault</strong> (<code class="mono">/api-keys</code>).
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="{{ url_for('projects') }}" class="cds-btn cds-btn-secondary cds-btn-sm">
+            <span>Cases Vault</span>
+          </a>
+          <a href="{{ url_for('insertKeys') }}" class="cds-btn cds-btn-ghost cds-btn-sm">
+            <span>API Keys</span>
+          </a>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 {% endblock %}

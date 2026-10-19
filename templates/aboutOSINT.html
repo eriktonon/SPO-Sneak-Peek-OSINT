@@ -1,54 +1,203 @@
 {% extends "base.html" %}
-{% block title %}SPO — OSINT Methodology &amp; Intelligence Cycle // SP Sneak Peek OSINT{% endblock %}
-{% block header_title %}03.1 // OSINT INTELLIGENCE CYCLE &amp; METHODOLOGY{% endblock %}
+{% block title %}SP — OSINT Methodology &amp; Intelligence Cycle // Sneak Peek OSINT{% endblock %}
+{% block breadcrumb %}SP // OSINT INTELLIGENCE CYCLE &amp; METHODOLOGY{% endblock %}
 
 {% block content %}
-<section class="cds-panel" style="border-left:4px solid var(--cds-primary);" aria-labelledby="osint-h1">
+<!-- ======================================================================
+     ROW 1: OSINT DOCTRINE TELEMETRY STRIP (4 WIDGETS)
+     ====================================================================== -->
+<section class="cds-grid-4 mb-4" aria-label="OSINT Doctrine Telemetry">
+  <article class="cds-tile cds-accent-purple">
+    <div class="cds-kpi-label">
+      <span>INTELLIGENCE CYCLE</span>
+      <span class="cds-tag cds-tag-purple">DOCTRINE</span>
+    </div>
+    <div class="cds-kpi-value">5 PHASES</div>
+    <div class="dd-spark-bars" aria-hidden="true">
+      <span style="height:65%"></span><span style="height:72%"></span><span style="height:78%"></span><span style="height:82%"></span>
+      <span style="height:86%"></span><span style="height:90%"></span><span style="height:88%"></span><span style="height:94%"></span>
+      <span style="height:92%"></span><span style="height:96%"></span><span style="height:95%"></span><span style="height:100%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">Scope &bull; Collect &bull; Normalize &bull; Correlate &bull; Act</div>
+  </article>
+
+  <article class="cds-tile cds-accent-green">
+    <div class="cds-kpi-label">
+      <span>ZERO-KEY SOURCES</span>
+      <span class="cds-tag cds-tag-green">PASSIVE FIRST</span>
+    </div>
+    <div class="cds-kpi-value text-success">12+ FEEDS</div>
+    <div class="dd-spark-bars ok" aria-hidden="true">
+      <span style="height:70%"></span><span style="height:75%"></span><span style="height:80%"></span><span style="height:78%"></span>
+      <span style="height:85%"></span><span style="height:89%"></span><span style="height:92%"></span><span style="height:90%"></span>
+      <span style="height:94%"></span><span style="height:96%"></span><span style="height:93%"></span><span style="height:98%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">RDAP &bull; crt.sh &bull; BrasilAPI &bull; InternetDB &bull; OTX</div>
+  </article>
+
+  <article class="cds-tile cds-accent-blue">
+    <div class="cds-kpi-label">
+      <span>SOCMINT &amp; EMAIL SURFACE</span>
+      <span class="cds-tag cds-tag-blue">MULTI-VECTOR</span>
+    </div>
+    <div class="cds-kpi-value" style="color:var(--dd-apm-text);">73 NETWORKS</div>
+    <div class="dd-spark-bars apm" aria-hidden="true">
+      <span style="height:60%"></span><span style="height:68%"></span><span style="height:74%"></span><span style="height:79%"></span>
+      <span style="height:83%"></span><span style="height:87%"></span><span style="height:85%"></span><span style="height:90%"></span>
+      <span style="height:92%"></span><span style="height:95%"></span><span style="height:94%"></span><span style="height:99%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">Social &bull; Dating &bull; MX/SPF &bull; PGP &bull; Git Commits</div>
+  </article>
+
+  <article class="cds-tile cds-accent-red">
+    <div class="cds-kpi-label">
+      <span>SHIFT-LEFT GUARDRAILS</span>
+      <span class="cds-tag cds-tag-red">STRIX DAST</span>
+    </div>
+    <div class="cds-kpi-value" style="font-size:21px;">OWASP TOP 10</div>
+    <div class="dd-spark-bars alert" aria-hidden="true">
+      <span style="height:72%"></span><span style="height:76%"></span><span style="height:80%"></span><span style="height:84%"></span>
+      <span style="height:86%"></span><span style="height:88%"></span><span style="height:90%"></span><span style="height:92%"></span>
+      <span style="height:94%"></span><span style="height:96%"></span><span style="height:95%"></span><span style="height:100%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">SSRFGuard &bull; TLS 1.3 &bull; Security Headers</div>
+  </article>
+</section>
+
+<!-- ======================================================================
+     ROW 2: 5-PHASE OSINT INTELLIGENCE CYCLE
+     ====================================================================== -->
+<section class="cds-panel cds-accent-purple mb-4" aria-labelledby="osint-h1">
   <div class="cds-panel-header">
     <div class="cds-panel-header-title">
-      <i data-lucide="compass" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+      <i data-lucide="compass" style="width:15px;height:15px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
       <span>INTELLIGENCE DOCTRINE // 5-PHASE OSINT LIFECYCLE</span>
     </div>
-    <span class="cds-tag cds-tag-blue">BUILD TO MANAGE</span>
+    <span class="cds-tag cds-tag-purple">BUILD TO MANAGE (BTM)</span>
   </div>
 
   <div class="cds-panel-body">
-    <h1 id="osint-h1" class="cds-page-h1"><strong>Open Source Intelligence (OSINT)</strong> Operational Methodology</h1>
-    <p class="cds-lead">
-      <strong>Open Source Intelligence (OSINT)</strong> is the structured collection, verification, correlation, and analysis of publicly available indicators across internet registries, DNS/RDAP infrastructure, Certificate Transparency logs, corporate tax filings, official gazettes, and developer repositories to produce auditable security and due-diligence decisions.
-    </p>
+    <div>
+      <h1 id="osint-h1" class="cds-page-h1"><strong>Open Source Intelligence (OSINT)</strong> Operational Methodology</h1>
+      <p class="cds-lead mt-1">
+        <strong>Open Source Intelligence (OSINT)</strong> is the structured collection, verification, correlation, and analysis of publicly available indicators across internet registries, DNS/RDAP infrastructure, Certificate Transparency logs, corporate tax filings, official gazettes, and developer repositories to produce auditable security and due-diligence decisions.
+      </p>
+    </div>
+
+    <div class="cds-grid-5 mt-2">
+      <article class="cds-tile cds-accent-purple" style="background:var(--dd-bg-surface-alt);justify-content:flex-start;gap:8px;">
+        <div class="flex items-center justify-between">
+          <span class="cds-tag cds-tag-purple">PHASE 01</span>
+          <i data-lucide="crosshair" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:14.5px;font-weight:700;">Planning &amp; Scope</h2>
+        <p class="text-xs text-secondary">
+          Define target organization, domains, 14-digit CNPJs, IPv4 ranges, handles, or email addresses inside an auditable Investigation Case.
+        </p>
+      </article>
+
+      <article class="cds-tile cds-accent-blue" style="background:var(--dd-bg-surface-alt);justify-content:flex-start;gap:8px;">
+        <div class="flex items-center justify-between">
+          <span class="cds-tag cds-tag-blue">PHASE 02</span>
+          <i data-lucide="database" style="width:14px;height:14px;color:var(--dd-apm);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:14.5px;font-weight:700;">Collection</h2>
+        <p class="text-xs text-secondary">
+          Query Registro.br/IANA RDAP, authoritative DNS/DoH, crt.sh, BrasilAPI QSA, Shodan InternetDB, OTX, OpenPGP, and GitHub commit APIs.
+        </p>
+      </article>
+
+      <article class="cds-tile cds-accent-amber" style="background:var(--dd-bg-surface-alt);justify-content:flex-start;gap:8px;">
+        <div class="flex items-center justify-between">
+          <span class="cds-tag cds-tag-amber">PHASE 03</span>
+          <i data-lucide="filter" style="width:14px;height:14px;color:var(--dd-warn);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:14.5px;font-weight:700;">Normalization</h2>
+        <p class="text-xs text-secondary">
+          Normalize tax identifiers, deduplicate CT log subdomains, resolve active A/MX/SPF records, and correlate commit author emails.
+        </p>
+      </article>
+
+      <article class="cds-tile cds-accent-red" style="background:var(--dd-bg-surface-alt);justify-content:flex-start;gap:8px;">
+        <div class="flex items-center justify-between">
+          <span class="cds-tag cds-tag-red">PHASE 04</span>
+          <i data-lucide="sparkles" style="width:14px;height:14px;color:var(--dd-alert);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:14.5px;font-weight:700;">Neural Correlation</h2>
+        <p class="text-xs text-secondary">
+          Correlate domain registrant CNPJ with QSA officers, unpatched CVEs, and Strix DAST posture via local <code class="mono">granite4.2-uncensored</code>.
+        </p>
+      </article>
+
+      <article class="cds-tile cds-accent-green" style="background:var(--dd-bg-surface-alt);justify-content:flex-start;gap:8px;">
+        <div class="flex items-center justify-between">
+          <span class="cds-tag cds-tag-green">PHASE 05</span>
+          <i data-lucide="file-check-2" style="width:14px;height:14px;color:var(--dd-ok);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:14.5px;font-weight:700;">Dissemination</h2>
+        <p class="text-xs text-secondary">
+          Export structured JSON evidence bundles and Shift-Left remediation snippets for engineering, legal, or red-team execution.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================
+     ROW 3: OSINT TELEMETRY VECTORS & DATA SOURCES MATRIX
+     ====================================================================== -->
+<section class="cds-panel cds-accent-blue" aria-labelledby="sources-h2">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="layers" style="width:15px;height:15px;color:var(--dd-apm);" aria-hidden="true"></i>
+      <h2 id="sources-h2" class="cds-panel-header-title">OSINT COLLECTION VECTORS &amp; VERIFICATION ENGINES</h2>
+    </div>
+    <span class="cds-tag cds-tag-green">100% PASSIVE / AUDITABLE</span>
   </div>
 
-  <div class="cds-grid-5" style="border-left:none;border-right:none;border-bottom:none;">
-    <article class="cds-grid-cell" style="gap:10px;">
-      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 01</span>
-      <h2 style="font-size:15px;font-weight:600;">Planning &amp; Scope</h2>
-      <p style="font-size:13px;color:var(--cds-text-secondary);">Define target organization, domains, 14-digit CNPJs, IPv4 ranges, or handles inside an auditable Investigation Case.</p>
-    </article>
-
-    <article class="cds-grid-cell" style="gap:10px;">
-      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 02</span>
-      <h2 style="font-size:15px;font-weight:600;">Collection</h2>
-      <p style="font-size:13px;color:var(--cds-text-secondary);">Query Registro.br/IANA RDAP, authoritative DNS, crt.sh, BrasilAPI QSA, Shodan InternetDB, OTX, and GitHub events.</p>
-    </article>
-
-    <article class="cds-grid-cell" style="gap:10px;">
-      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 03</span>
-      <h2 style="font-size:15px;font-weight:600;">Normalization</h2>
-      <p style="font-size:13px;color:var(--cds-text-secondary);">Normalize tax identifiers, deduplicate CT log subdomains, resolve active A records, and extract commit author emails.</p>
-    </article>
-
-    <article class="cds-grid-cell" style="gap:10px;">
-      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 04</span>
-      <h2 style="font-size:15px;font-weight:600;">Neural Correlation</h2>
-      <p style="font-size:13px;color:var(--cds-text-secondary);">Correlate domain registrant CNPJ with QSA officers, unpatched CVEs, and Strix DAST posture via Granite 4.2 Uncensored.</p>
-    </article>
-
-    <article class="cds-grid-cell" style="gap:10px;">
-      <span class="cds-tag cds-tag-green" style="align-self:flex-start;">PHASE 05</span>
-      <h2 style="font-size:15px;font-weight:600;">Dissemination</h2>
-      <p style="font-size:13px;color:var(--cds-text-secondary);">Export structured JSON evidence bundles and Shift-Left remediation snippets for engineering, legal, or red-team action.</p>
-    </article>
+  <div class="cds-table-wrap" style="border:none;border-radius:0;">
+    <table class="cds-table">
+      <thead>
+        <tr>
+          <th>RECONNAISSANCE VECTOR</th>
+          <th>PRIMARY UPSTREAM SOURCES</th>
+          <th>CORRELATED ARTIFACTS</th>
+          <th>SP MODULE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="font-bold">Corporate, Tax &amp; Legal OSINT</td>
+          <td class="mono text-xs">Registro.br RDAP, IANA RDAP, BrasilAPI, ReceitaWS, Querido Diário</td>
+          <td class="text-xs text-secondary">Registrant CNPJ, Razão Social, QSA Partners/Officers, Share Capital, CNAEs, Official Gazettes</td>
+          <td><a href="{{ url_for('companyInvestigation') }}" class="cds-btn cds-btn-ghost mono">/company-recon</a></td>
+        </tr>
+        <tr>
+          <td class="font-bold">Subdomain &amp; Passive DNS Surface</td>
+          <td class="mono text-xs">crt.sh (Certificate Transparency), HackerTarget, AlienVault OTX</td>
+          <td class="text-xs text-secondary">SAN X.509 certificates, shadow/staging hosts, resolved IPv4 A/MX/NS/TXT records</td>
+          <td><a href="{{ url_for('companyInvestigation') }}" class="cds-btn cds-btn-ghost mono">/company-recon</a></td>
+        </tr>
+        <tr>
+          <td class="font-bold">Infrastructure, Ports &amp; CVE Intel</td>
+          <td class="mono text-xs">Shodan InternetDB, Shodan Full API, VirusTotal v3, IP-API ASN</td>
+          <td class="text-xs text-secondary">Open TCP ports, CPE technology fingerprints, unpatched CVEs, ISP/ASN geolocation</td>
+          <td><a href="{{ url_for('searchServers') }}" class="cds-btn cds-btn-ghost mono">/server-intel</a></td>
+        </tr>
+        <tr>
+          <td class="font-bold">SOCMINT, Dating &amp; Email OSINT</td>
+          <td class="mono text-xs">GitHub Events/Commits API, Gravatar, Google DoH MX/SPF, OpenPGP HKP</td>
+          <td class="text-xs text-secondary">73 Social/Dating platforms (Tinder, Badoo, Instagram, Telegram, OnlyFans), Git commit emails, PGP keys</td>
+          <td><a href="{{ url_for('personalInvestigation') }}" class="cds-btn cds-btn-ghost mono">/personal-trace</a></td>
+        </tr>
+        <tr>
+          <td class="font-bold">Strix Surface DAST &amp; Guardrails</td>
+          <td class="mono text-xs">TLS 1.3 Handshake Inspector, OWASP Header Auditor, SSRFGuard</td>
+          <td class="text-xs text-secondary">HSTS/CSP/XFO posture score, exposed paths, SPF/DMARC anti-spoofing, Shift-Left autofix snippets</td>
+          <td><a href="{{ url_for('securityAudit') }}" class="cds-btn cds-btn-ghost mono">/security-audit</a></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 {% endblock %}

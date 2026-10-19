@@ -292,14 +292,14 @@
         </span>
         <span class="cds-tag cds-tag-amber">{{ recon.social_dorks|length }} PIVOTS</span>
       </div>
-      <div class="cds-panel-body" style="gap:6px;max-height:480px;overflow-y:auto;">
+      <div class="sp-dork-list">
         {% for label, dork_url in recon.social_dorks.items() %}
-          <a href="{{ dork_url }}" target="_blank" rel="noopener noreferrer" class="cds-tile" style="padding:9px 11px;text-decoration:none;background:var(--dd-bg-surface-alt);">
-            <div class="flex items-center justify-between">
-              <span class="font-semibold text-xs" style="color:var(--dd-purple-bright);">{{ label }}</span>
-              <i data-lucide="external-link" style="width:12px;height:12px;color:var(--dd-text-muted);" aria-hidden="true"></i>
+          <a href="{{ dork_url }}" target="_blank" rel="noopener noreferrer" class="sp-dork-item">
+            <div class="flex items-center justify-between gap-2" style="min-width:0;">
+              <span class="font-semibold text-xs" style="color:var(--dd-purple-bright);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ label }}</span>
+              <i data-lucide="external-link" style="width:12px;height:12px;color:var(--dd-text-muted);flex-shrink:0;" aria-hidden="true"></i>
             </div>
-            <div class="mono text-helper" style="font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">{{ dork_url }}</div>
+            <span class="sp-dork-url">{{ dork_url }}</span>
           </a>
         {% endfor %}
       </div>
