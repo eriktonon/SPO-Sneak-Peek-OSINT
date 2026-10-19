@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SPO Cloud SIEM — Operator Authentication</title>
+  <title>SP — Sneak Peek OSINT — Operator Authentication</title>
   <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/datadog-druids.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sp-theme.css') }}" />
 </head>
 <body class="cds-auth-body">
   <header style="padding:12px 24px;background:#191229;border-bottom:1px solid #2d2147;" class="flex items-center justify-between">
@@ -20,8 +20,8 @@
         </svg>
       </div>
       <div>
-        <div style="color:#ffffff;font-weight:700;font-size:13.5px;">SPO Cloud SIEM &amp; OSINT Observability</div>
-        <div class="mono" style="color:#c4b5fd;font-size:10px;">DATADOG DRUIDS SECOPS EDITION &bull; v2.0.0</div>
+        <div style="color:#ffffff;font-weight:700;font-size:13.5px;">SP — Sneak Peek OSINT &amp; OSINT Observability</div>
+        <div class="mono" style="color:#c4b5fd;font-size:10px;">SP Dark/Light SECOPS EDITION &bull; v2.0.0</div>
       </div>
     </div>
     <span class="cds-tag cds-tag-purple">PBKDF2-SHA256 &bull; RATE-LIMITED</span>
@@ -30,14 +30,14 @@
   <main class="cds-auth-main" role="main">
     <section class="cds-auth-card" aria-labelledby="login-h1">
       <div class="cds-panel-header">
-        <span class="cds-panel-header-title">CLOUD SIEM // OPERATOR SIGN IN</span>
+        <span class="cds-panel-header-title">SP // OPERATOR SIGN IN</span>
         <span class="cds-tag cds-tag-green">VAULT ONLINE</span>
       </div>
       <form action="{{ url_for('login') }}" method="POST" class="cds-panel-body">
         <div>
           <h1 id="login-h1" class="cds-page-h1" style="font-size:21px;"><strong>Operator</strong> Authentication</h1>
           <p class="text-xs text-secondary mt-1">
-            Authenticate to access the OSINT Telemetry Board, Strix DAST Scanner, and Watchdog Granite 4.2 AI.
+            Authenticate to access the OSINT Telemetry Board, Strix DAST Scanner, and Granite 4.2 Granite 4.2 AI.
           </p>
         </div>
 
@@ -52,7 +52,7 @@
         </div>
 
         <button type="submit" class="cds-btn cds-btn-primary w-full mt-2">
-          <span>Sign In to Cloud SIEM</span>
+          <span>Sign In to SP</span>
           <span class="mono" aria-hidden="true">&rarr;</span>
         </button>
       </form>

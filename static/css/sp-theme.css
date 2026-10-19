@@ -1,0 +1,1016 @@
+/* ==========================================================================
+   SPO — Sneak Peek OSINT v2.0 // Datadog Cloud SIEM & Observability (DRUIDS)
+   Art Direction: /taste-design-direction (Anti-AI-Slop, High-Density Telemetry)
+   Calibration: DESIGN_VARIANCE=5/10 | VISUAL_DENSITY=9/10 | MOTION_INTENSITY=4/10
+   Palette: Datadog Aubergine (#1B132A), Royal Purple (#632CA6 / #7C3AED),
+            Monitor OK (#10B981), Warn (#F59E0B), Alert (#EF4444), APM (#3B82F6)
+   ========================================================================== */
+
+:root {
+  /* Datadog Light Mode (Classic Dogweb / Cloud SIEM Default) */
+  --dd-bg-canvas: #f3f4f8;
+  --dd-bg-surface: #ffffff;
+  --dd-bg-surface-alt: #f8f9fc;
+  --dd-bg-surface-hover: #f1f3f9;
+  --dd-bg-widget-header: #fafbfe;
+  --dd-bg-input: #ffffff;
+  --dd-border-subtle: #e2e5ee;
+  --dd-border-strong: #cbd1e1;
+  --dd-text-primary: #111827;
+  --dd-text-secondary: #4b5563;
+  --dd-text-muted: #6b7280;
+  --dd-shadow-widget: 0 1px 2px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(15, 23, 42, 0.02);
+  --dd-shadow-hover: 0 4px 12px rgba(99, 44, 166, 0.09);
+
+  /* Datadog Brand & Telemetry Accents */
+  --dd-purple: #632ca6;
+  --dd-purple-hover: #4e2187;
+  --dd-purple-bright: #7c3aed;
+  --dd-purple-soft: rgba(99, 44, 166, 0.10);
+  --dd-purple-border: rgba(99, 44, 166, 0.28);
+
+  --dd-ok: #10b981;
+  --dd-ok-text: #047857;
+  --dd-ok-soft: rgba(16, 185, 129, 0.12);
+  --dd-ok-border: rgba(16, 185, 129, 0.32);
+
+  --dd-warn: #f59e0b;
+  --dd-warn-text: #b45309;
+  --dd-warn-soft: rgba(245, 158, 11, 0.14);
+  --dd-warn-border: rgba(245, 158, 11, 0.35);
+
+  --dd-alert: #ef4444;
+  --dd-alert-text: #b91c1c;
+  --dd-alert-soft: rgba(239, 68, 68, 0.12);
+  --dd-alert-border: rgba(239, 68, 68, 0.32);
+
+  --dd-apm: #2563eb;
+  --dd-apm-text: #1d4ed8;
+  --dd-apm-soft: rgba(37, 99, 235, 0.10);
+  --dd-apm-border: rgba(37, 99, 235, 0.28);
+
+  /* Datadog Iconic Left Sidebar Rail (Always Deep Aubergine/Slate) */
+  --dd-nav-bg: #191229;
+  --dd-nav-bg-bottom: #120d1e;
+  --dd-nav-border: #2d2147;
+  --dd-nav-text: #c4bdd4;
+  --dd-nav-text-muted: #7f7399;
+  --dd-nav-active-bg: #632ca6;
+  --dd-nav-hover-bg: rgba(124, 58, 237, 0.18);
+
+  /* Legacy alias compatibility for all 20 templates */
+  --cds-bg: var(--dd-bg-canvas);
+  --cds-layer-01: var(--dd-bg-surface);
+  --cds-layer-02: var(--dd-bg-surface-alt);
+  --cds-layer-hover: var(--dd-bg-surface-hover);
+  --cds-field: var(--dd-bg-input);
+  --cds-border-subtle: var(--dd-border-subtle);
+  --cds-border-strong: var(--dd-border-strong);
+  --cds-text-primary: var(--dd-text-primary);
+  --cds-text-secondary: var(--dd-text-secondary);
+  --cds-text-helper: var(--dd-text-muted);
+  --cds-interactive: var(--dd-purple);
+  --cds-interactive-hover: var(--dd-purple-hover);
+  --cds-danger: var(--dd-alert);
+  --cds-danger-hover: #dc2626;
+  --cds-success: var(--dd-ok);
+  --cds-warning: var(--dd-warn);
+  --cds-purple: var(--dd-purple-bright);
+  --cds-cyan: var(--dd-apm);
+
+  --font-sans: 'Inter', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+}
+
+html.dark {
+  /* Datadog Dark Mode (Cloud SIEM / SecOps Night Operations) */
+  --dd-bg-canvas: #0d0f14;
+  --dd-bg-surface: #151821;
+  --dd-bg-surface-alt: #1a1e29;
+  --dd-bg-surface-hover: #1f2433;
+  --dd-bg-widget-header: #181c26;
+  --dd-bg-input: #11141c;
+  --dd-border-subtle: #252a3a;
+  --dd-border-strong: #353c52;
+  --dd-text-primary: #f1f5f9;
+  --dd-text-secondary: #94a3b8;
+  --dd-text-muted: #64748b;
+  --dd-shadow-widget: 0 2px 6px rgba(0, 0, 0, 0.32);
+  --dd-shadow-hover: 0 4px 16px rgba(124, 58, 237, 0.18);
+
+  --dd-purple: #7c3aed;
+  --dd-purple-hover: #6d28d9;
+  --dd-purple-bright: #a78bfa;
+  --dd-purple-soft: rgba(124, 58, 237, 0.16);
+  --dd-purple-border: rgba(139, 92, 246, 0.38);
+
+  --dd-ok: #10b981;
+  --dd-ok-text: #34d399;
+  --dd-ok-soft: rgba(16, 185, 129, 0.15);
+  --dd-ok-border: rgba(16, 185, 129, 0.38);
+
+  --dd-warn: #f59e0b;
+  --dd-warn-text: #fbbf24;
+  --dd-warn-soft: rgba(245, 158, 11, 0.15);
+  --dd-warn-border: rgba(245, 158, 11, 0.38);
+
+  --dd-alert: #ef4444;
+  --dd-alert-text: #f87171;
+  --dd-alert-soft: rgba(239, 68, 68, 0.16);
+  --dd-alert-border: rgba(239, 68, 68, 0.38);
+
+  --dd-apm: #3b82f6;
+  --dd-apm-text: #60a5fa;
+  --dd-apm-soft: rgba(59, 130, 246, 0.16);
+  --dd-apm-border: rgba(59, 130, 246, 0.38);
+
+  --dd-nav-bg: #130e1f;
+  --dd-nav-bg-bottom: #0d0916;
+  --dd-nav-border: #251c3b;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--dd-bg-canvas);
+  color: var(--dd-text-primary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.48;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.mono, code, pre, kbd, .tabular-nums {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Accessibility Skip Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 9999;
+  background: var(--dd-purple);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--dd-purple-bright);
+  outline-offset: 1px;
+}
+
+/* ==========================================================================
+   1. DATADOG SHELL: LEFT AUBERGINE RAIL + TOP QUERY OMNIBAR
+   ========================================================================== */
+.dd-app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Left Aubergine Navigation Rail (Signature Datadog Look) */
+.dd-sidebar,
+.cds-sidebar {
+  width: 232px;
+  background: linear-gradient(180deg, var(--dd-nav-bg) 0%, var(--dd-nav-bg-bottom) 100%);
+  border-right: 1px solid var(--dd-nav-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 90;
+  color: var(--dd-nav-text);
+}
+
+.dd-brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--dd-nav-border);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.dd-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.dd-brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #7c3aed 0%, #632ca6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.45);
+  flex-shrink: 0;
+}
+
+.dd-brand-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1.15;
+}
+
+.dd-brand-subtitle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #c4b5fd;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cds-nav-section-title,
+.dd-nav-section-title {
+  padding: 14px 14px 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dd-nav-text-muted);
+}
+
+.cds-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cds-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  color: var(--dd-nav-text);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  border-radius: 5px;
+  transition: background-color 120ms ease, color 120ms ease, transform 100ms ease;
+}
+
+.cds-nav-link:hover {
+  background: var(--dd-nav-hover-bg);
+  color: #ffffff;
+}
+
+.cds-nav-link.active {
+  background: var(--dd-nav-active-bg);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.cds-nav-link-inner {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cds-nav-tag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d8b4fe;
+}
+
+.cds-nav-link.active .cds-nav-tag {
+  background: rgba(0, 0, 0, 0.28);
+  color: #ffffff;
+}
+
+/* Main Content Area (Right of Sidebar) */
+.dd-main-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Datadog Top Facet Search & Timeframe Omnibar */
+.dd-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: var(--dd-bg-surface);
+  border-bottom: 1px solid var(--dd-border-subtle);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.dd-query-bar {
+  flex: 1;
+  max-width: 780px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--dd-bg-input);
+  border: 1px solid var(--dd-border-strong);
+  border-radius: 6px;
+  padding: 4px 10px;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.dd-query-bar:focus-within {
+  border-color: var(--dd-purple);
+  box-shadow: 0 0 0 2px var(--dd-purple-soft);
+}
+
+.dd-query-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--dd-purple-bright);
+  background: var(--dd-purple-soft);
+  border: 1px solid var(--dd-purple-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.dd-facet-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--dd-border-subtle);
+  white-space: nowrap;
+}
+
+.dd-facet-chip .facet-k {
+  background: var(--dd-bg-surface-alt);
+  color: var(--dd-text-secondary);
+  padding: 1px 5px;
+  font-weight: 600;
+}
+
+.dd-facet-chip .facet-v {
+  background: var(--dd-purple-soft);
+  color: var(--dd-purple-bright);
+  padding: 1px 6px;
+  font-weight: 600;
+}
+
+.dd-query-input {
+  flex: 1;
+  min-width: 140px;
+  border: none;
+  background: transparent;
+  color: var(--dd-text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  outline: none;
+}
+
+.dd-query-input::placeholder {
+  color: var(--dd-text-muted);
+}
+
+/* Datadog Timeframe Picker & Controls */
+.dd-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dd-time-picker {
+  display: inline-flex;
+  align-items: center;
+  background: var(--dd-bg-surface-alt);
+  border: 1px solid var(--dd-border-subtle);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.dd-time-btn {
+  border: none;
+  background: transparent;
+  color: var(--dd-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.dd-time-btn:hover {
+  color: var(--dd-text-primary);
+}
+
+.dd-time-btn.active {
+  background: var(--dd-purple);
+  color: #ffffff;
+}
+
+.dd-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: var(--dd-ok-soft);
+  color: var(--dd-ok-text);
+  border: 1px solid var(--dd-ok-border);
+}
+
+.dd-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dd-ok);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
+}
+
+/* Sub-header Telemetry Monitor Strip */
+.dd-monitor-strip,
+.cds-breadcrumb-bar {
+  background: var(--dd-bg-surface);
+  border-bottom: 1px solid var(--dd-border-subtle);
+  padding: 7px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--dd-text-secondary);
+}
+
+/* Main Workspace Canvas */
+.cds-main {
+  flex: 1;
+  padding: 16px 18px 28px;
+  max-width: 1640px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   2. DATADOG WIDGET BOARD GRIDS & CARDS (6px Radius, 10px Gaps, Top Accent)
+   ========================================================================== */
+.cds-grid,
+.cds-grid-2,
+.cds-grid-3,
+.cds-grid-4,
+.cds-grid-12 {
+  display: grid;
+  gap: 12px;
+  background-color: transparent;
+  border: none;
+}
+
+.cds-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cds-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cds-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cds-grid-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+
+.cds-col-3 { grid-column: span 3 / span 3; }
+.cds-col-4 { grid-column: span 4 / span 4; }
+.cds-col-5 { grid-column: span 5 / span 5; }
+.cds-col-6 { grid-column: span 6 / span 6; }
+.cds-col-7 { grid-column: span 7 / span 7; }
+.cds-col-8 { grid-column: span 8 / span 8; }
+.cds-col-12 { grid-column: span 12 / span 12; }
+
+.cds-tile,
+.cds-panel,
+.dd-widget {
+  background-color: var(--dd-bg-surface);
+  color: var(--dd-text-primary);
+  border: 1px solid var(--dd-border-subtle);
+  border-radius: 6px;
+  box-shadow: var(--dd-shadow-widget);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.cds-tile:hover,
+.cds-panel:hover,
+.dd-widget:hover {
+  border-color: var(--dd-border-strong);
+}
+
+.cds-panel {
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.cds-panel-header {
+  padding: 9px 14px;
+  background-color: var(--dd-bg-widget-header);
+  border-bottom: 1px solid var(--dd-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cds-panel-header-title {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dd-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cds-panel-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Datadog Monitor Accent Bars */
+.cds-accent-blue { border-top: 3px solid var(--dd-apm); }
+.cds-accent-red { border-top: 3px solid var(--dd-alert); }
+.cds-accent-green { border-top: 3px solid var(--dd-ok); }
+.cds-accent-amber { border-top: 3px solid var(--dd-warn); }
+.cds-accent-purple { border-top: 3px solid var(--dd-purple); }
+.cds-accent-left-blue { border-left: 4px solid var(--dd-purple); }
+.cds-accent-left-red { border-left: 4px solid var(--dd-alert); }
+
+/* ==========================================================================
+   3. DATADOG TIMESERIES SPARKLINE HISTOGRAMS & KPI METRICS
+   ========================================================================== */
+.cds-kpi-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dd-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cds-kpi-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--dd-text-primary);
+  margin: 6px 0 4px;
+}
+
+.cds-kpi-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--dd-text-muted);
+}
+
+/* Signature Datadog 24-Bar Timeseries Sparkline Strip */
+.dd-spark-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 22px;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+
+.dd-spark-bars span {
+  flex: 1;
+  min-width: 3px;
+  border-radius: 1.5px 1.5px 0 0;
+  background: var(--dd-purple);
+  opacity: 0.78;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.dd-spark-bars span:hover {
+  opacity: 1;
+  transform: scaleY(1.12);
+}
+
+.dd-spark-bars.ok span { background: var(--dd-ok); }
+.dd-spark-bars.apm span { background: var(--dd-apm); }
+.dd-spark-bars.alert span { background: var(--dd-alert); }
+.dd-spark-bars.warn span { background: var(--dd-warn); }
+
+/* ==========================================================================
+   4. TYPOGRAPHY & HEADINGS (Crisp Datadog Sans + Tabular Mono)
+   ========================================================================== */
+h1, h2, h3, h4, p {
+  margin: 0;
+  text-align: left;
+}
+
+.cds-page-h1, h1 {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--dd-text-primary);
+}
+
+.cds-page-h1 strong, h1 strong {
+  font-weight: 700;
+}
+
+.cds-section-h2, h2 {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--dd-text-primary);
+}
+
+/* ==========================================================================
+   5. DATADOG TAGS, FACET PILLS & MONITOR STATUS BADGES
+   ========================================================================== */
+.cds-tag,
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.cds-tag-blue, .badge-info {
+  background-color: var(--dd-apm-soft);
+  color: var(--dd-apm-text);
+  border-color: var(--dd-apm-border);
+}
+
+.cds-tag-green, .badge-success {
+  background-color: var(--dd-ok-soft);
+  color: var(--dd-ok-text);
+  border-color: var(--dd-ok-border);
+}
+
+.cds-tag-red, .badge-danger {
+  background-color: var(--dd-alert-soft);
+  color: var(--dd-alert-text);
+  border-color: var(--dd-alert-border);
+}
+
+.cds-tag-amber, .badge-warning {
+  background-color: var(--dd-warn-soft);
+  color: var(--dd-warn-text);
+  border-color: var(--dd-warn-border);
+}
+
+.cds-tag-purple, .badge-purple {
+  background-color: var(--dd-purple-soft);
+  color: var(--dd-purple-bright);
+  border-color: var(--dd-purple-border);
+}
+
+.cds-tag-gray, .badge-neutral {
+  background-color: var(--dd-bg-surface-alt);
+  color: var(--dd-text-secondary);
+  border-color: var(--dd-border-subtle);
+}
+
+/* ==========================================================================
+   6. DATADOG BUTTONS & INTERACTIVE CONTROLS (Tactile Affordance)
+   ========================================================================== */
+.cds-btn,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 90ms ease, box-shadow 120ms ease;
+}
+
+.cds-btn:active,
+.btn:active {
+  transform: scale(0.985);
+}
+
+.cds-btn-primary,
+.btn-primary {
+  background-color: var(--dd-purple);
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(99, 44, 166, 0.25);
+}
+.cds-btn-primary:hover,
+.btn-primary:hover {
+  background-color: var(--dd-purple-hover);
+}
+
+.cds-btn-danger,
+.btn-danger {
+  background-color: var(--dd-alert);
+  color: #ffffff;
+}
+.cds-btn-danger:hover,
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.cds-btn-secondary,
+.btn-secondary {
+  background-color: var(--dd-bg-surface-alt);
+  color: var(--dd-text-primary);
+  border-color: var(--dd-border-strong);
+}
+.cds-btn-secondary:hover,
+.btn-secondary:hover {
+  background-color: var(--dd-bg-surface-hover);
+  border-color: var(--dd-purple);
+}
+
+.cds-btn-ghost {
+  background: transparent;
+  color: var(--dd-text-secondary);
+  border-color: var(--dd-border-subtle);
+  min-height: 30px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+}
+.cds-btn-ghost:hover {
+  background-color: var(--dd-bg-surface-hover);
+  color: var(--dd-text-primary);
+  border-color: var(--dd-border-strong);
+}
+
+/* ==========================================================================
+   7. FORMS & INPUTS (Datadog Facet & Search Controls)
+   ========================================================================== */
+.cds-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cds-label,
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dd-text-secondary);
+}
+
+.cds-input,
+.cds-select,
+.cds-textarea,
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 11px;
+  background-color: var(--dd-bg-input);
+  color: var(--dd-text-primary);
+  border: 1px solid var(--dd-border-strong);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.cds-textarea,
+.form-textarea {
+  min-height: 104px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.cds-input:focus,
+.cds-select:focus,
+.cds-textarea:focus,
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--dd-purple);
+  box-shadow: 0 0 0 2px var(--dd-purple-soft);
+}
+
+/* ==========================================================================
+   8. DATADOG LOG & SIGNAL EXPLORER TABLES
+   ========================================================================== */
+.cds-table-wrap,
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--dd-border-subtle);
+  border-radius: 6px;
+  background-color: var(--dd-bg-surface);
+}
+
+.cds-table,
+.table-carbon {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12.5px;
+}
+
+.cds-table th,
+.table-carbon th {
+  background-color: var(--dd-bg-widget-header);
+  color: var(--dd-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--dd-border-subtle);
+  white-space: nowrap;
+}
+
+.cds-table td,
+.table-carbon td {
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--dd-border-subtle);
+  color: var(--dd-text-primary);
+  vertical-align: middle;
+}
+
+.cds-table tbody tr:hover,
+.table-carbon tbody tr:hover {
+  background-color: var(--dd-bg-surface-hover);
+}
+
+/* ==========================================================================
+   9. TERMINAL STREAM & CODE BLOCKS (Datadog Live Tail)
+   ========================================================================== */
+.cds-terminal {
+  background-color: #0b0d13;
+  color: #e2e8f0;
+  border: 1px solid #262c3d;
+  border-left: 3px solid var(--dd-purple);
+  border-radius: 6px;
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.62;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-y: auto;
+}
+
+.cds-alert {
+  padding: 11px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--dd-border-subtle);
+  border-left: 4px solid var(--dd-purple);
+  background-color: var(--dd-bg-surface-alt);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cds-alert-danger { border-left-color: var(--dd-alert); }
+.cds-alert-success { border-left-color: var(--dd-ok); }
+.cds-alert-warning { border-left-color: var(--dd-warn); }
+
+/* Auth Standalone Screens (Datadog Login Portal) */
+.cds-auth-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.16), transparent 55%), var(--dd-bg-canvas);
+}
+
+.cds-auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.cds-auth-card {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--dd-bg-surface);
+  border: 1px solid var(--dd-border-subtle);
+  border-top: 4px solid var(--dd-purple);
+  border-radius: 8px;
+  box-shadow: var(--dd-shadow-hover);
+}
+
+/* Utilities */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.mt-1 { margin-top: 4px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mt-6 { margin-top: 20px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-4 { margin-bottom: 14px; }
+.w-full { width: 100%; }
+.text-xs { font-size: 11.5px; }
+.text-sm { font-size: 13px; }
+.text-secondary { color: var(--dd-text-secondary); }
+.text-helper { color: var(--dd-text-muted); }
+.text-danger { color: var(--dd-alert-text); }
+.text-success { color: var(--dd-ok-text); }
+.text-warning { color: var(--dd-warn-text); }
+.text-blue { color: var(--dd-purple-bright); }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.uppercase { text-transform: uppercase; }
+
+@media (max-width: 1100px) {
+  .cds-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cds-grid-3 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .cds-col-3, .cds-col-4, .cds-col-5, .cds-col-6, .cds-col-7, .cds-col-8 {
+    grid-column: span 12 / span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .dd-app-layout { flex-direction: column; }
+  .dd-sidebar, .cds-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .cds-grid-2, .cds-grid-4 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

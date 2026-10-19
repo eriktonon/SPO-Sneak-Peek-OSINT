@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}SPO Watchdog AI — Granite 4.2 Uncensored SecOps Investigator{% endblock %}
-{% block breadcrumb %}WATCHDOG AI // GRANITE 4.2 UNCENSORED SECOPS INVESTIGATOR (OLLAMA){% endblock %}
+{% block title %}SP — Granite 4.2 Uncensored SecOps Investigator{% endblock %}
+{% block breadcrumb %}SP // GRANITE 4.2 UNCENSORED SECOPS AI (OLLAMA){% endblock %}
 
 {% block content %}
 <!-- ======================================================================
-     ROW 1: DATADOG WATCHDOG AI TELEMETRY STRIP (4 MONITOR WIDGETS)
+     ROW 1: GRANITE 4.2 AI TELEMETRY STRIP (4 WIDGETS)
      ====================================================================== -->
-<section class="cds-grid-4 mb-4" aria-label="Watchdog Granite 4.2 Telemetry Monitors">
+<section class="cds-grid-4 mb-4" aria-label="Granite 4.2 Telemetry">
   <article class="cds-tile {% if ollama_status.online %}cds-accent-green{% else %}cds-accent-red{% endif %}">
     <div class="cds-kpi-label">
       <span>OLLAMA DAEMON // STATUS</span>
@@ -29,7 +29,7 @@
 
   <article class="cds-tile cds-accent-purple">
     <div class="cds-kpi-label">
-      <span>WATCHDOG MODEL // IMAGE</span>
+      <span>GRANITE 4.2 // IMAGE</span>
       <span class="cds-tag cds-tag-purple">ABLITERATED</span>
     </div>
     <div class="cds-kpi-value text-blue" style="font-size:21px;">
@@ -73,13 +73,13 @@
 </section>
 
 <!-- ======================================================================
-     ROW 2: WATCHDOG AI HEADER BANNER
+     ROW 2: GRANITE 4.2 AI HEADER BANNER
      ====================================================================== -->
-<section class="cds-panel cds-accent-purple mb-4" aria-labelledby="watchdog-h1">
+<section class="cds-panel cds-accent-purple mb-4" aria-labelledby="granite-h1">
   <div class="cds-panel-header">
     <span class="cds-panel-header-title">
       <i data-lucide="sparkles" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
-      <span>DATADOG WATCHDOG SECOPS CO-PILOT // ERIKTONON/GRANITE4.2-UNCENSORED</span>
+      <span>SP SECOPS CO-PILOT // ERIKTONON/GRANITE4.2-UNCENSORED</span>
     </span>
     <div class="flex items-center gap-2">
       <button type="button" class="cds-btn cds-btn-ghost mono" data-copy-text="ollama pull eriktonon/granite4.2-uncensored">
@@ -94,7 +94,7 @@
   </div>
   <div class="cds-panel-body" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;">
     <div style="max-width:78ch;">
-      <h1 id="watchdog-h1" class="cds-page-h1"><strong>eriktonon/granite4.2-uncensored</strong> Watchdog Investigator</h1>
+      <h1 id="granite-h1" class="cds-page-h1"><strong>eriktonon/granite4.2-uncensored</strong> SecOps Investigator</h1>
       <p class="text-sm text-secondary mt-1">
         Uncensored 8B cybersecurity &amp; OSINT model abliterated across 26 intermediate layers (10–35) and fine-tuned with <strong>SecOps LoRA</strong> by <strong>Erik Tonon</strong>. Correlates passive DNS/RDAP, Shodan InternetDB ports, NIST CVEs, and Strix OWASP findings without synthetic refusal lectures.
       </p>
@@ -109,15 +109,15 @@
 </section>
 
 <!-- ======================================================================
-     ROW 3: TASKING WORKBENCH (5 COLS) + WATCHDOG LIVE TRACE OUTPUT (7 COLS)
+     ROW 3: TASKING WORKBENCH (5 COLS) + LIVE TRACE OUTPUT (7 COLS)
      ====================================================================== -->
-<section class="cds-grid-12" aria-label="Watchdog Tasking and Intelligence Output">
+<section class="cds-grid-12" aria-label="Granite 4.2 Tasking and Intelligence Output">
   <!-- Left 5 Cols: Tasking Form -->
   <div class="cds-panel cds-col-5 cds-accent-blue">
     <div class="cds-panel-header">
       <span class="cds-panel-header-title">
         <i data-lucide="terminal" style="width:14px;height:14px;color:var(--dd-apm);" aria-hidden="true"></i>
-        <span>SECOPS &amp; OSINT TASKING FACETS</span>
+        <span>SECOPS &amp; OSINT TASKING</span>
       </span>
       <span class="cds-tag cds-tag-gray">POST /api/chat</span>
     </div>
@@ -134,7 +134,7 @@
       </div>
 
       <div class="cds-form-group">
-        <label for="scan-context" class="cds-label">02 // ATTACH RECORDED TELEMETRY SCAN</label>
+        <label for="scan-context" class="cds-label">02 // ATTACH RECORDED OSINT SCAN</label>
         <select id="scan-context" name="scan_id" class="cds-select">
           <option value="">-- Custom Prompt Only (No Scan Attached) --</option>
           {% for s in (recent_scans or []) %}
@@ -157,17 +157,17 @@
 
       <button type="submit" class="cds-btn cds-btn-primary w-full">
         <i data-lucide="sparkles" style="width:15px;height:15px;" aria-hidden="true"></i>
-        <span>Run Watchdog Granite 4.2 Investigation</span>
+        <span>Run Granite 4.2 Investigation</span>
       </button>
     </form>
   </div>
 
-  <!-- Right 7 Cols: Live Watchdog Trace Output -->
+  <!-- Right 7 Cols: Live Trace Output -->
   <div class="cds-panel cds-col-7 cds-accent-purple">
     <div class="cds-panel-header">
       <div class="flex items-center gap-2">
         <i data-lucide="cpu" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
-        <h2 class="cds-panel-header-title">WATCHDOG NEURAL TRACE OUTPUT</h2>
+        <h2 class="cds-panel-header-title">GRANITE 4.2 NEURAL OUTPUT</h2>
       </div>
       <div class="flex items-center gap-2">
         {% if ai_result %}
@@ -177,7 +177,7 @@
           <span class="cds-tag cds-tag-amber">OFFLINE DETERMINISTIC BRIEF</span>
           {% endif %}
           <button type="button" class="cds-btn cds-btn-ghost" data-copy-text="{{ ai_result.analysis }}">
-            <span data-copy-label>Copy Trace</span>
+            <span data-copy-label>Copy Output</span>
           </button>
         {% else %}
           <span class="cds-tag cds-tag-purple">READY FOR TASKING</span>
@@ -199,7 +199,7 @@
         <div class="cds-terminal" style="min-height:390px;max-height:560px;">{{ ai_result.analysis }}</div>
       {% else %}
         <div class="cds-terminal" style="min-height:390px;display:flex;flex-direction:column;justify-content:center;">
-<span style="color:#a78bfa;font-weight:700;">[DATADOG WATCHDOG // GRANITE 4.2 UNCENSORED READY]</span>
+<span style="color:#a78bfa;font-weight:700;">[SP SECOPS AI // GRANITE 4.2 UNCENSORED READY]</span>
 &gt; @model: {{ ollama_status.configured_model }} (40 layers, 128K context, SecOps LoRA)
 &gt; @endpoint: {{ ollama_status.host }}
 &gt; @status: Select a recorded OSINT / Strix scan on the left or enter a custom SecOps hypothesis to generate an uncensored technical dossier.</div>

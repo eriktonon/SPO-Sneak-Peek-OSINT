@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}SPO Cloud SIEM &amp; OSINT Observability — Erik Tonon{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}SPO v2.0 — Cloud SIEM, Zero-Key OSINT Reconnaissance, Strix OWASP Top 10 DAST, and Watchdog SecOps AI (eriktonon/granite4.2-uncensored). Engineered by Erik Tonon.{% endblock %}" />
+  <title>{% block title %}SP — Sneak Peek OSINT v2.0 — Erik Tonon{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}SP (Sneak Peek OSINT) v2.0 — Zero-Key Open Source Intelligence, 73-Platform Social & Dating Trace, Strix OWASP Top 10 DAST, and Granite 4.2 Uncensored AI. Engineered by Erik Tonon.{% endblock %}" />
   <meta name="author" content="Erik Tonon (@eriktonon)" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="{{ request.url }}" />
@@ -13,20 +13,20 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{{ self.title() }}" />
   <meta property="og:description" content="{{ self.meta_description() }}" />
-  <meta property="og:site_name" content="SPO Cloud SIEM &amp; OSINT Platform" />
+  <meta property="og:site_name" content="SP — Sneak Peek OSINT Platform" />
 
-  <!-- Datadog Security Hound Vector Favicon -->
+  <!-- SP Vector Favicon -->
   <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}" />
 
-  <!-- Typography: Inter + JetBrains Mono / IBM Plex Mono (tabular-nums) -->
+  <!-- Typography: Inter + IBM Plex Mono (tabular-nums) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Datadog DRUIDS Stylesheet -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/datadog-druids.css') }}" />
+  <!-- SP Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sp-theme.css') }}" />
 
-  <!-- Early Theme Initialization (Default: Datadog Dark Mode, user-toggleable to Datadog Light Mode) -->
+  <!-- Early Theme Initialization (Default: SP Dark Mode, toggleable to SP Light Mode) -->
   <script>
     (function () {
       try {
@@ -47,7 +47,7 @@
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "SPO — Sneak Peek OSINT & Cloud SIEM v2.0",
+    "name": "SP — Sneak Peek OSINT v2.0",
     "applicationCategory": "SecurityApplication",
     "operatingSystem": "Linux, Windows, macOS",
     "softwareVersion": "2.0.0",
@@ -60,48 +60,45 @@
   </script>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main observability workspace</a>
+  <a href="#main-content" class="skip-link">Skip to main workspace</a>
 
   <div class="dd-app-layout">
     <!-- ====================================================================
-         LEFT NAVIGATION RAIL (Datadog Deep Aubergine #191229)
+         LEFT NAVIGATION RAIL (SP Deep Purple #191229)
          ==================================================================== -->
-    <aside class="dd-sidebar" aria-label="Datadog Security &amp; OSINT Navigation">
+    <aside class="dd-sidebar" aria-label="SP Navigation">
       <div>
         <!-- Brand Header -->
         <div class="dd-brand-header">
-          <a href="{{ url_for('dashboard') }}" class="dd-brand-link" aria-label="SPO Cloud SIEM Home">
-            <div class="dd-brand-logo" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <circle cx="12" cy="11" r="3" fill="#10B981" stroke="none"/>
-              </svg>
+          <a href="{{ url_for('dashboard') }}" class="dd-brand-link" aria-label="SP Sneak Peek OSINT Home">
+            <div class="dd-brand-logo mono font-bold" style="font-size:13px;color:#ffffff;" aria-hidden="true">
+              SP
             </div>
             <div>
-              <div class="dd-brand-title">SPO Cloud SIEM</div>
-              <div class="dd-brand-subtitle">OSINT &bull; Strix &bull; Watchdog</div>
+              <div class="dd-brand-title">Sneak Peek OSINT</div>
+              <div class="dd-brand-subtitle">OSINT &bull; Strix &bull; Granite 4.2</div>
             </div>
           </a>
           <span class="cds-nav-tag">v2.0</span>
         </div>
 
-        <nav aria-label="Primary Telemetry Modules">
-          <div class="dd-nav-section-title">Dashboards &amp; SIEM</div>
+        <nav aria-label="Primary OSINT Modules">
+          <div class="dd-nav-section-title">Command &amp; Security</div>
           <ul class="cds-nav-list">
             <li>
               <a href="{{ url_for('dashboard') }}" class="cds-nav-link {% if request.path == '/dashboard' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
-                  <i data-lucide="layout-Grid" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Service Overview</span>
+                  <i data-lucide="layout-grid" style="width:15px;height:15px;" aria-hidden="true"></i>
+                  <span>Command Center</span>
                 </span>
-                <span class="cds-nav-tag">SIEM</span>
+                <span class="cds-nav-tag">SP</span>
               </a>
             </li>
             <li>
               <a href="{{ url_for('securityAudit') }}" class="cds-nav-link {% if request.path == '/securityAudit' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="shield-alert" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Cloud SIEM &amp; Strix</span>
+                  <span>Strix DAST &amp; Hardening</span>
                 </span>
                 <span class="cds-nav-tag">DAST</span>
               </a>
@@ -110,20 +107,20 @@
               <a href="{{ url_for('graniteAI') }}" class="cds-nav-link {% if request.path == '/graniteAI' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="sparkles" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Watchdog Granite AI</span>
+                  <span>Granite 4.2 SecOps AI</span>
                 </span>
                 <span class="cds-nav-tag">LLM</span>
               </a>
             </li>
           </ul>
 
-          <div class="dd-nav-section-title">OSINT Explorers</div>
+          <div class="dd-nav-section-title">OSINT Modules</div>
           <ul class="cds-nav-list">
             <li>
               <a href="{{ url_for('companyInvestigation') }}" class="cds-nav-link {% if request.path == '/companyInvestigation' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="globe" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Domain &amp; RDAP Explorer</span>
+                  <span>Domain &amp; RDAP Recon</span>
                 </span>
                 <span class="cds-nav-tag">DNS</span>
               </a>
@@ -132,7 +129,7 @@
               <a href="{{ url_for('searchServers') }}" class="cds-nav-link {% if request.path == '/searchServers' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="server" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Host Map &amp; CVE Intel</span>
+                  <span>Server &amp; CVE Intel</span>
                 </span>
                 <span class="cds-nav-tag">NVD</span>
               </a>
@@ -141,20 +138,20 @@
               <a href="{{ url_for('personalInvestigation') }}" class="cds-nav-link {% if request.path in ['/personalInvestigation', '/personalTrace'] %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="user-search" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Identity &amp; SOCMINT</span>
+                  <span>Personal &amp; Social Trace</span>
                 </span>
-                <span class="cds-nav-tag">ID</span>
+                <span class="cds-nav-tag">73+</span>
               </a>
             </li>
           </ul>
 
-          <div class="dd-nav-section-title">Service Management</div>
+          <div class="dd-nav-section-title">Workspace</div>
           <ul class="cds-nav-list">
             <li>
               <a href="{{ url_for('projects') }}" class="cds-nav-link {% if request.path == '/projects' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="folder-kanban" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Incident Cases</span>
+                  <span>Investigation Cases</span>
                 </span>
               </a>
             </li>
@@ -162,19 +159,19 @@
               <a href="{{ url_for('insertKeys') }}" class="cds-nav-link {% if request.path == '/insertKeys' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="key-round" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Integrations &amp; Vault</span>
+                  <span>API Keys &amp; Ollama</span>
                 </span>
               </a>
             </li>
           </ul>
 
-          <div class="dd-nav-section-title">Reference &amp; Maintainer</div>
+          <div class="dd-nav-section-title">Documentation</div>
           <ul class="cds-nav-list">
             <li>
               <a href="{{ url_for('aboutOSINT') }}" class="cds-nav-link {% if request.path == '/aboutOSINT' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="compass" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>OSINT Pipeline Specs</span>
+                  <span>About OSINT</span>
                 </span>
               </a>
             </li>
@@ -182,7 +179,7 @@
               <a href="{{ url_for('manual') }}" class="cds-nav-link {% if request.path == '/manual' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="book-open" style="width:15px;height:15px;" aria-hidden="true"></i>
-                  <span>Runbook &amp; API Docs</span>
+                  <span>Operator Manual</span>
                 </span>
               </a>
             </li>
@@ -198,14 +195,14 @@
         </nav>
       </div>
 
-      <!-- Sidebar Footer: Agent Status & Operator -->
+      <!-- Sidebar Footer: Operator Status -->
       <div style="padding:12px 14px;border-top:1px solid var(--dd-nav-border);background:rgba(0,0,0,0.22);" class="flex items-center justify-between">
         <div>
           <div class="mono text-xs" style="color:#ffffff;font-weight:600;">
-            op:{{ session.get('user', 'operator') }}
+            {{ session.get('user', 'operator') }}
           </div>
           <div class="mono" style="font-size:10px;color:#34d399;margin-top:2px;">
-            &#9679; agent:healthy &bull; wal:sync
+            &#9679; SP Engine Online
           </div>
         </div>
         <a href="/logout" class="cds-btn cds-btn-ghost" style="color:#e2e8f0;border-color:#3b2d54;padding:4px 8px;" title="End Session" aria-label="Sign out">
@@ -215,91 +212,59 @@
     </aside>
 
     <!-- ====================================================================
-         MAIN OBSERVABILITY COLUMN (Top Facet Omnibar + Monitor Strip + Board)
+         MAIN WORKSPACE COLUMN
          ==================================================================== -->
     <div class="dd-main-column">
-      <!-- Datadog Top Facet Search & Timeframe Bar -->
+      <!-- Top Header Bar -->
       <header class="dd-topbar" role="banner">
-        <div class="dd-query-bar" role="search">
-          <span class="dd-query-label">QUERY</span>
-          <span class="dd-facet-chip" title="Environment Facet">
-            <span class="facet-k">env</span><span class="facet-v">homelab-prod</span>
-          </span>
-          <span class="dd-facet-chip" title="Service Facet">
-            <span class="facet-k">service</span><span class="facet-v">spo-siem</span>
-          </span>
-          <span class="dd-facet-chip" title="Watchdog LLM Model">
-            <span class="facet-k">model</span><span class="facet-v">granite4.2-8b</span>
-          </span>
-          <label for="dd-global-search" class="skip-link">Filter signals, hosts, or findings</label>
-          <input
-            id="dd-global-search"
-            type="text"
-            class="dd-query-input"
-            autocomplete="off"
-            placeholder="Filter signals, domains, CVEs, or tags... (Press / to focus)"
-            aria-label="Filter visible telemetry widgets and rows"
-          />
-          <kbd class="mono text-xs text-helper" style="padding:1px 5px;border:1px solid var(--dd-border-subtle);border-radius:4px;">/</kbd>
+        <div class="flex items-center gap-3" style="flex:1;min-width:0;">
+          <span class="cds-tag cds-tag-purple">{% block breadcrumb %}SP // COMMAND CENTER{% endblock %}</span>
+          <div class="dd-query-bar" role="search" style="max-width:440px;">
+            <i data-lucide="search" style="width:14px;height:14px;color:var(--dd-text-muted);" aria-hidden="true"></i>
+            <label for="dd-global-search" class="skip-link">Quick filter tables and findings</label>
+            <input
+              id="dd-global-search"
+              type="text"
+              class="dd-query-input"
+              autocomplete="off"
+              placeholder="Quick filter tables, networks, domains, or CVEs... (/)"
+              aria-label="Quick filter tables and findings"
+            />
+          </div>
         </div>
 
         <div class="dd-topbar-actions">
-          <div class="dd-live-pill" title="Real-time Telemetry &amp; SSRF Guard Active">
-            <span class="dd-live-dot" aria-hidden="true"></span>
-            <span>LIVE</span>
-          </div>
+          <span class="cds-tag cds-tag-green">STRIX 100/100</span>
+          <span class="cds-tag cds-tag-blue">SSRF GUARD ACTIVE</span>
 
-          <!-- Datadog Timeframe Selector -->
-          <div class="dd-time-picker" role="group" aria-label="Telemetry Timeframe">
-            <button type="button" class="dd-time-btn" data-timeframe="15m">15m</button>
-            <button type="button" class="dd-time-btn" data-timeframe="1h">1h</button>
-            <button type="button" class="dd-time-btn active" data-timeframe="24h">24h</button>
-            <button type="button" class="dd-time-btn" data-timeframe="7d">7d</button>
-          </div>
-
-          <!-- Theme Switcher (Datadog Dark / Datadog Light) -->
+          <!-- Theme Switcher (SP Dark / SP Light) -->
           <button
             type="button"
             id="theme-toggle"
             class="cds-btn cds-btn-ghost"
-            aria-label="Toggle Datadog Dark or Light mode"
-            title="Switch between Datadog Dark and Datadog Light theme"
+            aria-label="Toggle SP Dark or Light theme"
+            title="Switch between SP Dark and SP Light theme"
           >
             <i data-lucide="sun-moon" style="width:14px;height:14px;" aria-hidden="true"></i>
-            <span id="theme-label" class="mono">DD DARK</span>
+            <span id="theme-label" class="mono">SP DARK</span>
           </button>
         </div>
       </header>
 
-      <!-- Datadog Monitor Status Sub-Bar -->
-      <div class="dd-monitor-strip" aria-label="Monitor Health Summary">
-        <div class="flex items-center gap-3 flex-wrap">
-          <span class="cds-tag cds-tag-purple">{% block breadcrumb %}CLOUD SIEM // SERVICE OVERVIEW{% endblock %}</span>
-          <span class="mono text-xs text-secondary">
-            Monitors: <strong class="text-success">6 OK</strong> &bull; <strong class="text-danger">0 Alert</strong> &bull; <strong class="text-warning">0 Warn</strong>
-          </span>
-        </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="cds-tag cds-tag-green">strix.posture:100/100</span>
-          <span class="cds-tag cds-tag-blue">ssrf.guard:192.168.3.1-protected</span>
-          <span class="cds-tag cds-tag-purple">watchdog:eriktonon/granite4.2-uncensored</span>
-        </div>
-      </div>
-
-      <!-- Main Widget Board Workspace -->
+      <!-- Main Workspace -->
       <main id="main-content" class="cds-main" role="main">
         {% block content %}{% endblock %}
       </main>
 
-      <!-- Datadog Footer -->
+      <!-- Footer -->
       <footer style="padding:12px 18px;border-top:1px solid var(--dd-border-subtle);background:var(--dd-bg-surface);" class="flex items-center justify-between flex-wrap gap-3 text-xs text-secondary mono">
         <div>
-          SPO Cloud SIEM &amp; OSINT v2.0.0 &bull; Datadog DRUIDS Observability UI &bull; Engineered by
+          SP — Sneak Peek OSINT v2.0.0 &bull; Engineered by
           <a href="https://eriktonon.com/" target="_blank" rel="noopener noreferrer" style="color:var(--dd-purple-bright);text-decoration:none;font-weight:600;">Erik Tonon (@eriktonon)</a>
         </div>
         <div class="flex items-center gap-4">
           <a href="https://github.com/eriktonon/SPO-Sneak-Peek-OSINT" target="_blank" rel="noopener noreferrer" style="color:var(--dd-text-secondary);text-decoration:none;">GitHub</a>
-          <a href="https://ollama.com/eriktonon/granite4.2-uncensored" target="_blank" rel="noopener noreferrer" style="color:var(--dd-text-secondary);text-decoration:none;">Watchdog Granite 4.2</a>
+          <a href="https://ollama.com/eriktonon/granite4.2-uncensored" target="_blank" rel="noopener noreferrer" style="color:var(--dd-text-secondary);text-decoration:none;">Granite 4.2 Uncensored</a>
           <a href="{{ url_for('aboutUS') }}" style="color:var(--dd-purple-bright);text-decoration:none;font-weight:600;">Sponsor (BTC / ETH / SOL)</a>
         </div>
       </footer>
@@ -314,13 +279,13 @@
         window.lucide.createIcons();
       }
 
-      // 1. Datadog Theme Switcher (DD DARK / DD LIGHT)
+      // 1. SP Theme Switcher (SP DARK / SP LIGHT)
       var toggleBtn = document.getElementById('theme-toggle');
       var themeLabel = document.getElementById('theme-label');
       function syncThemeUI() {
         var isDark = document.documentElement.classList.contains('dark');
         if (themeLabel) {
-          themeLabel.textContent = isDark ? 'DD DARK' : 'DD LIGHT';
+          themeLabel.textContent = isDark ? 'SP DARK' : 'SP LIGHT';
         }
       }
       syncThemeUI();
@@ -336,22 +301,7 @@
         });
       }
 
-      // 2. Datadog Timeframe Selector Buttons (15m / 1h / 24h / 7d)
-      document.querySelectorAll('.dd-time-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('.dd-time-btn').forEach(function (b) {
-            b.classList.remove('active');
-          });
-          btn.classList.add('active');
-          // Jitter sparkline bars slightly to reflect timeframe slice
-          document.querySelectorAll('.dd-spark-bars span').forEach(function (bar) {
-            var h = Math.floor(28 + Math.random() * 72);
-            bar.style.height = h + '%';
-          });
-        });
-      });
-
-      // 3. Global Datadog Query Bar Filter + Page Table Filter Inputs
+      // 2. Global Quick Filter + Page Table Filter Inputs
       var globalSearch = document.getElementById('dd-global-search');
       if (globalSearch) {
         document.addEventListener('keydown', function (e) {
@@ -383,7 +333,7 @@
         });
       });
 
-      // 4. Copy-to-Clipboard Affordance
+      // 3. Copy-to-Clipboard Affordance
       document.querySelectorAll('[data-copy-text]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var text = btn.getAttribute('data-copy-text') || '';
