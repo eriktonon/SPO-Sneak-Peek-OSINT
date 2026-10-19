@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}SPO — Granite 4.2 Uncensored SecOps AI (Ollama){% endblock %}
+{% block header_title %}Granite 4.2 Uncensored SecOps & OSINT AI // eriktonon/granite4.2-uncensored{% endblock %}
+
+{% block content %}
+<!-- Model Header & Live Ollama Status Banner -->
+<div class="bg-spo-panel border border-spo-border rounded-xl p-6">
+   <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div class="space-y-2">
+         <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-0.5 text-[11px] font-mono font-bold uppercase rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">
+               IBM Granite 4.2 8B • Abliterated + SecOps LoRA
+            </span>
+            <span class="px-2.5 py-0.5 text-[11px] font-mono uppercase rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+               128K Context • temp 0.2 • top_p 0.92
+            </span>
+            {% if ollama_status.online %}
+               <span class="px-2.5 py-0.5 text-[11px] font-mono uppercase rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                  ● OLLAMA ONLINE ({{ ollama_status.host }})
+               </span>
+            {% else %}
+               <span class="px-2.5 py-0.5 text-[11px] font-mono uppercase rounded bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                  ○ OLLAMA OFFLINE ({{ ollama_status.host }})
+               </span>
+            {% endif %}
+         </div>
+         <h2 class="text-xl font-bold text-white font-mono">{{ model_meta.name }}</h2>
+         <p class="text-xs text-slate-300 max-w-3xl leading-relaxed">
+            Uncensored technical intelligence and cybersecurity LLM based on <strong>IBM Granite 4.2 8B</strong>, abliterated across 26 intermediate layers (10–35) and fine-tuned with <strong>SecOps LoRA</strong> by <strong>Erik Tonon</strong>. Engineered for OSINT evidence correlation, attack surface modeling, CVE & exploit triage, and Shift-Left remediation without synthetic refusal lectures.
+         </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0 text-xs font-mono">
+         <a href="{{ model_meta.hub_url }}" target="_blank" rel="noopener noreferrer"
+            class="px-4 py-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center gap-2 transition">
+            <i class="material-icons text-sm">open_in_new</i>
+            <span>Ollama Hub: eriktonon/granite4.2-uncensored</span>
+         </a>
+         <a href="{{ url_for('insertKeys') }}"
+            class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center gap-2 transition">
+            <i class="material-icons text-sm">settings</i>
+            <span>Configure Ollama Endpoint / Model</span>
+         </a>
+      </div>
+   </div>
+
+   <!-- CLI Quick Pull Bar -->
+   <div class="mt-4 pt-4 border-t border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
+      <div class="bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 flex items-center justify-between">
+         <span class="text-slate-400">Pull Image:</span>
+         <code class="text-emerald-400 select-all">ollama pull eriktonon/granite4.2-uncensored</code>
+      </div>
+      <div class="bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 flex items-center justify-between">
+         <span class="text-slate-400">Run Interactive:</span>
+         <code class="text-cyan-400 select-all">ollama run eriktonon/granite4.2-uncensored</code>
+      </div>
+      <div class="bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 flex items-center justify-between">
+         <span class="text-slate-400">Model Installed:</span>
+         <span class="{{ 'text-emerald-400 font-bold' if ollama_status.model_installed else 'text-amber-400' }}">
+            {{ 'YES (READY)' if ollama_status.model_installed else 'RUN OLLAMA PULL' }}
+         </span>
+      </div>
+   </div>
+</div>
+
+<!-- Analysis Workspace -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+   <!-- Left Column: Prompt & OSINT Evidence Selector -->
+   <div class="lg:col-span-5 bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
+      <div class="flex items-center gap-2">
+         <i class="material-icons text-amber-400">psychology</i>
+         <h3 class="font-semibold text-white">SecOps & OSINT Neural Tasking</h3>
+      </div>
+
+      <form method="POST" action="{{ url_for('graniteAI') }}" class="space-y-4">
+         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+         <div>
+            <label class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Tactical Analysis Mode</label>
+            <select name="mode" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-amber-500">
+               <option value="osint_correlation" {% if selected_mode == 'osint_correlation' %}selected{% endif %}>OSINT Multi-Source Threat Correlation</option>
+               <option value="redteam_surface" {% if selected_mode == 'redteam_surface' %}selected{% endif %}>Red Team Attack Surface & Dork Generation</option>
+               <option value="vuln_exploit_analysis" {% if selected_mode == 'vuln_exploit_analysis' %}selected{% endif %}>CVE / Exploit Analysis & Shift-Left Fix</option>
+               <option value="due_diligence" {% if selected_mode == 'due_diligence' %}selected{% endif %}>Corporate Due Diligence & Legal/QSA Risk</option>
+            </select>
+         </div>
+
+         <div>
+            <label class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Correlate with Recorded OSINT / Strix Scan (Optional)</label>
+            <select name="scan_id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-amber-500">
+               <option value="">-- Custom Prompt Only (No Scan Attached) --</option>
+               {% for s in recent_scans %}
+                  <option value="{{ s.id_scan }}" {% if selected_scan_id == s.id_scan %}selected{% endif %}>
+                     [#{{ s.id_scan }} | {{ s.scan_type|upper }}] {{ s.target }} — {{ (s.summary or '')[:45] }}
+                  </option>
+               {% endfor %}
+            </select>
+         </div>
+
+         <div>
+            <label class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Save Intelligence Brief to Case</label>
+            <select name="project_id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+               <option value="">-- Standalone Intelligence Brief --</option>
+               {% for p in user_projects %}
+                  <option value="{{ p.id_project }}" {% if selected_project_id == p.id_project %}selected{% endif %}>{{ p.name_project }}</option>
+               {% endfor %}
+            </select>
+         </div>
+
+         <div>
+            <label class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Operator Prompt / Target Hypothesis</label>
+            <textarea name="prompt" rows="5" placeholder="e.g. Correlate the exposed subdomains, open ports, and CNPJ partners to identify the highest-risk entry points and provide verification commands..."
+               class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3.5 text-sm text-white font-mono focus:outline-none focus:border-amber-500">{{ prompt_input or '' }}</textarea>
+         </div>
+
+         <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold py-2.5 px-5 rounded-lg text-sm transition flex items-center justify-center gap-2">
+            <i class="material-icons text-base">bolt</i>
+            <span>Execute Granite 4.2 Uncensored Analysis</span>
+         </button>
+      </form>
+   </div>
+
+   <!-- Right Column: AI Output Console & Model Specs -->
+   <div class="lg:col-span-7 space-y-6">
+      <div class="bg-spo-panel border border-spo-border rounded-xl overflow-hidden flex flex-col min-h-[420px]">
+         <div class="px-6 py-4 border-b border-spo-border flex items-center justify-between bg-slate-900/60">
+            <div class="flex items-center gap-2">
+               <i class="material-icons text-amber-400 text-lg">terminal</i>
+               <h3 class="font-semibold text-white text-sm font-mono">GRANITE 4.2 SECOPS INTELLIGENCE OUTPUT</h3>
+            </div>
+            {% if ai_result %}
+               <span class="text-xs font-mono {{ 'text-emerald-400' if ai_result.live_ollama else 'text-amber-400' }}">
+                  {{ ai_result.model }} • {{ ai_result.elapsed_ms }}ms
+               </span>
+            {% endif %}
+         </div>
+
+         <div class="p-6 flex-1 bg-slate-950/80">
+            {% if ai_result %}
+               <pre class="text-xs font-mono text-slate-200 whitespace-pre-wrap leading-relaxed overflow-x-auto">{{ ai_result.response }}</pre>
+            {% else %}
+               <div class="h-full flex flex-col items-center justify-center text-center py-12 space-y-3 text-slate-400">
+                  <i class="material-icons text-4xl text-amber-400/60">memory</i>
+                  <div class="text-sm font-semibold text-slate-300">Granite 4.2 Uncensored Co-Pilot Ready</div>
+                  <p class="text-xs max-w-md text-slate-500">
+                     Select a recorded reconnaissance scan (Company, Server, Personal, or Strix DAST) or enter a custom SecOps prompt on the left to generate an uncensored technical dossier.
+                  </p>
+               </div>
+            {% endif %}
+         </div>
+      </div>
+
+      <!-- Model Architecture & Modelfile Spec Card -->
+      <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
+         <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono uppercase text-amber-400 font-semibold">Architecture Specification — eriktonon/granite4.2-uncensored</span>
+            <span class="text-xs font-mono text-slate-500">{{ model_meta.size }} • GGUF</span>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+               <div class="font-mono text-slate-400">Base & Abliteration</div>
+               <div class="text-slate-200 mt-1">{{ model_meta.base_architecture }} — {{ model_meta.abliteration }}</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+               <div class="font-mono text-slate-400">SecOps Fine-Tuning</div>
+               <div class="text-slate-200 mt-1">{{ model_meta.fine_tuning }}</div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

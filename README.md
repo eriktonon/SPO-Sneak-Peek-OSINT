@@ -2,6 +2,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Flask 3.x](https://img.shields.io/badge/Flask-3.x-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Ollama: eriktonon/granite4.2-uncensored](https://img.shields.io/badge/Ollama-eriktonon%2Fgranite4.2--uncensored-f59e0b?logo=ollama&logoColor=white)](https://ollama.com/eriktonon/granite4.2-uncensored)
 [![Security: Strix & OWASP Top 10](https://img.shields.io/badge/Security-Strix%20DAST%20%2B%20OWASP%20Top%2010-e11d48?logo=securityscorecard&logoColor=white)](SECURITY.md)
 [![SQLite WAL](https://img.shields.io/badge/Database-SQLite%20WAL%20(Zero--Config)-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-10b981.svg)](LICENSE)
@@ -24,7 +25,28 @@
 
 **Sneak Peek OSINT (SPO)** is an Open-Source Intelligence (OSINT) reconnaissance and **Offensive-Defensive AppSec platform** engineered for **Security Researchers, Penetration Testers, Threat Intelligence Analysts, Compliance & Legal Teams, HR Professionals, and Investigative Journalists**.
 
-In **v2.0 (2026 Edition)**, SPO has been completely modernized and hardened with **PE-AGENTS-IBM Shift-Left Security** and the **Strix DAST & Prevention Engine** (`/pentest-strix` + `/PE-AGENTS-IBM Segurança`), featuring a **Zero-Config SQLite WAL persistence layer**, **100% free zero-key OSINT intelligence providers**, and a **Tactical Dark UI**.
+In **v2.0 (2026 Edition)**, SPO has been completely modernized and hardened with **PE-AGENTS-IBM Shift-Left Security**, the **Strix DAST & Prevention Engine** (`/pentest-strix` + `/PE-AGENTS-IBM Segurança`), and native neural OSINT correlation powered by **[`eriktonon/granite4.2-uncensored`](https://ollama.com/eriktonon/granite4.2-uncensored)** on **Ollama**.
+
+---
+
+## 🧠 Native SecOps AI Integration: [`eriktonon/granite4.2-uncensored`](https://ollama.com/eriktonon/granite4.2-uncensored)
+
+SPO v2.0 includes a dedicated **Granite 4.2 Uncensored SecOps Co-Pilot** (`/graniteAI` — [`controller/OllamaGranite.py`](controller/OllamaGranite.py)) built around Erik Tonon's official abliterated & SecOps-tuned LLM:
+
+- **Model Image**: [`eriktonon/granite4.2-uncensored`](https://ollama.com/eriktonon/granite4.2-uncensored) (`IBM Granite 4.2 8B`, 40 layers, 128K context window, 5.7 GB).
+- **Orthogonal Refusal Direction Abliteration**: Refusal directions neutralized across 26 intermediate transformer layers (layers 10–35) via activation steering decomposition.
+- **SecOps / DeepEvil LoRA**: Fine-tuned for OSINT multi-source correlation, attack surface modeling, reverse engineering, exploit PoC analysis, and Shift-Left remediation without moralizing lectures.
+- **4 Tactical Modes in `/graniteAI`**:
+  1. `osint_correlation`: Correlates domains, RDAP/WHOIS, CNPJ/QSA partners, subdomains, open ports, CVEs, and social footprints into a unified Threat Dossier.
+  2. `redteam_surface`: Generates targeted reconnaissance hypotheses, Google/GitHub/Shodan dorks, and reproducible verification commands (`curl`, `nmap`, `nuclei`, `dig`).
+  3. `vuln_exploit_analysis`: Deep CVE triage, root-cause mechanics, PoC verification, and production defensive fixes.
+  4. `due_diligence`: Corporate governance, QSA partner analysis, and judicial/compliance risk synthesis.
+
+```bash
+# Pull & run the official SecOps model on your local Ollama instance:
+ollama pull eriktonon/granite4.2-uncensored
+ollama run eriktonon/granite4.2-uncensored
+```
 
 ---
 
@@ -33,6 +55,7 @@ In **v2.0 (2026 Edition)**, SPO has been completely modernized and hardened with
 | Module / Layer | Legacy v1.0 (2018) | Modernized v2.0 (2026 — Erik Tonon) |
 | :--- | :--- | :--- |
 | **Runtime & Web Stack** | Python 3.5 + Flask 0.12 + committed `vspo/` venv | **Python 3.10–3.12 + Flask 3.x + Gunicorn + Non-Root Docker Compose** |
+| **SecOps LLM Engine** | *None* | **Ollama + [`eriktonon/granite4.2-uncensored`](https://ollama.com/eriktonon/granite4.2-uncensored) (IBM Granite 4.2 8B Abliterated + SecOps LoRA, 128K Context)** |
 | **Database Engine** | Manual MySQL server setup + raw SQL string concatenation | **Zero-Config SQLite WAL (`data/spo.db`) + 100% Parameterized SQL** |
 | **Authentication & AuthZ** | Static `"potato"` SHA-256 salt + no rate limiting | **Salted `PBKDF2-HMAC-SHA256` + Constant-Time Digest + Sliding-Window Brute-Force Shield + CSRF Tokens** |
 | **Strix DAST & Prevention (`/pentest-strix`)** | *None* | **Built-in Black-Box Surface DAST Auditor (OWASP Top 10 headers, TLS cipher inspection, `.env`/`.git` exposure probes, DNS SPF/DMARC anti-spoofing, CVSS v3.1 scoring & Shift-Left Autofix snippets)** |
@@ -49,19 +72,11 @@ In **v2.0 (2026 Edition)**, SPO has been completely modernized and hardened with
 
 SPO v2.0 implements both **internal Shift-Left self-protection** and **external Offensive-Defensive DAST auditing** in [`controller/StrixSecurity.py`](controller/StrixSecurity.py):
 
-### 1. Internal Shift-Left Hardening (Protecting SPO Operator & Infrastructure)
 - **`SSRFGuard` (OWASP A10:2021)**: Validates every target domain/IP before executing outbound OSINT or DAST requests. Automatically blocks loopback (`127.0.0.0/8`, `::1`), RFC1918 internal networks (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), link-local Cloud Metadata (`169.254.169.254`), DNS Rebinding, and enforces a strict guardrail on `192.168.3.1`.
 - **`LoginRateLimiter` (OWASP A04 / A07:2021)**: Sliding-window rate limiter per client IP that automatically locks out credential-stuffing or brute-force attempts (`HTTP 429`).
 - **`CSRFShield` & `PasswdHash` (OWASP A01 / A02:2021)**: Synchronizer token validation and password verification using `hmac.compare_digest` (constant-time execution) with salted `PBKDF2-HMAC-SHA256`.
 - **`SecurityHeadersMiddleware` (OWASP A05:2021)**: Automatically injects `Content-Security-Policy` (CSP), `Strict-Transport-Security` (HSTS), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.
 - **`SecurityAuditLogger` (OWASP A09:2021)**: Real-time structured security telemetry visible directly inside the `/securityAudit` dashboard.
-
-### 2. Strix Offensive-Defensive Surface Auditor (`/securityAudit`)
-- **AppSec Posture Score (0–100, Grade `A+` to `F`)**: Evaluates target domains against OWASP Top 10 controls.
-- **TLS & Cryptographic Inspection**: Verifies TLS version (`TLSv1.3` / `TLSv1.2`), active cipher suite, issuer CA, and certificate expiration.
-- **Sensitive Artifact Exposure Probes**: Non-destructive checks for exposed `/.env`, `/.git/HEAD`, `/actuator/env`, and `/swagger.json`.
-- **DNS Email Anti-Spoofing**: Verifies `SPF` (`v=spf1`) and `DMARC` (`_dmarc`) TXT records to detect domain spoofing and phishing risks.
-- **Shift-Left Autofix Snippets**: Every finding includes a reproducible `curl`/`nslookup` PoC and ready-to-apply remediation code.
 
 ---
 
@@ -110,6 +125,7 @@ python -m pytest -v
 
 - 🌐 **Website & Portfolio**: [https://eriktonon.com](https://eriktonon.com)
 - 🛡️ **BTM Readiness & AppSec Score**: [https://score.eriktonon.com](https://score.eriktonon.com)
+- 🧠 **Ollama Hub (Granite 4.2 Uncensored)**: [https://ollama.com/eriktonon/granite4.2-uncensored](https://ollama.com/eriktonon/granite4.2-uncensored)
 - 💼 **LinkedIn**: [https://www.linkedin.com/in/eriktonon/](https://www.linkedin.com/in/eriktonon/)
 - 💻 **GitHub**: [https://github.com/eriktonon](https://github.com/eriktonon)
 - 💖 **GitHub Sponsors**: [https://github.com/sponsors/eriktonon](https://github.com/sponsors/eriktonon)

@@ -1,19 +1,43 @@
 {% extends "base.html" %}
-{% block title %}SPO — API Keys Vault{% endblock %}
-{% block header_title %}External Threat Intelligence API Keys Vault{% endblock %}
+{% block title %}SPO — API Keys & Ollama Vault{% endblock %}
+{% block header_title %}External Threat Intelligence Keys & Ollama Granite 4.2 Configuration{% endblock %}
 
 {% block content %}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
    <div class="lg:col-span-2 bg-spo-panel border border-spo-border rounded-xl p-6 space-y-5">
       <div class="flex items-center gap-2">
          <i class="material-icons text-emerald-400">vpn_key</i>
-         <h2 class="text-lg font-semibold text-white">Configure External OSINT API Keys</h2>
+         <h2 class="text-lg font-semibold text-white">Configure External OSINT API Keys & Ollama Engine</h2>
       </div>
       <p class="text-xs text-slate-400">
-         SPO v2.0 operates in <b>Zero-Key Mode</b> by default using Registro.br/IANA RDAP, BrasilAPI, ReceitaWS, crt.sh, HackerTarget, AlienVault OTX, Querido Diário, and Shodan InternetDB. Add optional API keys below to unlock deep service banner grabbing and VirusTotal v3 multi-engine reputation.
+         SPO v2.0 operates in <b>Zero-Key Mode</b> by default using Registro.br/IANA RDAP, BrasilAPI, ReceitaWS, crt.sh, HackerTarget, AlienVault OTX, Querido Diário, and Shodan InternetDB. Configure optional API keys and your local/remote <b>Ollama</b> instance (<code class="text-amber-400 font-mono">eriktonon/granite4.2-uncensored</code>) below.
       </p>
 
       <form action="{{ url_for('insertKeys') }}" method="POST" class="space-y-4">
+         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1 pb-2 border-b border-slate-800">
+            <div>
+               <label for="ollama_host" class="block text-xs font-mono uppercase text-amber-400 mb-1.5">
+                  Ollama Endpoint URL
+               </label>
+               <input name="ollama_host" id="ollama_host" type="text"
+                  value="{{ configured_keys.get('ollama_host', 'http://localhost:11434') if configured_keys else 'http://localhost:11434' }}"
+                  placeholder="http://localhost:11434"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
+            </div>
+
+            <div>
+               <label for="ollama_model" class="block text-xs font-mono uppercase text-amber-400 mb-1.5">
+                  Ollama SecOps Model Image
+               </label>
+               <input name="ollama_model" id="ollama_model" type="text"
+                  value="{{ configured_keys.get('ollama_model', 'eriktonon/granite4.2-uncensored') if configured_keys else 'eriktonon/granite4.2-uncensored' }}"
+                  placeholder="eriktonon/granite4.2-uncensored"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
+            </div>
+         </div>
+
          <div>
             <label for="shodan" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
                Shodan API Key {% if configured_keys and configured_keys.get('shodan') %}<span class="text-emerald-400">({{ configured_keys.get('shodan') }})</span>{% endif %}
@@ -40,7 +64,7 @@
 
          <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-6 rounded-lg transition flex items-center gap-2">
             <i class="material-icons text-base">save</i>
-            <span>Save Keys to SQLite Vault</span>
+            <span>Save Configuration to SQLite Vault</span>
          </button>
       </form>
    </div>
@@ -48,6 +72,10 @@
    <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
       <h3 class="font-semibold text-white text-sm font-mono uppercase text-slate-400">Provider Status Matrix</h3>
       <div class="space-y-2.5 text-xs">
+         <div class="p-3 rounded-lg bg-slate-900 border border-amber-500/30 flex items-center justify-between">
+            <span>Ollama Granite 4.2 Uncensored</span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-mono">LOCAL / OLLAMA</span>
+         </div>
          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
             <span>Registro.br & IANA RDAP</span>
             <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>

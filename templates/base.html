@@ -67,7 +67,14 @@
                <i class="material-icons text-lg text-rose-400">shield</i>
                <span>Strix DAST & Security</span>
             </span>
-            <span class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-rose-500/20 text-rose-300">NEW</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-rose-500/20 text-rose-300">STRIX</span>
+         </a>
+         <a href="{{ url_for('graniteAI') }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-amber-500/10 text-amber-400 border border-amber-500/20' if request.endpoint == 'graniteAI' else 'text-slate-300' }}">
+            <span class="flex items-center gap-3">
+               <i class="material-icons text-lg text-amber-400">psychology</i>
+               <span>Granite 4.2 SecOps AI</span>
+            </span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-amber-500/20 text-amber-300">LLM</span>
          </a>
 
          <div class="pt-4 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-slate-500">Evidence & Vault</div>
@@ -105,7 +112,7 @@
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <div class="truncate">
                <div class="text-xs font-medium text-white truncate">{{ current_user or 'Operator' }}</div>
-               <div class="text-[11px] font-mono text-slate-400">SQLite WAL Active</div>
+               <div class="text-[11px] font-mono text-slate-400">SQLite WAL + Strix Active</div>
             </div>
          </div>
          <a href="{{ url_for('exit') }}" title="Logout" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition">
@@ -121,8 +128,11 @@
          <div class="flex items-center gap-3">
             <span class="text-xs font-mono uppercase tracking-widest text-slate-400">{% block header_title %}Tactical OSINT Workspace{% endblock %}</span>
          </div>
-         <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
-            <span class="px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-emerald-400">RDAP + BrasilAPI + InternetDB + crt.sh</span>
+         <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
+            <a href="{{ url_for('graniteAI') }}" class="px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition">
+               🧠 eriktonon/granite4.2-uncensored
+            </a>
+            <span class="hidden xl:inline px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-emerald-400">RDAP + BrasilAPI + InternetDB + Strix</span>
             <a href="{{ url_for('projects') }}" class="hover:text-white flex items-center gap-1">
                <i class="material-icons text-sm">add_circle_outline</i> New Case
             </a>

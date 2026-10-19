@@ -11,6 +11,10 @@ services:
       - SPO_HOST=0.0.0.0
       - SPO_DEBUG=false
       - SPO_DB_PATH=/app/data/spo.db
+      - SPO_OLLAMA_HOST=${SPO_OLLAMA_HOST:-http://host.docker.internal:11434}
+      - SPO_OLLAMA_MODEL=${SPO_OLLAMA_MODEL:-eriktonon/granite4.2-uncensored}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - spo_data:/app/data
     restart: unless-stopped

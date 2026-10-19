@@ -219,6 +219,24 @@ class SpoDAO:
                 r["payload"] = {}
         return rows
 
+    def getScanById(self, user_id: Any, scan_id: int) -> Optional[Dict[str, Any]]:
+        uid = self._extract_user_id(user_id)
+        row = self.connection.select(
+            """
+            SELECT id_scan, id_project, scan_type, target, summary, payload_json, created_at
+            FROM scan_history
+            WHERE id_user = ? AND id_scan = ?;
+            """,
+            (uid, scan_id),
+        )
+        if not row:
+            return None
+        try:
+            row["payload"] = json.loads(row.get("payload_json") or "{}")
+        except Exception:
+            row["payload"] = {}
+        return row
+
     def getDashboardStats(self, user_id: Any) -> Dict[str, Any]:
         uid = self._extract_user_id(user_id)
         proj_count = self.connection.select(
@@ -243,6 +261,10 @@ class SpoDAO:
             "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'strix';",
             (uid,),
         )
+        granite_scans = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'granite_ai';",
+            (uid,),
+        )
         keys = self.getAllApiKeys(uid)
         return {
             "projects": int((proj_count or {}).get("cnt", 0)),
@@ -251,6 +273,8 @@ class SpoDAO:
             "server_scans": int((server_scans or {}).get("cnt", 0)),
             "personal_scans": int((personal_scans or {}).get("cnt", 0)),
             "strix_scans": int((strix_scans or {}).get("cnt", 0)),
+            "granite_scans": int((granite_scans or {}).get("cnt", 0)),
             "configured_keys": list(keys.keys()),
         }
+
 

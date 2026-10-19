@@ -15,7 +15,8 @@ __author__ = "Erik Tonon (@eriktonon)"
         Lead Architect & Maintainer: Erik Tonon (https://eriktonon.com)
 
 SPO is an open-source intelligence (OSINT) & offensive-defensive security
-reconnaissance platform powered by Strix DAST & PE-AGENTS-IBM Security.
+reconnaissance platform powered by Strix DAST, PE-AGENTS-IBM Security, and
+Ollama IBM Granite 4.2 Uncensored (eriktonon/granite4.2-uncensored).
 Licensed under GPLv2.
 """
 import os
@@ -37,6 +38,7 @@ from controller import (
     CNPJ,
     Facebook,
     Jurisprudence,
+    OllamaGranite,
     Shodan,
     StrixSecurity,
     Subdomain,
@@ -55,7 +57,7 @@ spo.config.update(
     MAX_CONTENT_LENGTH=2 * 1024 * 1024,
 )
 
-# Controllers, Security Guards & DAO instances
+# Controllers, Security Guards, AI Engine & DAO instances
 dao = spoDAO.SpoDAO()
 whois_ctrl = Whois.Whois()
 cnpj_ctrl = CNPJ.CNPJ()
@@ -65,6 +67,7 @@ facebook_ctrl = Facebook.Facebook()
 shodan_ctrl = Shodan.Shodan()
 vt_ctrl = VirusTotal.VirusTotal()
 strix_auditor = StrixSecurity.StrixSecurityAuditor()
+granite_ai = OllamaGranite.OllamaGraniteEngine()
 rate_limiter = StrixSecurity.LoginRateLimiter(max_attempts=5, window_seconds=300, lockout_seconds=300)
 
 
@@ -114,6 +117,7 @@ def health():
         "version": "2.0.0",
         "maintainer": "Erik Tonon (@eriktonon)",
         "security_engine": "PE-AGENTS-IBM Strix Shift-Left Active",
+        "ai_model": OllamaGranite.OllamaGraniteEngine.DEFAULT_MODEL,
     }), 200
 
 
@@ -185,7 +189,6 @@ def wellcome():
 
 @spo.route("/firstLogin", methods=["GET", "POST"])
 def firstLogin():
-    # Allow registration on first access OR when an authenticated admin registers an operator
     if not dao.testFirstAccess() and not session.get("isAuthenticated"):
         return redirect(url_for("login"))
 
@@ -461,6 +464,77 @@ def securityAudit():
     )
 
 
+@spo.route("/graniteAI", methods=["GET", "POST"])
+@login_required
+def graniteAI():
+    uid = session.get("id")
+    host_row = dao.getApiKey(uid, "ollama_host")
+    model_row = dao.getApiKey(uid, "ollama_model")
+    custom_host = host_row["key_value"] if host_row else None
+    custom_model = model_row["key_value"] if model_row else None
+
+    ollama_status = granite_ai.check_status(override_host=custom_host, override_model=custom_model)
+    recent_scans = dao.getRecentScans(uid, limit=20)
+    ai_result = None
+    prompt_input = ""
+    selected_mode = "osint_correlation"
+    selected_scan_id = None
+    selected_project_id = None
+
+    if request.method == "POST":
+        prompt_input = (request.form.get("prompt") or "").strip()
+        selected_mode = (request.form.get("mode") or "osint_correlation").strip()
+        raw_scan_id = request.form.get("scan_id")
+        raw_project_id = request.form.get("project_id")
+
+        if raw_project_id and str(raw_project_id).isdigit():
+            selected_project_id = int(raw_project_id)
+
+        attached_payload = None
+        target_label = "Granite 4.2 Tactical Brief"
+        if raw_scan_id and str(raw_scan_id).isdigit():
+            selected_scan_id = int(raw_scan_id)
+            scan_row = dao.getScanById(uid, selected_scan_id)
+            if scan_row:
+                attached_payload = {
+                    "scan_id": scan_row["id_scan"],
+                    "scan_type": scan_row["scan_type"],
+                    "target": scan_row["target"],
+                    "summary": scan_row["summary"],
+                    "data": scan_row.get("payload", {}),
+                }
+                target_label = f"AI Correlation: {scan_row['target']}"
+
+        ai_result = granite_ai.analyze(
+            prompt=prompt_input,
+            mode=selected_mode,
+            context_payload=attached_payload,
+            override_host=custom_host,
+            override_model=custom_model,
+        )
+
+        dao.saveScanResult(
+            uid,
+            scan_type="granite_ai",
+            target=target_label,
+            summary=f"Model: {ai_result['model']} ({selected_mode}) • {'LIVE' if ai_result['live_ollama'] else 'OFFLINE BRIEF'}",
+            payload=ai_result,
+            project_id=selected_project_id,
+        )
+
+    return render_template(
+        "graniteAI.html",
+        ollama_status=ollama_status,
+        model_meta=OllamaGranite.OllamaGraniteEngine.get_model_metadata(),
+        recent_scans=recent_scans,
+        ai_result=ai_result,
+        prompt_input=prompt_input,
+        selected_mode=selected_mode,
+        selected_scan_id=selected_scan_id,
+        selected_project_id=selected_project_id,
+    )
+
+
 @spo.route("/projects", methods=["GET", "POST"])
 @login_required
 def projects():
@@ -516,6 +590,8 @@ def insertKeys():
         shodan_key = (request.form.get("shodan") or "").strip()
         vt_key = (request.form.get("virustotal") or "").strip()
         gh_key = (request.form.get("github") or "").strip()
+        ollama_host = (request.form.get("ollama_host") or "").strip()
+        ollama_model = (request.form.get("ollama_model") or "").strip()
 
         updated_any = False
         if shodan_key:
@@ -530,15 +606,26 @@ def insertKeys():
             if dao.upsertApiKey(uid, "github", gh_key):
                 flash("GitHub Personal Access Token saved successfully.", "success")
                 updated_any = True
+        if ollama_host:
+            sanitized_host = OllamaGranite.OllamaGraniteEngine.sanitize_host(ollama_host)
+            if dao.upsertApiKey(uid, "ollama_host", sanitized_host):
+                flash(f"Ollama Endpoint saved: {sanitized_host}", "success")
+                updated_any = True
+        if ollama_model:
+            if dao.upsertApiKey(uid, "ollama_model", ollama_model):
+                flash(f"Ollama Model saved: {ollama_model}", "success")
+                updated_any = True
 
         if not updated_any:
-            flash("No valid API key was provided.", "warning")
+            flash("No valid API key or Ollama configuration was provided.", "warning")
         return redirect(url_for("insertKeys"))
 
     keys = dao.getAllApiKeys(uid)
     masked_keys = {}
     for k, v in keys.items():
-        if len(v) > 8:
+        if k in ("ollama_host", "ollama_model"):
+            masked_keys[k] = v
+        elif len(v) > 8:
             masked_keys[k] = f"{v[:4]}{'*' * (len(v) - 8)}{v[-4:]}"
         else:
             masked_keys[k] = "****"

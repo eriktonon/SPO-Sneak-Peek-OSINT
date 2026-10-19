@@ -195,13 +195,14 @@ def test_flask_routes_security_headers_and_author_wallets(temp_db, monkeypatch):
         assert res.status_code == 302
         assert "/dashboard" in res.headers["Location"]
 
-        # Access protected routes including /securityAudit
+        # Access protected routes including /securityAudit and /graniteAI
         for route in (
             "/dashboard",
             "/companyInvestigation",
             "/searchServers",
             "/personalInvestigation",
             "/securityAudit",
+            "/graniteAI",
             "/projects",
             "/insertKeys",
             "/aboutOSINT",
@@ -218,7 +219,21 @@ def test_flask_routes_security_headers_and_author_wallets(temp_db, monkeypatch):
         assert "0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92" in about_html
         assert "3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq" in about_html
 
+        # Verify Granite 4.2 Uncensored page & analysis execution
+        granite_html = client.get("/graniteAI").data.decode("utf-8")
+        assert "eriktonon/granite4.2-uncensored" in granite_html
+        ai_post = client.post(
+            "/graniteAI",
+            data={
+                "mode": "osint_correlation",
+                "prompt": "Analyze subdomain exposure and open ports for example.com",
+            },
+        )
+        assert ai_post.status_code == 200
+        assert b"eriktonon/granite4.2-uncensored" in ai_post.data
+
         # Verify SSRFGuard blocks 192.168.3.1 on /securityAudit
         ssrf_res = client.post("/securityAudit", data={"target": "192.168.3.1"})
         assert ssrf_res.status_code == 200
         assert b"192.168.3.1" in ssrf_res.data
+
