@@ -195,12 +195,13 @@ def test_flask_routes_security_headers_and_author_wallets(temp_db, monkeypatch):
         assert res.status_code == 302
         assert "/dashboard" in res.headers["Location"]
 
-        # Access protected routes including /securityAudit and /graniteAI
+        # Access protected routes including /personalTrace, /securityAudit and /graniteAI
         for route in (
             "/dashboard",
             "/companyInvestigation",
             "/searchServers",
             "/personalInvestigation",
+            "/personalTrace",
             "/securityAudit",
             "/graniteAI",
             "/projects",
@@ -211,6 +212,11 @@ def test_flask_routes_security_headers_and_author_wallets(temp_db, monkeypatch):
         ):
             r = client.get(route)
             assert r.status_code == 200, f"Route {route} failed with {r.status_code}"
+
+        # Verify /personalTrace renders all 73 social & dating platforms (Tinder, Badoo, OnlyFans, Instagram, TikTok, Telegram)
+        trace_html = client.get("/personalTrace").data.decode("utf-8")
+        for expected_platform in ("Tinder", "Badoo", "OkCupid", "Bumble", "Happn", "OnlyFans", "Instagram", "TikTok", "Telegram"):
+            assert expected_platform in trace_html
 
         # Verify Erik Tonon profile & crypto wallets on /about
         about_html = client.get("/about").data.decode("utf-8")

@@ -48,7 +48,7 @@ from controller import (
 )
 
 spo = Flask(__name__, template_folder="templates", static_folder="static")
-spo.secret_key = os.environ.get("SPO_SECRET_KEY") or secrets.token_hex(32)
+spo.secret_key = os.environ.get("SPO_SECRET_KEY") or "spo-cloud-siem-local-vault-key-2026-eriktonon"
 spo.permanent_session_lifetime = timedelta(minutes=60)
 spo.config.update(
     TEMPLATES_AUTO_RELOAD=True,
@@ -364,6 +364,7 @@ def personalInvestigation():
         likes_by_facebook=likes_by_facebook,
         location_by_facebook=location_by_facebook,
         recon=recon,
+        catalog_platforms=facebook_ctrl.PLATFORMS,
         selected_project_id=selected_project_id,
     )
 

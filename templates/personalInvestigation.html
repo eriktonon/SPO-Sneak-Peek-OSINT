@@ -1,50 +1,154 @@
 {% extends "base.html" %}
-{% block title %}SPO — Personal &amp; Social OSINT // Datadog Cloud SIEM{% endblock %}
-{% block header_title %}01.4 // PERSONAL, USERNAME, EMAIL &amp; SOCIAL MEDIA RECONNAISSANCE{% endblock %}
+{% block title %}SPO Cloud SIEM — Identity, Dating &amp; Social Networks OSINT (73+ Platforms){% endblock %}
+{% block breadcrumb %}OSINT EXPLORERS // IDENTITY, DATING (TINDER/BADOO) &amp; 73+ SOCIAL NETWORKS (SOCMINT){% endblock %}
 
 {% block content %}
-<section class="cds-panel" style="border-left:4px solid var(--cds-primary);" aria-labelledby="personal-h1">
+<!-- ======================================================================
+     ROW 1: DATADOG SOCMINT TELEMETRY MONITORS (4 WIDGETS + SPARKLINES)
+     ====================================================================== -->
+<section class="cds-grid-4 mb-4" aria-label="SOCMINT Telemetry Monitors">
+  <article class="cds-tile cds-accent-purple">
+    <div class="cds-kpi-label">
+      <span>SOCMINT // PLATFORMS INDEXED</span>
+      <span class="cds-tag cds-tag-purple">8 CATEGORIES</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value">{{ (recon.total_platforms if recon else (catalog_platforms|length)) }}</div>
+      <span class="mono text-xs text-blue">24-thread concurrent</span>
+    </div>
+    <div class="dd-spark-bars" aria-hidden="true">
+      <span style="height:68%"></span><span style="height:74%"></span><span style="height:80%"></span><span style="height:76%"></span>
+      <span style="height:85%"></span><span style="height:88%"></span><span style="height:84%"></span><span style="height:92%"></span>
+      <span style="height:90%"></span><span style="height:94%"></span><span style="height:89%"></span><span style="height:98%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">Dating &bull; Social &bull; Creator &bull; Gaming &bull; SecOps</div>
+  </article>
+
+  <article class="cds-tile cds-accent-green">
+    <div class="cds-kpi-label">
+      <span>VERIFIED // MATCHED PROFILES</span>
+      <span class="cds-tag cds-tag-green">{% if recon %}ACTIVE SCAN{% else %}READY{% endif %}</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value text-success">{{ recon.found_count if recon else 0 }}</div>
+      <span class="mono text-xs text-secondary">{% if recon %}@{{ recon.username }}{% else %}awaiting handle{% endif %}</span>
+    </div>
+    <div class="dd-spark-bars ok" aria-hidden="true">
+      <span style="height:55%"></span><span style="height:64%"></span><span style="height:72%"></span><span style="height:68%"></span>
+      <span style="height:80%"></span><span style="height:86%"></span><span style="height:82%"></span><span style="height:90%"></span>
+      <span style="height:88%"></span><span style="height:95%"></span><span style="height:92%"></span><span style="height:100%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">API JSON + HTTP 200 + OSINT Dork Pivots</div>
+  </article>
+
+  <article class="cds-tile cds-accent-red">
+    <div class="cds-kpi-label">
+      <span>DATING &amp; CREATOR SURFACE</span>
+      <span class="cds-tag cds-tag-red">14 NETWORKS</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value" style="font-size:21px;">Tinder &bull; Badoo</div>
+      <span class="mono text-xs text-danger">+OnlyFans / Privacy</span>
+    </div>
+    <div class="dd-spark-bars alert" aria-hidden="true">
+      <span style="height:70%"></span><span style="height:75%"></span><span style="height:72%"></span><span style="height:84%"></span>
+      <span style="height:80%"></span><span style="height:88%"></span><span style="height:86%"></span><span style="height:92%"></span>
+      <span style="height:90%"></span><span style="height:94%"></span><span style="height:91%"></span><span style="height:96%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">Tinder, Badoo, OkCupid, POF, Bumble, Happn, OnlyFans</div>
+  </article>
+
+  <article class="cds-tile cds-accent-blue">
+    <div class="cds-kpi-label">
+      <span>DEEP ATTRIBUTION // COMMITS</span>
+      <span class="cds-tag cds-tag-blue">GITHUB + GRAVATAR</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value" style="color:var(--dd-apm-text);">
+        {{ (recon.github.commit_emails|length) if (recon and recon.github and recon.github.commit_emails) else 0 }}<span style="font-size:14px;color:var(--dd-text-muted);"> emails</span>
+      </div>
+      <span class="mono text-xs text-secondary">{{ recon.github.public_repos if (recon and recon.github) else 0 }} repos</span>
+    </div>
+    <div class="dd-spark-bars apm" aria-hidden="true">
+      <span style="height:60%"></span><span style="height:68%"></span><span style="height:75%"></span><span style="height:72%"></span>
+      <span style="height:82%"></span><span style="height:85%"></span><span style="height:80%"></span><span style="height:88%"></span>
+      <span style="height:90%"></span><span style="height:92%"></span><span style="height:89%"></span><span style="height:95%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">Git Push Commit Emails + SHA-256 Gravatar</div>
+  </article>
+</section>
+
+<!-- ======================================================================
+     ROW 2: HANDLE & EMAIL RECONNAISSANCE TASKING BAR
+     ====================================================================== -->
+<section class="cds-panel cds-accent-purple mb-4" aria-labelledby="personal-h1">
   <div class="cds-panel-header">
     <div class="cds-panel-header-title">
-      <i data-lucide="user-search" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
-      <span>MOD-03 // PERSONAL &amp; SOCMINT ENGINE</span>
+      <i data-lucide="user-search" style="width:15px;height:15px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+      <span>SOCMINT &amp; DATING RECONNAISSANCE ENGINE // /personalTrace</span>
     </div>
-    <span class="cds-tag cds-tag-blue">10+ PLATFORMS + GITHUB COMMITS + GRAVATAR</span>
+    <div class="flex items-center gap-2">
+      <span class="cds-tag cds-tag-purple">TINDER &bull; INSTAGRAM &bull; TIKTOK &bull; TELEGRAM &bull; ONLYFANS &bull; GITHUB</span>
+    </div>
   </div>
 
   <div class="cds-panel-body">
-    <div>
-      <h1 id="personal-h1" class="cds-page-h1"><strong>Personal &amp; Social Media</strong> OSINT Engine</h1>
-      <p class="cds-lead" style="margin-top:6px;">
-        Investigate a username/handle (e.g. <code class="mono">eriktonon</code>, <code class="mono">torvalds</code>) and/or email address across 10 developer and social platforms, extract public GitHub push commit emails, verify SHA-256 Gravatar profiles, and launch targeted social dorks.
-      </p>
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <div>
+        <h1 id="personal-h1" class="cds-page-h1"><strong>Personal, Dating &amp; Social Media</strong> OSINT Explorer</h1>
+        <p class="text-sm text-secondary mt-1">
+          Enumerate any handle or email across <strong>{{ catalog_platforms|length }} platforms</strong> spanning <strong>Dating Apps (Tinder, Badoo, OkCupid, POF, Bumble, Happn)</strong>, <strong>Social Media (Instagram, TikTok, X, Threads, Facebook, Snapchat, Bluesky)</strong>, <strong>Creator/Adult (OnlyFans, Privacy.com.br, Fansly, Patreon, Linktree)</strong>, <strong>Telegram</strong>, <strong>Gaming (Steam, Chess.com, Lichess, Roblox)</strong>, and <strong>Dev/SecOps</strong>.
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="mono text-xs text-secondary">Quick Presets:</span>
+        <button type="button" class="cds-btn cds-btn-ghost mono" data-fill-handle="eriktonon">@eriktonon</button>
+        <button type="button" class="cds-btn cds-btn-ghost mono" data-fill-handle="torvalds">@torvalds</button>
+      </div>
     </div>
 
-    <form action="{{ url_for('personalInvestigation') }}" method="POST" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:end;padding-top:6px;">
-      <div class="cds-field-group">
-        <label for="profile_facebook" class="cds-label">Username / Social Handle</label>
-        <input name="profile_facebook" id="profile_facebook" type="text" value="{{ recon.username if recon else '' }}" placeholder="eriktonon" required class="cds-input" />
+    <form id="socmint-form" action="{{ url_for('personalInvestigation') }}" method="POST" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;align-items:end;margin-top:4px;">
+      <div class="cds-form-group">
+        <label for="profile_facebook" class="cds-label">01 // USERNAME / SOCIAL HANDLE</label>
+        <input
+          name="profile_facebook"
+          id="profile_facebook"
+          type="text"
+          autocomplete="off"
+          value="{{ recon.username if recon else '' }}"
+          placeholder="eriktonon"
+          required
+          class="cds-input"
+        />
       </div>
 
-      <div class="cds-field-group">
-        <label for="personal-email" class="cds-label">Target Email (Optional)</label>
-        <input name="email" id="personal-email" type="email" value="{{ recon.email if recon else '' }}" placeholder="operator@domain.com" class="cds-input" />
+      <div class="cds-form-group">
+        <label for="personal-email" class="cds-label">02 // TARGET EMAIL (OPTIONAL)</label>
+        <input
+          name="email"
+          id="personal-email"
+          type="email"
+          autocomplete="off"
+          value="{{ recon.email if recon else '' }}"
+          placeholder="operator@domain.com"
+          class="cds-input"
+        />
       </div>
 
-      <div class="cds-field-group">
-        <label for="personal-project-id" class="cds-label">Attach to Investigation Case</label>
+      <div class="cds-form-group">
+        <label for="personal-project-id" class="cds-label">03 // INCIDENT CASE</label>
         <select name="project_id" id="personal-project-id" class="cds-select">
-          <option value="">-- Unassigned --</option>
-          {% for p in user_projects %}
+          <option value="">-- Standalone Recon --</option>
+          {% for p in (user_projects or []) %}
             <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
           {% endfor %}
         </select>
       </div>
 
       <div>
-        <button type="submit" class="cds-btn cds-btn-primary" style="width:100%;">
-          <span>Run Personal Recon</span>
-          <i data-lucide="search" style="width:16px;height:16px;" aria-hidden="true"></i>
+        <button type="submit" class="cds-btn cds-btn-primary w-full">
+          <i data-lucide="radar" style="width:15px;height:15px;" aria-hidden="true"></i>
+          <span>Scan {{ catalog_platforms|length }} Social &amp; Dating Networks</span>
         </button>
       </div>
     </form>
@@ -52,137 +156,311 @@
 </section>
 
 {% if recon %}
-<section class="cds-grid-3" aria-label="Personal Identity, Platform Presence, and Social Pivots">
-  <!-- Cell 1: Identity Profile -->
-  <div class="cds-panel" style="border:none;">
-    <div class="cds-panel-header">
-      <div class="cds-panel-header-title">
-        <i data-lucide="user-check" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
-        <h2>IDENTITY PROFILE ATTRIBUTION</h2>
-      </div>
-      <span class="cds-tag cds-tag-blue">@{{ recon.username }}</span>
-    </div>
-
-    <div class="cds-panel-body">
-      <div style="display:flex;align-items:center;gap:16px;">
-        {% if recon.avatar_url %}
-          <img src="{{ recon.avatar_url }}" alt="Profile avatar for {{ recon.username }}" style="width:64px;height:64px;object-fit:cover;border:1px solid var(--cds-border);" />
-        {% else %}
-          <div style="width:64px;height:64px;background-color:var(--cds-layer-02);border:1px solid var(--cds-border);display:flex;align-items:center;justify-content:center;">
-            <i data-lucide="user" style="width:28px;height:28px;color:var(--cds-link);" aria-hidden="true"></i>
-          </div>
-        {% endif %}
-        <div>
-          <div style="font-size:18px;font-weight:600;">{{ recon.github.name or recon.gravatar.display_name or recon.username }}</div>
-          <div class="mono" style="font-size:12px;color:var(--cds-link);">{{ recon.found_count }} / {{ recon.platforms|length }} PLATFORMS VERIFIED</div>
-        </div>
+<!-- ======================================================================
+     ROW 3 (ACTIVE SCAN): IDENTITY ATTRIBUTION (4 COLS) + 73-PLATFORM TABLE (8 COLS)
+     ====================================================================== -->
+<section class="cds-grid-12" aria-label="Identity Attribution and 73-Platform Presence Explorer">
+  <!-- Left 4 Columns: Identity Card + Commit Emails + Deep Dating/Social Dorks -->
+  <div class="cds-col-4 flex-col gap-3">
+    <div class="cds-panel cds-accent-green">
+      <div class="cds-panel-header">
+        <span class="cds-panel-header-title">
+          <i data-lucide="user-check" style="width:14px;height:14px;color:var(--dd-ok);" aria-hidden="true"></i>
+          <span>IDENTITY ATTRIBUTION</span>
+        </span>
+        <span class="cds-tag cds-tag-green">@{{ recon.username }}</span>
       </div>
 
-      {% if recon.github.found %}
-        <div class="cds-kv-list">
-          <div class="cds-kv-item" style="grid-column:span 2;">
-            <div class="cds-kv-dt">GitHub Bio</div>
-            <div class="cds-kv-dd" style="font-size:12.5px;">{{ recon.github.bio or 'No public bio provided.' }}</div>
-          </div>
-          <div class="cds-kv-item">
-            <div class="cds-kv-dt">Organization</div>
-            <div class="cds-kv-dd">{{ recon.github.company or 'N/A' }}</div>
-          </div>
-          <div class="cds-kv-item">
-            <div class="cds-kv-dt">Location</div>
-            <div class="cds-kv-dd">{{ recon.github.location or 'N/A' }}</div>
-          </div>
-          <div class="cds-kv-item">
-            <div class="cds-kv-dt">Public Repos</div>
-            <div class="cds-kv-dd mono">{{ recon.github.public_repos }}</div>
-          </div>
-          <div class="cds-kv-item">
-            <div class="cds-kv-dt">Followers</div>
-            <div class="cds-kv-dd mono">{{ recon.github.followers }}</div>
-          </div>
-        </div>
-
-        {% if recon.github.commit_emails %}
-          <div>
-            <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);margin-bottom:6px;">Extracted Git Commit Author Emails</div>
-            <div class="cds-terminal">{% for em in recon.github.commit_emails %}{{ em }}
-{% endfor %}</div>
-          </div>
-        {% endif %}
-      {% endif %}
-    </div>
-  </div>
-
-  <!-- Cell 2: Multi-Platform Enumeration Table -->
-  <div class="cds-panel" style="border:none;">
-    <div class="cds-panel-header">
-      <div class="cds-panel-header-title">
-        <i data-lucide="network" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
-        <h2>PLATFORM PRESENCE ({{ recon.found_count }} FOUND)</h2>
-      </div>
-    </div>
-
-    <div class="cds-table-wrap" style="max-height:420px;overflow-y:auto;">
-      <table class="cds-table">
-        <thead>
-          <tr>
-            <th>Platform</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in recon.platforms %}
-            <tr>
-              <td>
-                <div style="font-weight:600;">{{ p.platform }}</div>
-                <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);">{{ p.details if p.exists else 'HTTP 404' }}</div>
-              </td>
-              <td>
-                <span class="cds-tag {{ 'cds-tag-green' if p.exists else 'cds-tag-outline' }}">
-                  {{ 'FOUND' if p.exists else 'ABSENT' }}
-                </span>
-              </td>
-              <td>
-                {% if p.exists %}
-                  <a href="{{ p.url }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost cds-btn-sm">
-                    <span>OPEN</span>
-                    <i data-lucide="external-link" style="width:12px;height:12px;" aria-hidden="true"></i>
-                  </a>
-                {% else %}
-                  <span class="mono" style="font-size:11px;color:var(--cds-text-muted);">&mdash;</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Cell 3: Social & Public Record Pivots -->
-  <div class="cds-panel" style="border:none;">
-    <div class="cds-panel-header">
-      <div class="cds-panel-header-title">
-        <i data-lucide="compass" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
-        <h2>SOCIAL &amp; PUBLIC RECORD DORK PIVOTS</h2>
-      </div>
-    </div>
-
-    <div class="cds-panel-body">
-      <div style="display:flex;flex-direction:column;gap:1px;background-color:var(--cds-border);border:1px solid var(--cds-border);">
-        {% for label, dork_url in recon.social_dorks.items() %}
-          <a href="{{ dork_url }}" target="_blank" rel="noopener noreferrer" class="cds-tile-interactive" style="padding:14px 16px;gap:4px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:var(--cds-link);">
-              <span>{{ label }}</span>
-              <i data-lucide="external-link" style="width:14px;height:14px;" aria-hidden="true"></i>
+      <div class="cds-panel-body">
+        <div class="flex items-center gap-3">
+          {% if recon.avatar_url %}
+            <img src="{{ recon.avatar_url }}" alt="Avatar for {{ recon.username }}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid var(--dd-purple);" />
+          {% else %}
+            <div style="width:60px;height:60px;border-radius:8px;background:var(--dd-purple-soft);border:1px solid var(--dd-purple-border);display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="user" style="width:26px;height:26px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
             </div>
-            <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ dork_url }}</div>
+          {% endif %}
+          <div>
+            <div class="font-bold" style="font-size:16px;">{{ recon.github.name or recon.gravatar.display_name or recon.username }}</div>
+            <div class="mono text-xs text-success mt-1">{{ recon.found_count }} / {{ recon.platforms|length }} PLATFORMS VERIFIED</div>
+            {% if recon.email %}
+              <div class="mono text-xs text-secondary">{{ recon.email }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if recon.github.found %}
+          <div class="cds-grid-2 mt-2">
+            <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+              <span class="cds-kpi-label">ORG / COMPANY</span>
+              <span class="mono text-xs mt-1">{{ recon.github.company or 'Independent' }}</span>
+            </div>
+            <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+              <span class="cds-kpi-label">LOCATION</span>
+              <span class="mono text-xs mt-1">{{ recon.github.location or 'Global' }}</span>
+            </div>
+            <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+              <span class="cds-kpi-label">PUBLIC REPOS</span>
+              <span class="mono text-xs font-bold mt-1">{{ recon.github.public_repos }}</span>
+            </div>
+            <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+              <span class="cds-kpi-label">FOLLOWERS</span>
+              <span class="mono text-xs font-bold mt-1">{{ recon.github.followers }}</span>
+            </div>
+          </div>
+
+          {% if recon.github.bio %}
+            <div class="text-xs text-secondary mt-1" style="padding:8px 10px;background:var(--dd-bg-surface-alt);border-radius:6px;border:1px solid var(--dd-border-subtle);">
+              {{ recon.github.bio }}
+            </div>
+          {% endif %}
+
+          {% if recon.github.commit_emails %}
+            <div class="mt-1">
+              <div class="flex items-center justify-between mb-2">
+                <span class="cds-label">EXTRACTED COMMIT AUTHOR EMAILS</span>
+                <button type="button" class="cds-btn cds-btn-ghost mono" data-copy-text="{{ recon.github.commit_emails|join(', ') }}">
+                  <span data-copy-label>Copy Emails</span>
+                </button>
+              </div>
+              <div class="cds-terminal" style="padding:10px;font-size:11.5px;">{% for em in recon.github.commit_emails %}{{ em }}
+{% endfor %}</div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Deep Dating, Social & Legal OSINT Dork Pivots -->
+    <div class="cds-panel cds-accent-amber">
+      <div class="cds-panel-header">
+        <span class="cds-panel-header-title">
+          <i data-lucide="flame" style="width:14px;height:14px;color:var(--dd-warn);" aria-hidden="true"></i>
+          <span>DATING, SOCIAL &amp; LEGAL DORK PIVOTS</span>
+        </span>
+        <span class="cds-tag cds-tag-amber">{{ recon.social_dorks|length }} PIVOTS</span>
+      </div>
+      <div class="cds-panel-body" style="gap:6px;max-height:480px;overflow-y:auto;">
+        {% for label, dork_url in recon.social_dorks.items() %}
+          <a href="{{ dork_url }}" target="_blank" rel="noopener noreferrer" class="cds-tile" style="padding:9px 11px;text-decoration:none;background:var(--dd-bg-surface-alt);">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-xs" style="color:var(--dd-purple-bright);">{{ label }}</span>
+              <i data-lucide="external-link" style="width:12px;height:12px;color:var(--dd-text-muted);" aria-hidden="true"></i>
+            </div>
+            <div class="mono text-helper" style="font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">{{ dork_url }}</div>
           </a>
         {% endfor %}
       </div>
     </div>
   </div>
+
+  <!-- Right 8 Columns: 73-Platform Interactive SOCMINT Explorer Table -->
+  <div class="cds-panel cds-col-8 cds-accent-purple">
+    <div class="cds-panel-header" style="flex-wrap:wrap;gap:8px;">
+      <div class="flex items-center gap-2">
+        <i data-lucide="network" style="width:15px;height:15px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+        <h2 class="cds-panel-header-title">SOCIAL, DATING &amp; PLATFORM PRESENCE ({{ recon.found_count }} VERIFIED / {{ recon.platforms|length }} PROBED)</h2>
+      </div>
+      <div style="width:260px;">
+        <label for="socmint-table-filter" class="skip-link">Filter platforms</label>
+        <input
+          id="socmint-table-filter"
+          type="text"
+          autocomplete="off"
+          class="cds-input"
+          style="min-height:28px;padding:4px 9px;font-size:11.5px;"
+          placeholder="Filter Tinder, Instagram, Telegram..."
+          data-filter-input="#socmint-results-table"
+        />
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div style="padding:8px 14px;border-bottom:1px solid var(--dd-border-subtle);background:var(--dd-bg-surface-alt);" class="flex items-center gap-1 flex-wrap" role="group" aria-label="Filter by Social Category">
+      <button type="button" class="dd-time-btn active" data-cat-filter="ALL">All ({{ recon.platforms|length }})</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="VERIFIED">Verified ({{ recon.found_count }})</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Dating & Apps">Dating &amp; Tinder</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Social Media">Social Media</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Messaging & Forums">Messaging &amp; Telegram</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Video & Streaming">Video &amp; Streaming</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Creator & Links">Creator &amp; OnlyFans</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Gaming & Esports">Gaming</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Professional">Professional</button>
+      <button type="button" class="dd-time-btn" data-cat-filter="Dev, SecOps & Web3">Dev &amp; Web3</button>
+    </div>
+
+    <div class="cds-table-wrap" style="border:none;border-radius:0;max-height:760px;overflow-y:auto;">
+      <table id="socmint-results-table" class="cds-table">
+        <thead>
+          <tr>
+            <th>STATUS</th>
+            <th>PLATFORM</th>
+            <th>CATEGORY</th>
+            <th>TELEMETRY / METADATA</th>
+            <th>ACTIONS (DIRECT + DORK)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in recon.platforms %}
+          <tr data-row-category="{{ p.category }}" data-row-verified="{{ '1' if p.exists else '0' }}">
+            <td>
+              {% if p.exists %}
+                <span class="cds-tag cds-tag-green">VERIFIED</span>
+              {% elif 'WAF' in p.status_label or 'DORK' in p.status_label or 'AUTH' in p.status_label %}
+                <span class="cds-tag cds-tag-amber">{{ p.status_label }}</span>
+              {% else %}
+                <span class="cds-tag cds-tag-gray">ABSENT</span>
+              {% endif %}
+            </td>
+            <td class="font-bold">{{ p.platform }}</td>
+            <td>
+              <span class="cds-tag {% if p.category == 'Dating & Apps' %}cds-tag-red{% elif p.category == 'Social Media' %}cds-tag-purple{% elif p.category == 'Creator & Links' %}cds-tag-amber{% elif p.category == 'Dev, SecOps & Web3' %}cds-tag-blue{% else %}cds-tag-gray{% endif %}">
+                {{ p.category }}
+              </span>
+            </td>
+            <td class="mono text-xs text-secondary">{{ p.details }}</td>
+            <td>
+              <div class="flex items-center gap-1">
+                <a href="{{ p.url }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost" title="Open Direct Profile URL">
+                  <span>Profile</span>
+                  <i data-lucide="external-link" style="width:11px;height:11px;" aria-hidden="true"></i>
+                </a>
+                <a href="{{ p.dork_url }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost" title="Launch Google Site Dork for {{ p.platform }}">
+                  <span>Dork</span>
+                  <i data-lucide="search" style="width:11px;height:11px;" aria-hidden="true"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{% else %}
+<!-- ======================================================================
+     ROW 3 (DEFAULT CATALOG VIEW BEFORE SCAN): ALL 73 SOCIAL & DATING PLATFORMS
+     ====================================================================== -->
+<section class="cds-panel cds-accent-blue" aria-labelledby="catalog-heading">
+  <div class="cds-panel-header" style="flex-wrap:wrap;gap:8px;">
+    <div class="flex items-center gap-2">
+      <i data-lucide="layers" style="width:15px;height:15px;color:var(--dd-apm);" aria-hidden="true"></i>
+      <h2 id="catalog-heading" class="cds-panel-header-title">INDEXED SOCMINT &amp; DATING PLATFORM CATALOG ({{ catalog_platforms|length }} NETWORKS READY)</h2>
+    </div>
+    <div style="width:280px;">
+      <label for="catalog-filter" class="skip-link">Filter platform catalog</label>
+      <input
+        id="catalog-filter"
+        type="text"
+        autocomplete="off"
+        class="cds-input"
+        style="min-height:28px;padding:4px 9px;font-size:11.5px;"
+        placeholder="Filter Tinder, Badoo, Instagram, OnlyFans..."
+        data-filter-input="#socmint-catalog-table"
+      />
+    </div>
+  </div>
+
+  <!-- Category Filter Tabs -->
+  <div style="padding:8px 14px;border-bottom:1px solid var(--dd-border-subtle);background:var(--dd-bg-surface-alt);" class="flex items-center gap-1 flex-wrap" role="group" aria-label="Filter Catalog by Category">
+    <button type="button" class="dd-time-btn active" data-cat-filter="ALL">All ({{ catalog_platforms|length }})</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Dating & Apps">Dating (Tinder / Badoo / OkCupid / Bumble)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Social Media">Social Media (Instagram / TikTok / X / Threads)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Messaging & Forums">Messaging (Telegram / Reddit / Quora)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Video & Streaming">Streaming (YouTube / Twitch / Kick / Spotify)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Creator & Links">Creator &amp; Adult (OnlyFans / Privacy / Patreon)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Gaming & Esports">Gaming (Steam / Chess.com / Lichess / Roblox)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Professional">Professional (LinkedIn / Behance / 99Freelas)</button>
+    <button type="button" class="dd-time-btn" data-cat-filter="Dev, SecOps & Web3">Dev, SecOps &amp; Web3</button>
+  </div>
+
+  <div class="cds-table-wrap" style="border:none;border-radius:0;max-height:560px;overflow-y:auto;">
+    <table id="socmint-catalog-table" class="cds-table">
+      <thead>
+        <tr>
+          <th>PLATFORM</th>
+          <th>CATEGORY</th>
+          <th>PROFILE URL PATTERN</th>
+          <th>PROBE ENGINE</th>
+          <th>QUICK DORK PIVOT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in catalog_platforms %}
+        <tr data-row-category="{{ p.category }}" data-row-verified="1">
+          <td class="font-bold">{{ p.name }}</td>
+          <td>
+            <span class="cds-tag {% if p.category == 'Dating & Apps' %}cds-tag-red{% elif p.category == 'Social Media' %}cds-tag-purple{% elif p.category == 'Creator & Links' %}cds-tag-amber{% elif p.category == 'Dev, SecOps & Web3' %}cds-tag-blue{% else %}cds-tag-gray{% endif %}">
+              {{ p.category }}
+            </span>
+          </td>
+          <td class="mono text-xs text-secondary">{{ p.url }}</td>
+          <td>
+            {% if p.api %}
+              <span class="cds-tag cds-tag-green">JSON API + HTTP</span>
+            {% elif p.pivot_only %}
+              <span class="cds-tag cds-tag-amber">SEARCH DORK PIVOT</span>
+            {% else %}
+              <span class="cds-tag cds-tag-blue">HTTP 200 + SIGNATURE</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="https://www.google.com/search?q=site:{{ p.dork_domain }}+%22eriktonon%22" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost mono">
+              <span>site:{{ p.dork_domain }}</span>
+              <i data-lucide="external-link" style="width:11px;height:11px;" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    // 1. Quick Preset Handle Buttons (@eriktonon, @torvalds)
+    document.querySelectorAll('[data-fill-handle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var handle = btn.getAttribute('data-fill-handle');
+        var input = document.getElementById('profile_facebook');
+        if (input && handle) {
+          input.value = handle;
+          input.focus();
+        }
+      });
+    });
+
+    // 2. Category Filter Tabs (All, Verified, Dating & Apps, Social Media, etc.)
+    document.querySelectorAll('[data-cat-filter]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var cat = btn.getAttribute('data-cat-filter');
+        var group = btn.parentElement;
+        if (group) {
+          group.querySelectorAll('[data-cat-filter]').forEach(function (b) {
+            b.classList.remove('active');
+          });
+        }
+        btn.classList.add('active');
+
+        document.querySelectorAll('tr[data-row-category]').forEach(function (row) {
+          var rowCat = row.getAttribute('data-row-category');
+          var rowVer = row.getAttribute('data-row-verified');
+          if (cat === 'ALL') {
+            row.style.display = '';
+          } else if (cat === 'VERIFIED') {
+            row.style.display = (rowVer === '1') ? '' : 'none';
+          } else {
+            row.style.display = (rowCat === cat) ? '' : 'none';
+          }
+        });
+      });
+    });
+  })();
+</script>
 {% endblock %}
