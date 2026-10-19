@@ -190,6 +190,7 @@ def wellcome():
 
 
 @spo.route("/firstLogin", methods=["GET", "POST"])
+@spo.route("/first-login", methods=["GET", "POST"])
 def firstLogin():
     if not dao.testFirstAccess() and not session.get("isAuthenticated"):
         return redirect(url_for("login"))
@@ -224,6 +225,7 @@ def dashboard():
 
 
 @spo.route("/companyInvestigation", methods=["GET", "POST"])
+@spo.route("/company-recon", methods=["GET", "POST"])
 @login_required
 def companyInvestigation():
     uid = session.get("id")
@@ -317,6 +319,8 @@ def companyInvestigation():
 
 @spo.route("/personalInvestigation", methods=["GET", "POST"])
 @spo.route("/personalTrace", methods=["GET", "POST"])
+@spo.route("/personaltrace", methods=["GET", "POST"])
+@spo.route("/personal-trace", methods=["GET", "POST"])
 @login_required
 def personalInvestigation():
     uid = session.get("id")
@@ -326,37 +330,36 @@ def personalInvestigation():
     recon = None
     selected_project_id = None
 
-    if request.method == "POST":
-        profile_input = (request.form.get("profile_facebook") or "").strip()
-        email_input = (request.form.get("email") or "").strip()
-        raw_project_id = request.form.get("project_id")
-        if raw_project_id and str(raw_project_id).isdigit():
-            selected_project_id = int(raw_project_id)
+    profile_input = (request.form.get("profile_facebook") or request.args.get("q") or "").strip()
+    email_input = (request.form.get("email") or request.args.get("email") or "").strip()
+    raw_project_id = request.form.get("project_id") or request.args.get("project_id")
+    if raw_project_id and str(raw_project_id).isdigit():
+        selected_project_id = int(raw_project_id)
 
-        if profile_input or email_input:
-            recon = facebook_ctrl.investigate_person(profile_input or email_input, email=email_input)
-            photo_perfil = recon.get("avatar_url") or ""
-            likes_by_facebook = [
-                f"{p['platform']}: {p['url']} ({p['details']})"
-                for p in recon.get("platforms", [])
-                if p.get("exists")
-            ]
-            gh = recon.get("github", {})
-            if gh.get("location"):
-                location_by_facebook["Location"] = gh["location"]
-            if gh.get("company"):
-                location_by_facebook["Company"] = gh["company"]
-            if gh.get("blog"):
-                location_by_facebook["Website"] = gh["blog"]
+    if (request.method == "POST" or profile_input or email_input) and (profile_input or email_input):
+        recon = facebook_ctrl.investigate_person(profile_input, email=email_input)
+        photo_perfil = recon.get("avatar_url") or ""
+        likes_by_facebook = [
+            f"{p['platform']}: {p['url']} ({p['details']})"
+            for p in recon.get("platforms", [])
+            if p.get("exists")
+        ]
+        gh = recon.get("github", {})
+        if gh.get("location"):
+            location_by_facebook["Location"] = gh["location"]
+        if gh.get("company"):
+            location_by_facebook["Company"] = gh["company"]
+        if gh.get("blog"):
+            location_by_facebook["Website"] = gh["blog"]
 
-            dao.saveScanResult(
-                uid,
-                scan_type="personal",
-                target=profile_input or email_input,
-                summary=f"{recon.get('found_count', 0)} platforms matched • GitHub: {'Yes' if gh.get('found') else 'No'}",
-                payload=recon,
-                project_id=selected_project_id,
-            )
+        dao.saveScanResult(
+            uid,
+            scan_type="personal",
+            target=recon.get("email") or recon.get("username") or profile_input or email_input,
+            summary=f"{recon.get('found_count', 0)} platforms matched • Email: {recon.get('email') or 'N/A'} • GitHub: {'Yes' if gh.get('found') else 'No'}",
+            payload=recon,
+            project_id=selected_project_id,
+        )
 
     return render_template(
         "personalInvestigation.html",
@@ -370,10 +373,11 @@ def personalInvestigation():
 
 
 # Alias for url_for('personalTrace') compatibility
-spo.add_url_rule("/personalTrace", endpoint="personalTrace", view_func=personalInvestigation, methods=["GET", "POST"])
+spo.add_url_rule("/personal-trace", endpoint="personalTrace", view_func=personalInvestigation, methods=["GET", "POST"])
 
 
 @spo.route("/searchServers", methods=["GET", "POST"])
+@spo.route("/server-intel", methods=["GET", "POST"])
 @login_required
 def searchServers():
     uid = session.get("id")
@@ -425,6 +429,7 @@ def searchServers():
 
 
 @spo.route("/securityAudit", methods=["GET", "POST"])
+@spo.route("/security-audit", methods=["GET", "POST"])
 @login_required
 def securityAudit():
     uid = session.get("id")
@@ -468,6 +473,7 @@ def securityAudit():
 
 
 @spo.route("/graniteAI", methods=["GET", "POST"])
+@spo.route("/granite-ai", methods=["GET", "POST"])
 @login_required
 def graniteAI():
     uid = session.get("id")
@@ -585,6 +591,7 @@ def delete_project(project_id: int):
 
 
 @spo.route("/insertKeys", methods=["GET", "POST"])
+@spo.route("/api-keys", methods=["GET", "POST"])
 @login_required
 def insertKeys():
     uid = session.get("id")
@@ -637,6 +644,7 @@ def insertKeys():
 
 
 @spo.route("/aboutOSINT")
+@spo.route("/about-osint")
 @login_required
 def aboutOSINT():
     return render_template("aboutOSINT.html")
@@ -660,7 +668,7 @@ def robots_txt():
     body = (
         "User-agent: *\n"
         "Allow: /\n"
-        "Disallow: /insertKeys\n"
+        "Disallow: /api-keys\n"
         "Disallow: /projects\n"
         f"Sitemap: {host_root}/sitemap.xml\n"
     )
@@ -673,12 +681,12 @@ def sitemap_xml():
     pages = [
         "/",
         "/dashboard",
-        "/companyInvestigation",
-        "/searchServers",
-        "/personalInvestigation",
-        "/securityAudit",
-        "/graniteAI",
-        "/aboutOSINT",
+        "/company-recon",
+        "/server-intel",
+        "/personal-trace",
+        "/security-audit",
+        "/granite-ai",
+        "/about-osint",
         "/manual",
         "/about",
     ]

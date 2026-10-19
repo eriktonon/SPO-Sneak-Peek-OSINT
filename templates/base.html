@@ -86,7 +86,7 @@
           <div class="dd-nav-section-title">Command &amp; Security</div>
           <ul class="cds-nav-list">
             <li>
-              <a href="{{ url_for('dashboard') }}" class="cds-nav-link {% if request.path == '/dashboard' %}active{% endif %}">
+              <a href="{{ url_for('dashboard') }}" class="cds-nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="layout-grid" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Command Center</span>
@@ -95,7 +95,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('securityAudit') }}" class="cds-nav-link {% if request.path == '/securityAudit' %}active{% endif %}">
+              <a href="{{ url_for('securityAudit') }}" class="cds-nav-link {% if request.endpoint == 'securityAudit' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="shield-alert" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Strix DAST &amp; Hardening</span>
@@ -104,7 +104,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('graniteAI') }}" class="cds-nav-link {% if request.path == '/graniteAI' %}active{% endif %}">
+              <a href="{{ url_for('graniteAI') }}" class="cds-nav-link {% if request.endpoint == 'graniteAI' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="sparkles" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Granite 4.2 SecOps AI</span>
@@ -117,7 +117,7 @@
           <div class="dd-nav-section-title">OSINT Modules</div>
           <ul class="cds-nav-list">
             <li>
-              <a href="{{ url_for('companyInvestigation') }}" class="cds-nav-link {% if request.path == '/companyInvestigation' %}active{% endif %}">
+              <a href="{{ url_for('companyInvestigation') }}" class="cds-nav-link {% if request.endpoint == 'companyInvestigation' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="globe" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Domain &amp; RDAP Recon</span>
@@ -126,7 +126,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('searchServers') }}" class="cds-nav-link {% if request.path == '/searchServers' %}active{% endif %}">
+              <a href="{{ url_for('searchServers') }}" class="cds-nav-link {% if request.endpoint == 'searchServers' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="server" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Server &amp; CVE Intel</span>
@@ -135,7 +135,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('personalInvestigation') }}" class="cds-nav-link {% if request.path in ['/personalInvestigation', '/personalTrace'] %}active{% endif %}">
+              <a href="{{ url_for('personalInvestigation') }}" class="cds-nav-link {% if request.endpoint in ['personalInvestigation', 'personalTrace'] %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="user-search" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Personal &amp; Social Trace</span>
@@ -148,7 +148,7 @@
           <div class="dd-nav-section-title">Workspace</div>
           <ul class="cds-nav-list">
             <li>
-              <a href="{{ url_for('projects') }}" class="cds-nav-link {% if request.path == '/projects' %}active{% endif %}">
+              <a href="{{ url_for('projects') }}" class="cds-nav-link {% if request.endpoint == 'projects' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="folder-kanban" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Investigation Cases</span>
@@ -156,7 +156,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('insertKeys') }}" class="cds-nav-link {% if request.path == '/insertKeys' %}active{% endif %}">
+              <a href="{{ url_for('insertKeys') }}" class="cds-nav-link {% if request.endpoint == 'insertKeys' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="key-round" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>API Keys &amp; Ollama</span>
@@ -168,7 +168,7 @@
           <div class="dd-nav-section-title">Documentation</div>
           <ul class="cds-nav-list">
             <li>
-              <a href="{{ url_for('aboutOSINT') }}" class="cds-nav-link {% if request.path == '/aboutOSINT' %}active{% endif %}">
+              <a href="{{ url_for('aboutOSINT') }}" class="cds-nav-link {% if request.endpoint == 'aboutOSINT' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="compass" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>About OSINT</span>
@@ -176,7 +176,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('manual') }}" class="cds-nav-link {% if request.path == '/manual' %}active{% endif %}">
+              <a href="{{ url_for('manual') }}" class="cds-nav-link {% if request.endpoint == 'manual' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="book-open" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Operator Manual</span>
@@ -184,7 +184,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ url_for('aboutUS') }}" class="cds-nav-link {% if request.path == '/about' %}active{% endif %}">
+              <a href="{{ url_for('aboutUS') }}" class="cds-nav-link {% if request.endpoint == 'aboutUS' %}active{% endif %}">
                 <span class="cds-nav-link-inner">
                   <i data-lucide="coins" style="width:15px;height:15px;" aria-hidden="true"></i>
                   <span>Maintainer &amp; Crypto</span>

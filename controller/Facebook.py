@@ -580,6 +580,20 @@ class Facebook:
             text = text.rstrip("/").split("/")[-1]
         return text.lstrip("@").strip()
 
+    @classmethod
+    def is_valid_email(cls, raw: Optional[str]) -> bool:
+        if not raw:
+            return False
+        return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", raw.strip()))
+
+    @classmethod
+    def extract_handle_from_email(cls, email: Optional[str]) -> str:
+        if not email or "@" not in email:
+            return cls._clean_handle(email)
+        local_part = email.strip().split("@", 1)[0]
+        local_part = local_part.split("+", 1)[0]
+        return cls._clean_handle(local_part)
+
     @staticmethod
     def _extract_html_title(html_snippet: str) -> str:
         match = re.search(r"<title[^>]*>(.*?)</title>", html_snippet, re.IGNORECASE | re.DOTALL)
@@ -845,30 +859,175 @@ class Facebook:
     def _gravatar_recon(cls, query: str) -> Dict[str, Any]:
         clean = (query or "").strip().lower()
         if not clean:
-            return {"avatar_url": "", "found": False, "hash": ""}
+            return {"avatar_url": "", "found": False, "hash": "", "display_name": "", "preferred_username": ""}
         sha256_hash = hashlib.sha256(clean.encode("utf-8")).hexdigest()
+        md5_hash = hashlib.md5(clean.encode("utf-8")).hexdigest()
         found = False
         display_name = ""
+        preferred_username = ""
+        profile_url = ""
         try:
-            r = requests.get(f"https://en.gravatar.com/{sha256_hash}.json", headers=cls.API_HEADERS, timeout=4.5)
+            r = requests.get(f"https://en.gravatar.com/{md5_hash}.json", headers=cls.API_HEADERS, timeout=4.0)
             if r.status_code == 200:
                 found = True
                 entry = (r.json().get("entry") or [{}])[0]
                 display_name = entry.get("displayName") or entry.get("preferredUsername") or ""
+                preferred_username = entry.get("preferredUsername") or ""
+                profile_url = entry.get("profileUrl") or ""
         except Exception:
             pass
         return {
             "found": found,
             "hash": sha256_hash,
+            "md5_hash": md5_hash,
             "display_name": display_name,
+            "preferred_username": preferred_username,
+            "profile_url": profile_url,
             "avatar_url": f"https://www.gravatar.com/avatar/{sha256_hash}?d=identicon&s=200",
         }
 
     @classmethod
+    def _email_osint_recon(cls, email: str) -> Dict[str, Any]:
+        """Run deep OSINT reconnaissance on an email address: DNS MX/SPF, OpenPGP, GitHub Email-to-User & Breach Dorks."""
+        clean_email = (email or "").strip().lower()
+        if not clean_email or "@" not in clean_email:
+            return {
+                "searched": False,
+                "email": "",
+                "local_part": "",
+                "domain": "",
+                "mx_valid": False,
+                "mx_records": [],
+                "has_spf": False,
+                "pgp_key_found": False,
+                "pgp_key_url": "",
+                "github_login": "",
+                "github_commits_count": 0,
+                "email_dorks": {},
+            }
+
+        local_part, domain = clean_email.split("@", 1)
+        mx_records = []
+        has_spf = False
+        pgp_key_found = False
+        github_login = ""
+        github_commits_count = 0
+
+        # 1. DNS MX & SPF Check via Google DNS-over-HTTPS
+        try:
+            mx_r = requests.get(
+                f"https://dns.google/resolve?name={quote_plus(domain)}&type=MX",
+                headers=cls.API_HEADERS,
+                timeout=3.5,
+            )
+            if mx_r.status_code == 200:
+                for ans in mx_r.json().get("Answer") or []:
+                    data_val = str(ans.get("data") or "").strip().rstrip(".")
+                    if data_val:
+                        mx_records.append(data_val.split()[-1])
+        except Exception:
+            pass
+
+        try:
+            txt_r = requests.get(
+                f"https://dns.google/resolve?name={quote_plus(domain)}&type=TXT",
+                headers=cls.API_HEADERS,
+                timeout=3.5,
+            )
+            if txt_r.status_code == 200:
+                for ans in txt_r.json().get("Answer") or []:
+                    if "v=spf1" in str(ans.get("data") or "").lower():
+                        has_spf = True
+                        break
+        except Exception:
+            pass
+
+        # 2. OpenPGP Public Keyring Lookup
+        pgp_key_url = f"https://keys.openpgp.org/search?q={quote_plus(clean_email)}"
+        try:
+            pgp_r = requests.get(
+                f"https://keys.openpgp.org/vks/v1/by-email/{quote_plus(clean_email)}",
+                headers=cls.API_HEADERS,
+                timeout=3.5,
+            )
+            if pgp_r.status_code == 200 and "BEGIN PGP PUBLIC KEY" in (pgp_r.text or ""):
+                pgp_key_found = True
+        except Exception:
+            pass
+
+        # 3. GitHub User & Commit Search by Email
+        try:
+            gh_u = requests.get(
+                f"https://api.github.com/search/users?q={quote_plus(clean_email)}+in:email",
+                headers=cls.API_HEADERS,
+                timeout=4.0,
+            )
+            if gh_u.status_code == 200:
+                items = gh_u.json().get("items") or []
+                if items:
+                    github_login = items[0].get("login") or ""
+        except Exception:
+            pass
+
+        try:
+            commit_headers = dict(cls.API_HEADERS)
+            commit_headers["Accept"] = "application/vnd.github.cloak-preview+json, application/vnd.github+json"
+            gh_c = requests.get(
+                f"https://api.github.com/search/commits?q=author-email:{quote_plus(clean_email)}&per_page=3",
+                headers=commit_headers,
+                timeout=4.0,
+            )
+            if gh_c.status_code == 200:
+                data = gh_c.json()
+                github_commits_count = int(data.get("total_count") or 0)
+                items = data.get("items") or []
+                if items and not github_login:
+                    author_obj = items[0].get("author") or {}
+                    github_login = author_obj.get("login") or ""
+        except Exception:
+            pass
+
+        enc_e = quote_plus(clean_email)
+        email_dorks = {
+            "Exact Email Footprint (Web & Forums)": f"https://www.google.com/search?q=%22{enc_e}%22",
+            "Email on Dating & Social (Tinder / Instagram / LinkedIn / X)": f"https://www.google.com/search?q=%22{enc_e}%22+(site:tinder.com+OR+site:instagram.com+OR+site:linkedin.com+OR+site:facebook.com+OR+site:x.com)",
+            "Email in Pastebin, GitHub Commits & Config Leaks": f"https://www.google.com/search?q=%22{enc_e}%22+(site:pastebin.com+OR+site:github.com+OR+site:gist.github.com+OR+filetype:env+OR+filetype:sql+OR+filetype:log)",
+            "Breach & Infostealer Check (HIBP / HudsonRock / DeHashed / IntelX)": f"https://www.google.com/search?q=%22{enc_e}%22+(site:haveibeenpwned.com+OR+site:cavalier.hudsonrock.com+OR+site:dehashed.com+OR+site:intelx.io)",
+            "GitHub Public Commits by Author Email": f"https://github.com/search?q=author-email%3A{enc_e}&type=commits",
+            "OpenPGP Public Keyring Lookup": pgp_key_url,
+        }
+
+        return {
+            "searched": True,
+            "email": clean_email,
+            "local_part": local_part,
+            "domain": domain,
+            "mx_valid": len(mx_records) > 0,
+            "mx_records": mx_records[:4],
+            "has_spf": has_spf,
+            "pgp_key_found": pgp_key_found,
+            "pgp_key_url": pgp_key_url,
+            "github_login": github_login,
+            "github_commits_count": github_commits_count,
+            "email_dorks": email_dorks,
+        }
+
+    @classmethod
     def investigate_person(cls, raw_input: Optional[str], email: Optional[str] = None) -> Dict[str, Any]:
-        """Run full Personal, Dating & Social OSINT reconnaissance across 60+ platforms."""
-        handle = cls._clean_handle(raw_input)
-        target_email = (email or (handle if "@" in handle else "")).strip()
+        """Run full Personal, Dating, Social & Email OSINT reconnaissance across 73 platforms."""
+        raw_clean = (raw_input or "").strip()
+        email_clean = (email or "").strip()
+
+        # Support searching by email in either field or with username left blank
+        if "@" in raw_clean and not email_clean:
+            target_email = raw_clean.lower()
+            handle = cls.extract_handle_from_email(raw_clean)
+        else:
+            target_email = email_clean.lower() if "@" in email_clean else ""
+            handle = cls._clean_handle(raw_clean)
+            if not handle and target_email:
+                handle = cls.extract_handle_from_email(target_email)
+
         username = handle.split("@")[0] if "@" in handle else handle
 
         if not username and not target_email:
@@ -879,19 +1038,32 @@ class Facebook:
                 "avatar_url": "",
                 "github": {"found": False},
                 "gravatar": {"found": False},
+                "email_intel": {"searched": False},
                 "platforms": [],
                 "category_counts": {},
                 "social_dorks": {},
             }
 
         with ThreadPoolExecutor(max_workers=24) as pool:
+            email_future = pool.submit(cls._email_osint_recon, target_email) if target_email else None
             gh_future = pool.submit(cls._github_deep_recon, username)
             grav_future = pool.submit(cls._gravatar_recon, target_email or username)
             plat_futures = [pool.submit(cls._check_platform, p, username) for p in cls.PLATFORMS]
 
+            email_intel = email_future.result() if email_future else {"searched": False, "email_dorks": {}}
             gh_info = gh_future.result()
             grav_info = grav_future.result()
             platforms = [f.result() for f in plat_futures]
+
+        # If GitHub wasn't found by handle prefix, but Email OSINT or Gravatar discovered a GitHub login, fetch it!
+        discovered_gh_login = email_intel.get("github_login") or grav_info.get("preferred_username") or ""
+        if not gh_info.get("found") and discovered_gh_login and discovered_gh_login.lower() != username.lower():
+            gh_info = cls._github_deep_recon(discovered_gh_login)
+
+        # If user searched by handle and GitHub revealed commit emails, run Email OSINT on the primary commit email!
+        resolved_email = target_email or (gh_info["commit_emails"][0] if gh_info.get("commit_emails") else "")
+        if resolved_email and not email_intel.get("searched"):
+            email_intel = cls._email_osint_recon(resolved_email)
 
         # Sort so VERIFIED profiles appear first within the list, preserving category order
         platforms.sort(key=lambda item: (0 if item.get("exists") else 1, item.get("category", ""), item.get("platform", "")))
@@ -903,32 +1075,39 @@ class Facebook:
 
         avatar_url = gh_info.get("avatar_url") or grav_info.get("avatar_url") or ""
         enc = quote_plus(username)
-        social_dorks = {
-            "Tinder Web Profile & Bio Dork": f"https://www.google.com/search?q=site:tinder.com+%22{enc}%22+OR+%22tinder.com/@{enc}%22",
-            "Dating Apps (Bumble / Badoo / OkCupid / Happn)": f"https://www.google.com/search?q=%22{enc}%22+(site:badoo.com+OR+site:okcupid.com+OR+site:bumble.com+OR+site:pof.com+OR+site:happn.com)",
-            "Instagram Profile, Mentions & Tags": f"https://www.google.com/search?q=site:instagram.com+%22{enc}%22",
-            "TikTok Profile, Videos & Comments": f"https://www.google.com/search?q=site:tiktok.com+%22{enc}%22",
-            "Telegram Channels, Groups & Users (t.me)": f"https://www.google.com/search?q=site:t.me+%22{enc}%22",
-            "WhatsApp Public Links (wa.me / chat.whatsapp)": f"https://www.google.com/search?q=%22{enc}%22+(site:wa.me+OR+site:chat.whatsapp.com+OR+site:api.whatsapp.com)",
-            "OnlyFans / Privacy.com.br / Fansly Dork": f"https://www.google.com/search?q=%22{enc}%22+(site:onlyfans.com+OR+site:privacy.com.br+OR+site:fansly.com+OR+site:linktr.ee)",
-            "X / Twitter Profile & Mentions": f"https://x.com/search?q={enc}&f=user",
-            "Threads (@threads.net) Footprint": f"https://www.google.com/search?q=site:threads.net+%22{enc}%22",
-            "LinkedIn Corporate & Executive Search": f"https://www.google.com/search?q=site:linkedin.com/in/+%22{enc}%22",
-            "Facebook Public Directory & Groups": f"https://www.facebook.com/public/{enc}",
-            "Discord / Steam / Gaming Aliases Dork": f"https://www.google.com/search?q=%22{enc}%22+(site:steamcommunity.com+OR+site:discord.com+OR+site:twitch.tv+OR+site:kick.com)",
-            "GitHub Commits & Source Code Search": f"https://github.com/search?q=%22{enc}%22&type=commits",
-            "Pastebin, Gists & Document Leaks Dork": f"https://www.google.com/search?q=%22{enc}%22+(site:pastebin.com+OR+site:gist.github.com+OR+filetype:pdf+OR+filetype:xlsx)",
-            "Jusbrasil & Diários Oficiais (Brazil Legal)": f"https://www.jusbrasil.com.br/busca?q={enc}",
-            "Escavador & Currículo Lattes (Brazil Academic)": f"https://www.google.com/search?q=%22{enc}%22+(site:escavador.com+OR+site:cnpq.br)",
-        }
+        social_dorks: Dict[str, str] = {}
+        if email_intel.get("email_dorks"):
+            social_dorks.update(email_intel["email_dorks"])
+
+        social_dorks.update(
+            {
+                "Tinder Web Profile & Bio Dork": f"https://www.google.com/search?q=site:tinder.com+%22{enc}%22+OR+%22tinder.com/@{enc}%22",
+                "Dating Apps (Bumble / Badoo / OkCupid / Happn)": f"https://www.google.com/search?q=%22{enc}%22+(site:badoo.com+OR+site:okcupid.com+OR+site:bumble.com+OR+site:pof.com+OR+site:happn.com)",
+                "Instagram Profile, Mentions & Tags": f"https://www.google.com/search?q=site:instagram.com+%22{enc}%22",
+                "TikTok Profile, Videos & Comments": f"https://www.google.com/search?q=site:tiktok.com+%22{enc}%22",
+                "Telegram Channels, Groups & Users (t.me)": f"https://www.google.com/search?q=site:t.me+%22{enc}%22",
+                "WhatsApp Public Links (wa.me / chat.whatsapp)": f"https://www.google.com/search?q=%22{enc}%22+(site:wa.me+OR+site:chat.whatsapp.com+OR+site:api.whatsapp.com)",
+                "OnlyFans / Privacy.com.br / Fansly Dork": f"https://www.google.com/search?q=%22{enc}%22+(site:onlyfans.com+OR+site:privacy.com.br+OR+site:fansly.com+OR+site:linktr.ee)",
+                "X / Twitter Profile & Mentions": f"https://x.com/search?q={enc}&f=user",
+                "Threads (@threads.net) Footprint": f"https://www.google.com/search?q=site:threads.net+%22{enc}%22",
+                "LinkedIn Corporate & Executive Search": f"https://www.google.com/search?q=site:linkedin.com/in/+%22{enc}%22",
+                "Facebook Public Directory & Groups": f"https://www.facebook.com/public/{enc}",
+                "Discord / Steam / Gaming Aliases Dork": f"https://www.google.com/search?q=%22{enc}%22+(site:steamcommunity.com+OR+site:discord.com+OR+site:twitch.tv+OR+site:kick.com)",
+                "GitHub Commits & Source Code Search": f"https://github.com/search?q=%22{enc}%22&type=commits",
+                "Pastebin, Gists & Document Leaks Dork": f"https://www.google.com/search?q=%22{enc}%22+(site:pastebin.com+OR+site:gist.github.com+OR+filetype:pdf+OR+filetype:xlsx)",
+                "Jusbrasil & Diários Oficiais (Brazil Legal)": f"https://www.jusbrasil.com.br/busca?q={enc}",
+                "Escavador & Currículo Lattes (Brazil Academic)": f"https://www.google.com/search?q=%22{enc}%22+(site:escavador.com+OR+site:cnpq.br)",
+            }
+        )
 
         return {
-            "query": raw_input,
+            "query": raw_clean or email_clean,
             "username": username,
-            "email": target_email or (gh_info["commit_emails"][0] if gh_info.get("commit_emails") else ""),
+            "email": resolved_email,
             "avatar_url": avatar_url,
             "github": gh_info,
             "gravatar": grav_info,
+            "email_intel": email_intel,
             "platforms": platforms,
             "total_platforms": len(platforms),
             "found_count": sum(1 for p in platforms if p.get("exists")),

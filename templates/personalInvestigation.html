@@ -85,45 +85,45 @@
   <div class="cds-panel-header">
     <div class="cds-panel-header-title">
       <i data-lucide="user-search" style="width:15px;height:15px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
-      <span>SOCMINT &amp; DATING RECONNAISSANCE ENGINE // /personalTrace</span>
+      <span>SOCMINT, EMAIL &amp; DATING RECONNAISSANCE ENGINE // /personal-trace</span>
     </div>
     <div class="flex items-center gap-2">
-      <span class="cds-tag cds-tag-purple">TINDER &bull; INSTAGRAM &bull; TIKTOK &bull; TELEGRAM &bull; ONLYFANS &bull; GITHUB</span>
+      <span class="cds-tag cds-tag-purple">EMAIL OSINT &bull; TINDER &bull; INSTAGRAM &bull; TIKTOK &bull; TELEGRAM &bull; ONLYFANS</span>
     </div>
   </div>
 
   <div class="cds-panel-body">
     <div class="flex items-center justify-between flex-wrap gap-2">
       <div>
-        <h1 id="personal-h1" class="cds-page-h1"><strong>Personal, Dating &amp; Social Media</strong> OSINT Explorer</h1>
+        <h1 id="personal-h1" class="cds-page-h1"><strong>Personal, Email, Dating &amp; Social Media</strong> OSINT Explorer</h1>
         <p class="text-sm text-secondary mt-1">
-          Enumerate any handle or email across <strong>{{ catalog_platforms|length }} platforms</strong> spanning <strong>Dating Apps (Tinder, Badoo, OkCupid, POF, Bumble, Happn)</strong>, <strong>Social Media (Instagram, TikTok, X, Threads, Facebook, Snapchat, Bluesky)</strong>, <strong>Creator/Adult (OnlyFans, Privacy.com.br, Fansly, Patreon, Linktree)</strong>, <strong>Telegram</strong>, <strong>Gaming (Steam, Chess.com, Lichess, Roblox)</strong>, and <strong>Dev/SecOps</strong>.
+          Search by <strong>Username/Handle</strong> or <strong>Email Address</strong> across <strong>{{ catalog_platforms|length }} platforms</strong> spanning <strong>Dating Apps (Tinder, Badoo, OkCupid, POF, Bumble, Happn)</strong>, <strong>Social Media (Instagram, TikTok, X, Threads, Facebook, Snapchat, Bluesky)</strong>, <strong>Creator/Adult (OnlyFans, Privacy.com.br, Fansly, Patreon, Linktree)</strong>, <strong>Telegram</strong>, <strong>Gaming</strong>, and <strong>Email MX/PGP/Breach Surface</strong>.
         </p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <span class="mono text-xs text-secondary">Quick Presets:</span>
         <button type="button" class="cds-btn cds-btn-ghost mono" data-fill-handle="eriktonon">@eriktonon</button>
+        <button type="button" class="cds-btn cds-btn-ghost mono" data-fill-email="eriktonon@gmail.com">eriktonon@gmail.com</button>
         <button type="button" class="cds-btn cds-btn-ghost mono" data-fill-handle="torvalds">@torvalds</button>
       </div>
     </div>
 
     <form id="socmint-form" action="{{ url_for('personalInvestigation') }}" method="POST" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;align-items:end;margin-top:4px;">
       <div class="cds-form-group">
-        <label for="profile_facebook" class="cds-label">01 // USERNAME / SOCIAL HANDLE</label>
+        <label for="profile_facebook" class="cds-label">01 // USERNAME / SOCIAL HANDLE (OR EMAIL)</label>
         <input
           name="profile_facebook"
           id="profile_facebook"
           type="text"
           autocomplete="off"
           value="{{ recon.username if recon else '' }}"
-          placeholder="eriktonon"
-          required
+          placeholder="eriktonon (optional if email provided)"
           class="cds-input"
         />
       </div>
 
       <div class="cds-form-group">
-        <label for="personal-email" class="cds-label">02 // TARGET EMAIL (OPTIONAL)</label>
+        <label for="personal-email" class="cds-label">02 // TARGET EMAIL SEARCH (MX / PGP / BREACH / 73+ NETWORKS)</label>
         <input
           name="email"
           id="personal-email"
@@ -148,7 +148,7 @@
       <div>
         <button type="submit" class="cds-btn cds-btn-primary w-full">
           <i data-lucide="radar" style="width:15px;height:15px;" aria-hidden="true"></i>
-          <span>Scan {{ catalog_platforms|length }} Social &amp; Dating Networks</span>
+          <span>Scan Handle / Email Across {{ catalog_platforms|length }} Networks</span>
         </button>
       </div>
     </form>
@@ -157,10 +157,10 @@
 
 {% if recon %}
 <!-- ======================================================================
-     ROW 3 (ACTIVE SCAN): IDENTITY ATTRIBUTION (4 COLS) + 73-PLATFORM TABLE (8 COLS)
+     ROW 3 (ACTIVE SCAN): IDENTITY & EMAIL ATTRIBUTION (4 COLS) + 73-PLATFORM TABLE (8 COLS)
      ====================================================================== -->
 <section class="cds-grid-12" aria-label="Identity Attribution and 73-Platform Presence Explorer">
-  <!-- Left 4 Columns: Identity Card + Commit Emails + Deep Dating/Social Dorks -->
+  <!-- Left 4 Columns: Identity Card + Email Intelligence + Deep Dating/Social Dorks -->
   <div class="cds-col-4 flex-col gap-3">
     <div class="cds-panel cds-accent-green">
       <div class="cds-panel-header">
@@ -184,7 +184,7 @@
             <div class="font-bold" style="font-size:16px;">{{ recon.github.name or recon.gravatar.display_name or recon.username }}</div>
             <div class="mono text-xs text-success mt-1">{{ recon.found_count }} / {{ recon.platforms|length }} PLATFORMS VERIFIED</div>
             {% if recon.email %}
-              <div class="mono text-xs text-secondary">{{ recon.email }}</div>
+              <div class="mono text-xs text-blue mt-1">{{ recon.email }}</div>
             {% endif %}
           </div>
         </div>
@@ -231,12 +231,64 @@
       </div>
     </div>
 
-    <!-- Deep Dating, Social & Legal OSINT Dork Pivots -->
+    {% if recon.email_intel and recon.email_intel.searched %}
+    <!-- Email Intelligence, MX, OpenPGP & Breach Surface Card -->
+    <div class="cds-panel cds-accent-blue">
+      <div class="cds-panel-header">
+        <span class="cds-panel-header-title">
+          <i data-lucide="mail-search" style="width:14px;height:14px;color:var(--dd-apm);" aria-hidden="true"></i>
+          <span>EMAIL OSINT, MX &amp; PGP SURFACE</span>
+        </span>
+        {% if recon.email_intel.mx_valid %}
+          <span class="cds-tag cds-tag-green">MX VALID</span>
+        {% else %}
+          <span class="cds-tag cds-tag-amber">UNVERIFIED DOMAIN</span>
+        {% endif %}
+      </div>
+      <div class="cds-panel-body" style="gap:8px;">
+        <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+          <span class="cds-kpi-label">TARGET EMAIL ADDRESS</span>
+          <span class="mono text-xs font-bold text-blue mt-1">{{ recon.email_intel.email }}</span>
+        </div>
+
+        <div class="cds-grid-2">
+          <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+            <span class="cds-kpi-label">MAIL DOMAIN / SPF</span>
+            <span class="mono text-xs mt-1">{{ recon.email_intel.domain }} &bull; {{ 'SPF OK' if recon.email_intel.has_spf else 'No SPF' }}</span>
+          </div>
+          <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+            <span class="cds-kpi-label">OPENPGP KEYRING</span>
+            <span class="mono text-xs mt-1 {% if recon.email_intel.pgp_key_found %}text-success{% else %}text-secondary{% endif %}">
+              {{ 'PGP KEY FOUND' if recon.email_intel.pgp_key_found else 'No Public Key' }}
+            </span>
+          </div>
+        </div>
+
+        {% if recon.email_intel.mx_records %}
+        <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+          <span class="cds-kpi-label">ACTIVE MX SERVERS</span>
+          <span class="mono text-xs text-secondary mt-1">{{ recon.email_intel.mx_records|join(' • ') }}</span>
+        </div>
+        {% endif %}
+
+        {% if recon.email_intel.github_login or recon.email_intel.github_commits_count %}
+        <div class="cds-tile" style="padding:8px 10px;background:var(--dd-bg-surface-alt);">
+          <span class="cds-kpi-label">GITHUB EMAIL CORRELATION</span>
+          <span class="mono text-xs text-success mt-1">
+            {% if recon.email_intel.github_login %}@{{ recon.email_intel.github_login }} &bull; {% endif %}{{ recon.email_intel.github_commits_count }} public commits
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Deep Dating, Social, Email Breach & Legal OSINT Dork Pivots -->
     <div class="cds-panel cds-accent-amber">
       <div class="cds-panel-header">
         <span class="cds-panel-header-title">
           <i data-lucide="flame" style="width:14px;height:14px;color:var(--dd-warn);" aria-hidden="true"></i>
-          <span>DATING, SOCIAL &amp; LEGAL DORK PIVOTS</span>
+          <span>DATING, EMAIL BREACH &amp; SOCIAL DORKS</span>
         </span>
         <span class="cds-tag cds-tag-amber">{{ recon.social_dorks|length }} PIVOTS</span>
       </div>
@@ -424,7 +476,7 @@
 {% block scripts %}
 <script>
   (function () {
-    // 1. Quick Preset Handle Buttons (@eriktonon, @torvalds)
+    // 1. Quick Preset Handle & Email Buttons (@eriktonon, eriktonon@gmail.com, @torvalds)
     document.querySelectorAll('[data-fill-handle]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var handle = btn.getAttribute('data-fill-handle');
@@ -432,6 +484,19 @@
         if (input && handle) {
           input.value = handle;
           input.focus();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-fill-email]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var emailVal = btn.getAttribute('data-fill-email');
+        var emailInput = document.getElementById('personal-email');
+        var handleInput = document.getElementById('profile_facebook');
+        if (emailInput && emailVal) {
+          if (handleInput) handleInput.value = '';
+          emailInput.value = emailVal;
+          emailInput.focus();
         }
       });
     });
