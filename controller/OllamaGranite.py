@@ -10,6 +10,7 @@ Integrates Erik Tonon's abliterated + SecOps LoRA fine-tuned model:
 """
 import json
 import os
+import subprocess
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
@@ -92,6 +93,60 @@ class OllamaGraniteEngine:
             return cls.DEFAULT_HOST
         return f"{parsed.scheme}://{parsed.netloc}"
 
+    @staticmethod
+    def _wsl_http_get(url: str, timeout_sec: int = 5) -> Optional[Dict[str, Any]]:
+        if os.name != "nt":
+            return None
+        try:
+            proc = subprocess.run(
+                ["wsl", "curl", "-s", "-m", str(timeout_sec), url],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=timeout_sec + 3,
+            )
+            if proc.returncode == 0 and proc.stdout.strip():
+                return json.loads(proc.stdout)
+        except Exception:
+            return None
+        return None
+
+    @staticmethod
+    def _wsl_http_post(
+        url: str, payload: Dict[str, Any], timeout_sec: int = 90
+    ) -> Optional[Dict[str, Any]]:
+        if os.name != "nt":
+            return None
+        try:
+            proc = subprocess.run(
+                [
+                    "wsl",
+                    "curl",
+                    "-s",
+                    "-m",
+                    str(timeout_sec),
+                    "-X",
+                    "POST",
+                    "-H",
+                    "Content-Type: application/json",
+                    "--data-binary",
+                    "@-",
+                    url,
+                ],
+                input=json.dumps(payload, ensure_ascii=False),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=timeout_sec + 5,
+            )
+            if proc.returncode == 0 and proc.stdout.strip():
+                return json.loads(proc.stdout)
+        except Exception:
+            return None
+        return None
+
     def check_status(
         self,
         override_host: Optional[str] = None,
@@ -115,23 +170,33 @@ class OllamaGraniteEngine:
             "error": None,
         }
 
+        data: Optional[Dict[str, Any]] = None
         try:
-            resp = self.session.get(tags_endpoint, timeout=4)
+            resp = self.session.get(tags_endpoint, timeout=3)
             if resp.status_code == 200:
                 data = resp.json()
-                models_list = [
-                    m.get("name", "")
-                    for m in data.get("models", [])
-                    if isinstance(m, dict) and m.get("name")
-                ]
-                status_info["online"] = True
-                status_info["available_models"] = models_list
-                base_target = target_model.split(":")[0].lower()
-                status_info["model_installed"] = any(
-                    base_target in m.lower() for m in models_list
-                )
         except Exception as exc:
             status_info["error"] = str(exc)
+
+        if data is None:
+            wsl_data = self._wsl_http_get("http://127.0.0.1:11434/api/tags", timeout_sec=4)
+            if isinstance(wsl_data, dict) and "models" in wsl_data:
+                data = wsl_data
+                status_info["host"] = f"{host} (WSL2 Bridge)"
+                status_info["error"] = None
+
+        if isinstance(data, dict):
+            models_list = [
+                m.get("name", "")
+                for m in data.get("models", [])
+                if isinstance(m, dict) and m.get("name")
+            ]
+            status_info["online"] = True
+            status_info["available_models"] = models_list
+            base_target = target_model.split(":")[0].lower()
+            status_info["model_installed"] = any(
+                base_target in m.lower() for m in models_list
+            )
 
         return status_info
 
@@ -216,6 +281,7 @@ class OllamaGraniteEngine:
         }
 
         started = datetime.now(timezone.utc)
+        err_msg = ""
         try:
             resp = self.session.post(chat_endpoint, json=request_body, timeout=self.timeout)
             if resp.status_code == 200:
@@ -239,6 +305,31 @@ class OllamaGraniteEngine:
             err_msg = f"HTTP {resp.status_code}: {resp.text[:240]}"
         except Exception as exc:
             err_msg = str(exc)
+
+        # Fallback to WSL2 Ollama bridge if running on Windows and direct socket was refused
+        wsl_resp = self._wsl_http_post(
+            "http://127.0.0.1:11434/api/chat",
+            payload=request_body,
+            timeout_sec=max(self.timeout, 90),
+        )
+        if isinstance(wsl_resp, dict):
+            content = (
+                wsl_resp.get("message", {}).get("content")
+                or wsl_resp.get("response")
+                or ""
+            ).strip()
+            if content:
+                elapsed_ms = int((datetime.now(timezone.utc) - started).total_seconds() * 1000)
+                return {
+                    "ok": True,
+                    "live_ollama": True,
+                    "model": model,
+                    "host": f"{host} (WSL2 Bridge)",
+                    "mode": mode,
+                    "response": content,
+                    "elapsed_ms": elapsed_ms,
+                    "timestamp": started.strftime("%Y-%m-%d %H:%M:%S UTC"),
+                }
 
         fallback_text = self._build_offline_fallback_analysis(
             prompt=clean_prompt,
