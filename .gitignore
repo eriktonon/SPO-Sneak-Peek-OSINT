@@ -45,8 +45,14 @@ Thumbs.db
 *.swp
 *.swo
 
-# Pytest & Coverage
+# Pytest, Build & Runtime Caches
 .pytest_cache/
 .coverage
 htmlcov/
 .ruff_cache/
+.mypy_cache/
+.cache/
+target/
+node_modules/
+*.log
+
