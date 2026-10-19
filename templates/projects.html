@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}SPO — Investigation Cases & Evidence DB{% endblock %}
+{% block header_title %}Investigation Cases // Evidence Database{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+   <!-- Left Column: Create + List Projects -->
+   <div class="space-y-6">
+      <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
+         <h3 class="font-semibold text-white flex items-center gap-2 mb-3">
+            <i class="material-icons text-emerald-400">create_new_folder</i> New Investigation Case
+         </h3>
+         <form action="{{ url_for('projects') }}" method="POST" class="space-y-3">
+            <div>
+               <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Case Name</label>
+               <input name="name_project" type="text" placeholder="Operation Blacklight" required
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+               <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Scope / Description</label>
+               <input name="scope_project" type="text" placeholder="External attack surface & corporate OSINT"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium py-2 px-4 rounded-lg transition">
+               Create Case
+            </button>
+         </form>
+      </div>
+
+      <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
+         <h3 class="font-semibold text-white mb-3 text-sm font-mono uppercase text-slate-400">Saved Cases ({{ projects|length }})</h3>
+         {% if projects %}
+            <div class="space-y-2">
+               {% for p in projects %}
+                  <a href="{{ url_for('projects', id=p.id_project) }}"
+                     class="block p-3 rounded-lg border transition {{ 'bg-emerald-500/10 border-emerald-500/40 text-white' if active_project and active_project.id_project == p.id_project else 'bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-800' }}">
+                     <div class="flex items-center justify-between">
+                        <span class="font-medium text-sm">{{ p.name_project }}</span>
+                        <span class="px-2 py-0.5 text-xs font-mono rounded bg-slate-800 text-emerald-400">{{ p.scan_count }} scans</span>
+                     </div>
+                     <div class="text-xs text-slate-400 mt-1 truncate">{{ p.scope_project }}</div>
+                  </a>
+               {% endfor %}
+            </div>
+         {% else %}
+            <p class="text-xs text-slate-400">No investigation cases created yet.</p>
+         {% endif %}
+      </div>
+   </div>
+
+   <!-- Right Column: Active Project Evidence -->
+   <div class="lg:col-span-2 bg-spo-panel border border-spo-border rounded-xl p-6">
+      {% if active_project %}
+         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-5">
+            <div>
+               <h2 class="text-xl font-bold text-white">{{ active_project.name_project }}</h2>
+               <p class="text-xs text-slate-400 mt-0.5">{{ active_project.scope_project }} • Created {{ active_project.created_at }}</p>
+            </div>
+            <div class="flex items-center gap-2">
+               <a href="{{ url_for('export_project', project_id=active_project.id_project) }}" target="_blank"
+                  class="px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono hover:bg-cyan-500/20 flex items-center gap-1.5">
+                  <i class="material-icons text-sm">download</i> Export JSON Report
+               </a>
+               <form action="{{ url_for('delete_project', project_id=active_project.id_project) }}" method="POST" onsubmit="return confirm('Delete this case?');">
+                  <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-mono hover:bg-rose-500/20">
+                     Delete
+                  </button>
+               </form>
+            </div>
+         </div>
+
+         {% if active_project.scans %}
+            <div class="space-y-4">
+               {% for scan in active_project.scans %}
+                  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                     <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                           <span class="px-2 py-0.5 rounded text-xs font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{{ scan.scan_type }}</span>
+                           <span class="font-mono font-bold text-white text-sm">{{ scan.target }}</span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">{{ scan.created_at }}</span>
+                     </div>
+                     <p class="text-xs text-slate-300 mb-3">{{ scan.summary }}</p>
+                     <details class="text-xs">
+                        <summary class="cursor-pointer font-mono text-cyan-400 hover:underline">Inspect Raw OSINT Evidence Payload</summary>
+                        <pre class="mt-2 p-3 bg-black/60 rounded border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto max-h-64">{{ scan.payload_json }}</pre>
+                     </details>
+                  </div>
+               {% endfor %}
+            </div>
+         {% else %}
+            <div class="p-8 text-center text-slate-400 text-sm">
+               No scans attached to this case yet. Select this case when running a Company, Server, or Personal scan.
+            </div>
+         {% endif %}
+      {% else %}
+         <div class="p-12 text-center text-slate-400 text-sm">
+            Create or select an Investigation Case on the left to inspect and export collected OSINT evidence.
+         </div>
+      {% endif %}
+   </div>
+</div>
+{% endblock %}

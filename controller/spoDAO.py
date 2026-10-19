@@ -1,86 +1,250 @@
-__Author__ = 'Victor de Queiroz'
+# -*- coding:UTF-8 -*-
 """
- Data Access Object
- 
- class for querys sql
-
+Data Access Object (DAO) for SPO - Sneak Peek OSINT v2.0.
+Uses 100% parameterized SQL queries and supports users, multi-service API keys,
+investigation projects, and OSINT scan history persistence.
 """
+import json
+from typing import Any, Dict, List, Optional
 from controller import DataFactory
 from controller import PasswdHash
 from controller import validatorSQLI
 
-class SpoDAO(object):
 
+class SpoDAO:
+    def __init__(self, db_path: Optional[str] = None):
+        self.connection = DataFactory.DataFactory(db_path=db_path)
+        self.passhash = PasswdHash.PasswdHash()
+        self.sqli = validatorSQLI.ValidateSQLI()
 
-    #instance of controller.dataFactory
-    connection = DataFactory.DataFactory()
-    #instance of PasswordHash
-    passhash = PasswdHash.PasswdHash()
-    #validator SQLI
-    sqli = validatorSQLI.ValidateSQLI()
+    @staticmethod
+    def _extract_user_id(user_id_or_dict: Any) -> int:
+        if isinstance(user_id_or_dict, dict):
+            return int(user_id_or_dict.get("id_user", 0))
+        return int(user_id_or_dict)
 
-    #function for test if first access
-    def testFirstAccess(self):
-        # if is first access return True
-        sql = "select * from user_spo;"
-        if self.connection.select(sql) is None:
-            return True
-        else:
+    def testFirstAccess(self) -> bool:
+        """Return True if no users are registered in the database yet."""
+        row = self.connection.select("SELECT id_user FROM user_spo LIMIT 1;")
+        return row is None
+
+    def insertUser(self, user: str, passwd: str) -> Optional[int]:
+        """Create a new user with PBKDF2-SHA256 password hash."""
+        if not user or not passwd:
+            return None
+        clean_user = user.strip()
+        if self.sqli.validatorSQLI(clean_user):
+            return None
+        hashed = self.passhash.hash(passwd)
+        existing = self.connection.select(
+            "SELECT id_user FROM user_spo WHERE login = ?;", (clean_user,)
+        )
+        if existing:
+            return int(existing["id_user"])
+        return self.connection.insert(
+            "INSERT INTO user_spo (login, password) VALUES (?, ?);",
+            (clean_user, hashed),
+        )
+
+    def testLogin(self, user: str, passwd: str) -> bool:
+        """Authenticate user credentials against stored password hash."""
+        if not user or not passwd:
             return False
+        clean_user = user.strip()
+        if self.sqli.validatorSQLI(clean_user):
+            return False
+        row = self.connection.select(
+            "SELECT id_user, login, password FROM user_spo WHERE login = ?;",
+            (clean_user,),
+        )
+        if not row:
+            return False
+        return self.passhash.verify(row["password"], passwd)
 
-    #for first access create an user
-    #recive password on plain text, send to cripto and cripto
-    # returns a hash for db insert
-    def insertUser(self,user,passwd):
+    def getIDUser(self, user: str) -> Optional[Dict[str, Any]]:
+        """Return {'id_user': <int>} for the given username."""
+        if not user:
+            return None
+        return self.connection.select(
+            "SELECT id_user FROM user_spo WHERE login = ?;", (user.strip(),)
+        )
 
-        #send password for PasswdHash
-        password = self.passhash.hash(passwd)
-        #query sql for insert user and pass
-        #validate SQLI
-        if self.sqli.validatorSQLI(user) == False:
-            sql = "insert into user_spo(login,password) values ('"+user+"','"+password+"');"
-        #execute a query
-        self.connection.insert(sql)
+    # --- API Keys Management (Shodan, VirusTotal, GitHub, etc.) ---
 
-    #validator for login
-    def testLogin(self,user,passwd):
-        #validate SQLI
-        if self.sqli.validatorSQLI(user) == False:
-            #hash the password
-            password = self.passhash.hash(passwd)
-            #select query
-            sql ="select login,password from user_spo where login ='"+user+"' and password ='"+password+"';"
-            if self.connection.select(sql) is None:
-                return False
-            else:
-                return True
+    def getApiKey(self, user_id: Any, service_name: str) -> Optional[Dict[str, Any]]:
+        uid = self._extract_user_id(user_id)
+        return self.connection.select(
+            "SELECT id_key, key_value, name_key, updated_at FROM key_api WHERE id_user = ? AND name_key = ?;",
+            (uid, service_name.lower().strip()),
+        )
 
-    #get id user
-    def getIDUser(self,user):
-        # get id to user
-        id = self.connection.select("select id_user from user_spo where login='" + user + "'")
-        return id
+    def getAllApiKeys(self, user_id: Any) -> Dict[str, str]:
+        uid = self._extract_user_id(user_id)
+        rows = self.connection.select_all(
+            "SELECT name_key, key_value FROM key_api WHERE id_user = ?;", (uid,)
+        )
+        return {r["name_key"]: r["key_value"] for r in rows if r.get("key_value")}
 
-    #insert shodan key
-    def insertShodanKey(self,id,key):
-       #validate SQLI
-        if self.sqli.validatorSQLI(key) == False:
-            #insert query
-            sql ="insert into key_api(key_value,name_key,id_user) values('"+key+"','shodan',"+str(id['id_user'])+");"
+    def upsertApiKey(self, user_id: Any, service_name: str, key_value: str) -> bool:
+        if not key_value or not service_name:
+            return False
+        clean_key = key_value.strip()
+        clean_service = service_name.lower().strip()
+        if self.sqli.validatorSQLI(clean_key):
+            return False
+        uid = self._extract_user_id(user_id)
+        existing = self.getApiKey(uid, clean_service)
+        if existing is None:
+            self.connection.insert(
+                "INSERT INTO key_api (key_value, name_key, id_user) VALUES (?, ?, ?);",
+                (clean_key, clean_service, uid),
+            )
+        else:
+            self.connection.update(
+                "UPDATE key_api SET key_value = ?, updated_at = CURRENT_TIMESTAMP WHERE id_user = ? AND name_key = ?;",
+                (clean_key, uid, clean_service),
+            )
+        return True
 
-            self.connection.insert(sql)
+    # Backward-compatible Shodan key helpers
+    def insertShodanKey(self, user_id: Any, key: str) -> bool:
+        return self.upsertApiKey(user_id, "shodan", key)
 
-    #get shodan key
-    def getShodanKey(self,id):
-       sql= "select key_value from key_api where id_user="+str(id['id_user'])+";"
-       return self.connection.select(sql)
+    def getShodanKey(self, user_id: Any) -> Optional[Dict[str, Any]]:
+        return self.getApiKey(user_id, "shodan")
 
+    def updateShodanKey(self, user_id: Any, key: str) -> bool:
+        return self.upsertApiKey(user_id, "shodan", key)
 
-    #update shodan key
-    def updateShodanKey(self,id,key):
-        #validate sqli
-        if self.sqli.validatorSQLI(key) == False:
-            #update query
-            sql= "update key_api set key_value='"+key+"' where id_user="+str(id['id_user'])+";"
-            self.connection.insert(sql)
+    # --- Investigation Projects & Case Evidence ---
 
+    def createProject(self, user_id: Any, name: str, scope: str = "General OSINT Investigation") -> Optional[int]:
+        if not name or not name.strip():
+            return None
+        uid = self._extract_user_id(user_id)
+        return self.connection.insert(
+            "INSERT INTO project (id_user, name_project, scope_project) VALUES (?, ?, ?);",
+            (uid, name.strip(), (scope or "General OSINT Investigation").strip()),
+        )
+
+    def listProjects(self, user_id: Any) -> List[Dict[str, Any]]:
+        uid = self._extract_user_id(user_id)
+        return self.connection.select_all(
+            """
+            SELECT p.id_project, p.name_project, p.scope_project, p.created_at,
+                   COUNT(s.id_scan) AS scan_count
+            FROM project p
+            LEFT JOIN scan_history s ON s.id_project = p.id_project
+            WHERE p.id_user = ?
+            GROUP BY p.id_project
+            ORDER BY p.id_project DESC;
+            """,
+            (uid,),
+        )
+
+    def getProject(self, user_id: Any, project_id: int) -> Optional[Dict[str, Any]]:
+        uid = self._extract_user_id(user_id)
+        project = self.connection.select(
+            "SELECT * FROM project WHERE id_project = ? AND id_user = ?;",
+            (project_id, uid),
+        )
+        if not project:
+            return None
+        scans = self.getProjectScans(uid, project_id)
+        project["scans"] = scans
+        return project
+
+    def deleteProject(self, user_id: Any, project_id: int) -> int:
+        uid = self._extract_user_id(user_id)
+        return self.connection.delete(
+            "DELETE FROM project WHERE id_project = ? AND id_user = ?;",
+            (project_id, uid),
+        )
+
+    def saveScanResult(
+        self,
+        user_id: Any,
+        scan_type: str,
+        target: str,
+        payload: Dict[str, Any],
+        summary: str = "",
+        project_id: Optional[int] = None,
+    ) -> int:
+        uid = self._extract_user_id(user_id)
+        payload_str = json.dumps(payload, ensure_ascii=False, default=str)
+        return self.connection.insert(
+            """
+            INSERT INTO scan_history (id_project, id_user, scan_type, target, summary, payload_json)
+            VALUES (?, ?, ?, ?, ?, ?);
+            """,
+            (project_id, uid, scan_type, target.strip(), summary, payload_str),
+        )
+
+    def getProjectScans(self, user_id: Any, project_id: int) -> List[Dict[str, Any]]:
+        uid = self._extract_user_id(user_id)
+        rows = self.connection.select_all(
+            """
+            SELECT id_scan, id_project, scan_type, target, summary, payload_json, created_at
+            FROM scan_history
+            WHERE id_user = ? AND id_project = ?
+            ORDER BY id_scan DESC;
+            """,
+            (uid, project_id),
+        )
+        for r in rows:
+            try:
+                r["payload"] = json.loads(r.get("payload_json") or "{}")
+            except Exception:
+                r["payload"] = {}
+        return rows
+
+    def getRecentScans(self, user_id: Any, limit: int = 15) -> List[Dict[str, Any]]:
+        uid = self._extract_user_id(user_id)
+        rows = self.connection.select_all(
+            """
+            SELECT s.id_scan, s.id_project, s.scan_type, s.target, s.summary, s.payload_json, s.created_at,
+                   p.name_project
+            FROM scan_history s
+            LEFT JOIN project p ON p.id_project = s.id_project
+            WHERE s.id_user = ?
+            ORDER BY s.id_scan DESC
+            LIMIT ?;
+            """,
+            (uid, limit),
+        )
+        for r in rows:
+            try:
+                r["payload"] = json.loads(r.get("payload_json") or "{}")
+            except Exception:
+                r["payload"] = {}
+        return rows
+
+    def getDashboardStats(self, user_id: Any) -> Dict[str, Any]:
+        uid = self._extract_user_id(user_id)
+        proj_count = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM project WHERE id_user = ?;", (uid,)
+        )
+        scan_count = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ?;", (uid,)
+        )
+        company_scans = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'company';",
+            (uid,),
+        )
+        server_scans = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'server';",
+            (uid,),
+        )
+        personal_scans = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'personal';",
+            (uid,),
+        )
+        keys = self.getAllApiKeys(uid)
+        return {
+            "projects": int((proj_count or {}).get("cnt", 0)),
+            "total_scans": int((scan_count or {}).get("cnt", 0)),
+            "company_scans": int((company_scans or {}).get("cnt", 0)),
+            "server_scans": int((server_scans or {}).get("cnt", 0)),
+            "personal_scans": int((personal_scans or {}).get("cnt", 0)),
+            "configured_keys": list(keys.keys()),
+        }

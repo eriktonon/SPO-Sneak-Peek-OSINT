@@ -1,35 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt">
-   <head>
-       <!--URL icon-->
-      <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <link rel="shortcut icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!-- Compiled and minified CSS -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-      <!--Style css -->
-      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <meta charset="UTF-8">
-      <title>SPO - Sneak Peak OSINT </title>
-   </head>
-   <body background="{{ url_for('static', filename='img/bg.jpg') }}" class="error" id="particles-js">
-      <div class="error">
-      <div class="row">
-      <div class="error col s2 m3"></div>
-      <div class="card-panel grey darken-4">
-         <div class="card-action white-text center">
-            <i class="large material-icons">device_hub</i>
-             <p>Successfully Registered</p>
-            <a href="{{ url_for('login')}}">click here to login</a>
-         </div>
+<html lang="en" class="dark">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>SPO — Operator Registered</title>
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#090d16] text-slate-200 min-h-screen flex items-center justify-center p-4">
+   <div class="w-full max-w-md bg-[#111827] border border-emerald-500/30 rounded-2xl p-8 text-center space-y-4">
+      <div class="w-14 h-14 mx-auto rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+         <i class="material-icons text-3xl">verified_user</i>
       </div>
-      <!--particles-->
-      <script src="{{ url_for('static', filename='js/particles.js-master/particles.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/configParticle.js') }}"></script>
-   </body>
+      <h2 class="text-xl font-bold text-white">Operator Account Created</h2>
+      <p class="text-xs text-slate-400">Your credentials have been hashed with PBKDF2-SHA256 and stored in the vault.</p>
+      <a href="{{ url_for('login') }}" class="inline-block w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-4 rounded-lg transition">
+         Proceed to Login
+      </a>
+   </div>
+</body>
 </html>

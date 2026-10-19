@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spo-sneak-peek-osint"
+version = "2.0.0"
+description = "SPO - Sneak Peek OSINT: Tactical Open Source Intelligence Framework for Corporate, Infrastructure, Legal & Personal Reconnaissance"
+readme = "README.md"
+license = { text = "GPL-2.0-only" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Victor de Queiroz" },
+    { name = "Erik Tonon" }
+]
+dependencies = [
+    "Flask>=3.0.0,<4.0.0",
+    "Werkzeug>=3.0.0,<4.0.0",
+    "requests>=2.32.0",
+    "beautifulsoup4>=4.12.3",
+    "lxml>=5.2.0",
+    "python-whois>=0.9.4",
+    "dnspython>=2.6.1",
+    "shodan>=1.31.0",
+    "gunicorn>=22.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "ruff>=0.5.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

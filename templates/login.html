@@ -1,47 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-       <!--URL icon-->
-      <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <link rel="shortcut icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!-- Compiled and minified CSS -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-      <!--Style css -->
-      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <meta charset="UTF-8">
-      <title>SPO - Sneak Peek OSINT -- login</title>
-   </head>
-   <body background="{{ url_for('static', filename='img/bg.jpg') }}" class="loginScreen" id="particles-js">
-      <div class="row">
-         <div class="login">
-            <div class="col s12 m12">
-               <i class="large material-icons">device_hub</i>
-               <h6> S N E A K   P E E K   O S I N T</h6>
-               <br>
-            </div>
-            <form action="{{ url_for('login')}}" method="POST">
-               <div class="row">
-                  <div class="input-field col s12 white-text ">
-                     <input name="user" id="user" type="text" class="validate" title="Invalid characters" pattern="[a-zA-Z0-9\s]+$">
-                     <label class="active" for="user">User</label>
-                  </div>
-                  <div class="input-field col s12 white-text">
-                     <input name="password" id="password" type="password" class="validate">
-                     <label class="active" for="password">Password</label>
-                  </div>
-               </div>
-               <button class="btn waves-effect waves-light col s12 grey darken-4" type="submit" name="action">Login</button>
-            </form>
+<html lang="en" class="dark">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>SPO — Sneak Peek OSINT // Operator Login</title>
+   <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/png" />
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+   <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#090d16] text-slate-200 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+   <div id="particles-js" class="absolute inset-0 z-0 opacity-40"></div>
+   <div class="relative z-10 w-full max-w-md bg-[#111827]/95 backdrop-blur border border-slate-800 rounded-2xl p-8 shadow-2xl">
+      <div class="text-center mb-6">
+         <div class="w-14 h-14 mx-auto rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-3">
+            <i class="material-icons text-3xl">device_hub</i>
          </div>
+         <h1 class="font-mono font-bold tracking-widest text-lg text-white">SNEAK PEEK OSINT</h1>
+         <p class="text-xs font-mono text-emerald-400 mt-1">Tactical Reconnaissance Console v2.0</p>
       </div>
-      <!--particles-->
-      <script src="{{ url_for('static', filename='js/particles.js-master/particles.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/configParticle.js') }}"></script>
-   </body>
+
+      <form action="{{ url_for('login') }}" method="POST" class="space-y-4">
+         <div>
+            <label for="user" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Operator Username</label>
+            <input name="user" id="user" type="text" required autocomplete="username" placeholder="operator"
+               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+         </div>
+         <div>
+            <label for="password" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Password</label>
+            <input name="password" id="password" type="password" required autocomplete="current-password" placeholder="••••••••"
+               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+         </div>
+         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2">
+            <i class="material-icons text-base">login</i>
+            <span>Authenticate</span>
+         </button>
+      </form>
+   </div>
+   <script src="{{ url_for('static', filename='js/particles.js-master/particles.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/configParticle.js') }}"></script>
+</body>
 </html>

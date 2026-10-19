@@ -1,35 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt">
-   <head>
-       <!--URL icon-->
-      <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <link rel="shortcut icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!-- Compiled and minified CSS -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-      <!--Style css -->
-      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <meta charset="UTF-8">
-      <title>SPO - Sneak Peak OSINT </title>
-   </head>
-   <body background="{{ url_for('static', filename='img/bg.jpg') }}" class="error" id="particles-js">
-      <div class="error">
-      <div class="row">
-      <div class="error col s2 m3"></div>
-      <div class="card-panel grey darken-4">
-         <div class="card-action white-text center">
-            <i class="large material-icons">hot_tub</i>
-            <br>Page Not Found.<br>
-            <a href="{{ url_for('login')}}">Back</a>
-         </div>
-      </div>
-      <!--particles-->
-      <script src="{{ url_for('static', filename='js/particles.js-master/particles.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/configParticle.js') }}"></script>
-   </body>
+<html lang="en" class="dark">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>SPO — 404 Not Found</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#090d16] text-slate-200 min-h-screen flex items-center justify-center p-4">
+   <div class="w-full max-w-md bg-[#111827] border border-slate-800 rounded-2xl p-8 text-center space-y-4">
+      <div class="text-4xl font-mono font-bold text-cyan-400">404</div>
+      <h2 class="text-lg font-semibold text-white">Resource Not Found</h2>
+      <a href="{{ url_for('login') }}" class="inline-block bg-slate-800 hover:bg-slate-700 text-white text-sm py-2 px-5 rounded-lg">Return to Console</a>
+   </div>
+</body>
 </html>

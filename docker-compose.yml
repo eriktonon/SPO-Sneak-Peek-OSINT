@@ -1,0 +1,19 @@
+services:
+  spo-osint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spo-sneak-peek-osint
+    ports:
+      - "${SPO_PORT:-1337}:1337"
+    environment:
+      - SPO_PORT=1337
+      - SPO_HOST=0.0.0.0
+      - SPO_DEBUG=false
+      - SPO_DB_PATH=/app/data/spo.db
+    volumes:
+      - spo_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  spo_data:

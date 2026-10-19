@@ -1,129 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--URL icon-->
-      <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <link rel="shortcut icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <!-- Compiled and minified CSS -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-      <!--Style css -->
-      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <meta charset="UTF-8">
-      <title>SPO - Sneak Peek OSINT -- Dashboard</title>
-   </head>
-   <body class="dashboard">
-      <nav>
-         <div class="nav-wrapper blue-grey darken-4">
-            <ul class="right hide-on-med-and-down">
-               <li><a href="sass.html"><i class="material-icons">search</i></a></li>
-               <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
-               <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
-            </ul>
-         </div>
-      </nav>
-      <ul class="side-nav col s6 fixed blue-grey darken-4">
-         <li class="white-text center">
-            <p>
-               <i class="large material-icons">device_hub</i>
-            <h6>S N E A K   P E E K   O S I N T</h6>
-            </p>
-         </li>
-         <li>
-            <div class="divider"></div>
-            <ul class="collapsible white">
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">visibility</i>
-                     Investigation
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('companyInvestigation') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to start a new Company investigation, this is the first step for your investigation about this company.">Company Investigation</a>
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('personalInvestigation') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to start a new personal investigation, this is the first step for your personal investigation.">Personal Investigation</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">dns</i>
-                     Databases
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to open your databases">Show Databases</a>
-                     <a href="" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to create a new database ">Create Database</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">airplay</i>
-                     Search for Servers
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('searchServers') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to search a server or service">Server or Service</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">account_circle</i>
-                     Personal Trace
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('personalTrace') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to search a person">Personal Search</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">assignment_ind</i>
-                     <a href="{{ url_for('aboutUS')}}" class="black-text">Contact / About us</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">help_outline</i>
-                     Help
-                  </div>
-                  <div class="collapsible-body">
-                     <div class="row">
-                        <div class="card blue-grey black">
-                           <div class="card-content white-text">
-                              <span class="card-title">SPO Sneak Peek OSINT</span>
-                              <p>SPO is a software for OSINT research and creates a case for investigation. If you want learn about Opensource Inteligence click below </p>
-                           </div>
-                           <div class="card-action">
-                              <a href="{{ url_for('aboutOSINT') }}">Read more about OSINT</a>
-                              <a href="{{ url_for('manual') }}">How to use SPO</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </li>
-            </ul>
-         </li>
-         <div class="divider"></div>
-      </ul>
-      <div class="col s4 m4"></div>
-      <div class="fixed-action-btn">
-         <a class="btn-floating btn-large tooltiped red ">
-         <i class="large material-icons">settings</i>
-         </a>
-         <ul>
-            <li><a href="{{ url_for('insertKeys') }}" class="btn-floating tooltipped light-blue darken-4" data-position="bottom" data-delay="50" data-tooltip="Add social media keys"><i class="material-icons">vpn_key</i></a></li>
-            <li><a href="" class="btn-floating tooltipped grey darken-4" data-position="bottom" data-delay="50" data-tooltip="Cadastrar usuário"><i class="material-icons">date_range</i></a></li>
-            <li><a href="{{ url_for('exit') }}" class="btn-floating tooltipped grey darken-4" data-position="bottom" data-delay="50" data-tooltip="exit"><i class="material-icons">move_to_inbox</i></a></li>
-         </ul>
+{% extends "base.html" %}
+{% block title %}SPO — OSINT Methodology & Intelligence Cycle{% endblock %}
+{% block header_title %}OSINT Intelligence Cycle & Methodology{% endblock %}
+
+{% block content %}
+<div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
+   <h2 class="text-xl font-bold text-white flex items-center gap-2">
+      <i class="material-icons text-emerald-400">school</i> Open Source Intelligence (OSINT) Methodology
+   </h2>
+   <p class="text-sm text-slate-300 leading-relaxed">
+      <b>Open Source Intelligence (OSINT)</b> is the structured collection, correlation, and analysis of publicly available data from the internet, public registries, DNS/RDAP infrastructure, certificate transparency logs, official gazettes, and developer platforms to produce actionable intelligence.
+   </p>
+
+   <div class="grid grid-cols-1 md:grid-cols-5 gap-4 pt-2">
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+         <div class="text-xs font-mono text-emerald-400">PHASE 01</div>
+         <div class="font-semibold text-white mt-1">Planning & Scope</div>
+         <p class="text-xs text-slate-400 mt-1.5">Define target organization, domains, CNPJs, or handles inside an Investigation Case.</p>
       </div>
-      </li>
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+         <div class="text-xs font-mono text-cyan-400">PHASE 02</div>
+         <div class="font-semibold text-white mt-1">Collection</div>
+         <p class="text-xs text-slate-400 mt-1.5">Query RDAP, DNS, crt.sh, BrasilAPI QSA, Shodan InternetDB, OTX, and GitHub events.</p>
       </div>
-      <!--jQuery materialize-->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <!-- Compiled and minified JavaScript -->
-      <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/button.js') }}"></script>
-   </body>
-</html>
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+         <div class="text-xs font-mono text-amber-400">PHASE 03</div>
+         <div class="font-semibold text-white mt-1">Processing</div>
+         <p class="text-xs text-slate-400 mt-1.5">Normalize CNPJ documents, deduplicate subdomains, resolve IPs, and extract commit emails.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+         <div class="text-xs font-mono text-purple-400">PHASE 04</div>
+         <div class="font-semibold text-white mt-1">Correlation</div>
+         <p class="text-xs text-slate-400 mt-1.5">Pivot from domain registrant CNPJ to QSA partners, government contracts, and open CVEs.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+         <div class="text-xs font-mono text-rose-400">PHASE 05</div>
+         <div class="font-semibold text-white mt-1">Dissemination</div>
+         <p class="text-xs text-slate-400 mt-1.5">Export structured JSON evidence packages for legal, red-team, or compliance reporting.</p>
+      </div>
+   </div>
+</div>
+{% endblock %}

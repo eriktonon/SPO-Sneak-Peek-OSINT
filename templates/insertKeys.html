@@ -1,165 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--URL icon-->
-      <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <link rel="shortcut icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/x-icon" />
-      <!-- Compiled and minified CSS -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-      <!--Style css -->
-      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <meta charset="UTF-8">
-      <title>SPO - Sneak Peek OSINT -- Dashboard</title>
-   </head>
-   <body class="dashboard">
-      <nav>
-         <div class="nav-wrapper blue-grey darken-4">
-            <ul class="right hide-on-med-and-down">
-               <li><a href="sass.html"><i class="material-icons">search</i></a></li>
-               <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
-               <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
-            </ul>
+{% extends "base.html" %}
+{% block title %}SPO — API Keys Vault{% endblock %}
+{% block header_title %}External Threat Intelligence API Keys Vault{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+   <div class="lg:col-span-2 bg-spo-panel border border-spo-border rounded-xl p-6 space-y-5">
+      <div class="flex items-center gap-2">
+         <i class="material-icons text-emerald-400">vpn_key</i>
+         <h2 class="text-lg font-semibold text-white">Configure External OSINT API Keys</h2>
+      </div>
+      <p class="text-xs text-slate-400">
+         SPO v2.0 operates in <b>Zero-Key Mode</b> by default using Registro.br/IANA RDAP, BrasilAPI, ReceitaWS, crt.sh, HackerTarget, AlienVault OTX, Querido Diário, and Shodan InternetDB. Add optional API keys below to unlock deep service banner grabbing and VirusTotal v3 multi-engine reputation.
+      </p>
+
+      <form action="{{ url_for('insertKeys') }}" method="POST" class="space-y-4">
+         <div>
+            <label for="shodan" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
+               Shodan API Key {% if configured_keys and configured_keys.get('shodan') %}<span class="text-emerald-400">({{ configured_keys.get('shodan') }})</span>{% endif %}
+            </label>
+            <input name="shodan" id="shodan" type="password" placeholder="Enter Shodan API Key..."
+               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
          </div>
-      </nav>
-      <ul class="side-nav col s6 fixed blue-grey darken-4">
-         <li class="white-text center">
-            <p>
-               <i class="large material-icons">device_hub</i>
-            <h6>S N E A K   P E E K   O S I N T</h6>
-            </p>
-         </li>
-         <li>
-            <div class="divider"></div>
-            <ul class="collapsible white">
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">visibility</i>
-                     Investigation
-                  </div>
-                   <div class="collapsible-body">
-                     <a href="{{ url_for('companyInvestigation') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to start a new Company investigation, this is the first step for your investigation about this company.">Company Investigation</a>
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('personalInvestigation') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to start a new personal investigation, this is the first step for your personal investigation.">Personal Investigation</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">dns</i>
-                     Databases
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to open your databases">Show Databases</a>
-                     <a href="" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to create a new database ">Create Database</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">airplay</i>
-                     Search for Servers
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('searchServers') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to search a server or service">Server or Service</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">account_circle</i>
-                     Personal Trace
-                  </div>
-                  <div class="collapsible-body">
-                     <a href="{{ url_for('personalTrace') }}" class="btn-flat tooltipped" data-position="right" data-delay="50" data-tooltip="Click here to search a person">Personal Search</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">assignment_ind</i>
-                     <a href="{{ url_for('aboutUS')}}" class="black-text">Contact / About us</a>
-                  </div>
-               </li>
-               <li>
-                  <div class="collapsible-header">
-                     <i class="material-icons">help_outline</i>
-                     Help
-                  </div>
-                  <div class="collapsible-body">
-                     <div class="row">
-                        <div class="card blue-grey black">
-                           <div class="card-content white-text">
-                              <span class="card-title">SPO Sneak Peek OSINT</span>
-                              <p>SPO is a software for OSINT research and creates a case for investigation. If you want learn about Opensource Inteligence click below </p>
-                           </div>
-                           <div class="card-action">
-                              <a href="{{ url_for('aboutOSINT') }}">Read more about OSINT</a>
-                              <a href="{{ url_for('manual') }}">How to use SPO</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </li>
-            </ul>
-         </li>
-         <div class="divider"></div>
-      </ul>
-      <div class="row">
-         <div class="col s9 offset-s3">
-            <div class="card horizontal">
-               <div class="card-stacked">
-                  <div class="card-content">
-                     <h2>Insert API keys</h2>
-                     <p>
-                        For use this software, you need insert some keys and users for external APIs and social media.
-                        <br>This keys is used for search on specific services.
-                        <br><b>For example</b>;
-                        <br>For search on shodan, we need a API key, <b>if you don't insert the key</b>, this some functionalities don't working.
-                        <br>if you use a free account your search is limited, and if you want to change the key, insert the new one.
-                     </p>
-                     <a href="https://account.shodan.io/register">Click here to create an Account on Shodan</a>
-                     <br/>
-                     <form action="{{ url_for('insertKeys')}}" method="POST">
-                        <div class="row">
-                           <div class="input-field col s12 black-text ">
-                              <input name="shodan" id="shodan" type="text" class="validate" title="Invalid characters" pattern="[a-zA-Z0-9\s]+$">
-                              <label class="active" for="shodan">Insert here your Shodan key</label>
-                               {% block content%}
-                                    <p>
-                                    {{ get_flashed_messages()[0]}}
-                                    </p>
-                               {% endblock %}
-                           </div>
-                        </div>
-                        <button class="btn waves-effect waves-light col s12 grey darken-4" type="submit" name="action">Insert a SHODAN API KEY</button>
-                     </form>
-                  </div>
-               </div>
-               <div class="card-image">
-                  <img src="{{ url_for('static', filename='img/key.png') }}">
-               </div>
-            </div>
+
+         <div>
+            <label for="virustotal" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
+               VirusTotal v3 API Key {% if configured_keys and configured_keys.get('virustotal') %}<span class="text-emerald-400">({{ configured_keys.get('virustotal') }})</span>{% endif %}
+            </label>
+            <input name="virustotal" id="virustotal" type="password" placeholder="Enter VirusTotal v3 API Key..."
+               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+         </div>
+
+         <div>
+            <label for="github" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
+               GitHub Personal Access Token (Optional — Higher Rate Limits) {% if configured_keys and configured_keys.get('github') %}<span class="text-emerald-400">({{ configured_keys.get('github') }})</span>{% endif %}
+            </label>
+            <input name="github" id="github" type="password" placeholder="ghp_..."
+               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+         </div>
+
+         <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-6 rounded-lg transition flex items-center gap-2">
+            <i class="material-icons text-base">save</i>
+            <span>Save Keys to SQLite Vault</span>
+         </button>
+      </form>
+   </div>
+
+   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
+      <h3 class="font-semibold text-white text-sm font-mono uppercase text-slate-400">Provider Status Matrix</h3>
+      <div class="space-y-2.5 text-xs">
+         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>Registro.br & IANA RDAP</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
+         </div>
+         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>BrasilAPI & ReceitaWS (CNPJ/QSA)</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
+         </div>
+         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>crt.sh + AlienVault OTX</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
+         </div>
+         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>Shodan InternetDB (Ports/CVEs)</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
+         </div>
+         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>Shodan Full Banner API</span>
+            <span class="px-2 py-0.5 rounded font-mono {{ 'bg-emerald-500/10 text-emerald-400' if configured_keys and configured_keys.get('shodan') else 'bg-slate-800 text-slate-400' }}">
+               {{ 'CONFIGURED' if configured_keys and configured_keys.get('shodan') else 'OPTIONAL KEY' }}
+            </span>
+         </div>
+         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>VirusTotal API v3</span>
+            <span class="px-2 py-0.5 rounded font-mono {{ 'bg-emerald-500/10 text-emerald-400' if configured_keys and configured_keys.get('virustotal') else 'bg-slate-800 text-slate-400' }}">
+               {{ 'CONFIGURED' if configured_keys and configured_keys.get('virustotal') else 'OPTIONAL KEY' }}
+            </span>
          </div>
       </div>
-      <div class="col s4 m4"></div>
-      <div class="fixed-action-btn">
-         <a class="btn-floating btn-large tooltiped red ">
-         <i class="large material-icons">settings</i>
-         </a>
-         <ul>
-            <li><a href="{{ url_for('insertKeys') }}" class="btn-floating tooltipped light-blue darken-4" data-position="bottom" data-delay="50" data-tooltip="Add social media keys"><i class="material-icons">vpn_key</i></a></li>
-            <li><a href="{{ url_for('exit') }}" class="btn-floating tooltipped grey darken-4" data-position="bottom" data-delay="50" data-tooltip="exit"><i class="material-icons">move_to_inbox</i></a></li>
-         </ul>
-      </div>
-      </li>
-      </div>
-      <!--jQuery materialize-->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <!-- Compiled and minified JavaScript -->
-      <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/button.js') }}"></script>
-   </body>
-</html>
+   </div>
+</div>
+{% endblock %}

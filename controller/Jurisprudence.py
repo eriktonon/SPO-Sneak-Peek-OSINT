@@ -1,139 +1,79 @@
-__Author__ = 'Victor de Queiroz'
 # -*- coding:UTF-8 -*-
 """
-Crawler for jurisprudence. www.jusbrasil.com.br
-
-This is a Brazilian site for lawyers publications about jurisprudence and others informations
-such as "diário da união" posts.
-
-This crawler search jurisprudence for CNPJ
-(CNPJ is a Brazilian documentation about companies)
+Legal, Gazette & Jurisprudence OSINT Controller for SPO v2.0.
+Combines live queries to Querido Diário API (Open Knowledge Brasil official gazettes)
+with structured Legal & Compliance OSINT search vectors across Jusbrasil,
+Diário Oficial da União (DOU), Portal da Transparência (CEIS/CNEP), Escavador, and CNJ.
 """
-
-# query for search format
-# https://www.jusbrasil.com.br/jurisprudencia/busca?q=07.170.938%2F0001-07
-# format cnpj reciverd = 07.170.938/0001-07
-# format query serch cnpj = 07.170.938%2F0001-07
-
-import urllib.request
-from bs4 import BeautifulSoup
+from typing import Dict
+from urllib.parse import quote_plus
+import requests
 
 
-class Jurisprudence(object):
+class Jurisprudence:
+    HEADERS = {
+        "User-Agent": "SPO-Sneak-Peek-OSINT/2.0 (+https://github.com/eriktonon/SPO-Sneak-Peek-OSINT)",
+        "Accept": "application/json",
+    }
 
-    def jurisprudence(self, cnpj):
-        # replace / to %2F on cnpj
-        sub = "/"
-        for i in range(0, len(sub)):
-            cnpj = cnpj.replace(sub[i], "%2F")
+    def jurisprudence(self, query_term: str) -> Dict[str, str]:
+        """
+        Search official gazettes via Querido Diário API and generate direct
+        legal/compliance OSINT verification links for the given CNPJ or entity name.
+        Returns a dictionary mapping descriptive labels to URLs.
+        """
+        if not query_term or not str(query_term).strip():
+            return {}
 
-        req = urllib.request.Request(
-            url="https://www.jusbrasil.com.br/jurisprudencia/busca?q=" + cnpj,
-            data=None,
-            headers={
-                'User-Agent': 'SPO - sneak peak OSINT https://github.com/victordequeiroz/SPO-Sneak-Peek-OSINT'
-            }
+        clean_term = str(query_term).strip()
+        encoded = quote_plus(clean_term)
+        digits_only = "".join(ch for ch in clean_term if ch.isdigit())
+
+        results: Dict[str, str] = {}
+
+        # 1. Live query to Querido Diário (Official Municipal Gazettes API)
+        try:
+            resp = requests.get(
+                "https://queridodiario.ok.org.br/api/gazettes",
+                params={"querystring": clean_term, "size": 5},
+                headers=self.HEADERS,
+                timeout=8,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                for idx, gaz in enumerate(data.get("gazettes", [])[:5], start=1):
+                    territory = gaz.get("territory_name") or "Município"
+                    state = gaz.get("state_code") or ""
+                    date = gaz.get("date") or "Data N/D"
+                    url = gaz.get("url") or gaz.get("txt_url") or ""
+                    if url:
+                        label = f"Diário Oficial ({territory}/{state}) - {date} [#{idx}]"
+                        results[label] = url
+        except Exception:
+            pass
+
+        # 2. High-value Legal, Judicial & Compliance OSINT Portals
+        results[f"Jusbrasil — Jurisprudência & Processos ({clean_term})"] = (
+            f"https://www.jusbrasil.com.br/jurisprudencia/busca?q={encoded}"
+        )
+        results[f"Jusbrasil — Diários Oficiais ({clean_term})"] = (
+            f"https://www.jusbrasil.com.br/diarios/busca?q={encoded}"
+        )
+        results[f"Diário Oficial da União (Imprensa Nacional DOU)"] = (
+            f"https://www.in.gov.br/consulta/-/buscar/dou?q=%22{encoded}%22&s=todos&exactDate=all&sortType=0"
+        )
+        results[f"Escavador — Monitoramento de Processos e Partes"] = (
+            f"https://www.escavador.com/busca?q={encoded}&qo=t"
+        )
+        if digits_only:
+            results[f"Portal da Transparência — Sanções CEIS/CNEP/CEPIM ({digits_only})"] = (
+                f"https://portaldatransparencia.gov.br/sancoes/consulta?cpfCnpj={digits_only}"
+            )
+            results[f"PNCP — Contratos e Atas no Portal Nacional de Contratações"] = (
+                f"https://pncp.gov.br/app/contratos?q={digits_only}"
+            )
+        results[f"Google Legal Dork (Intimações, Editais & PDFs Judiciais)"] = (
+            f"https://www.google.com/search?q=%22{encoded}%22+(site:jus.br+OR+site:jusbrasil.com.br+OR+site:in.gov.br)"
         )
 
-        # connect to jusbrasil for request a html content
-        with urllib.request.urlopen(req) as url:
-            # open html
-            url_dump = url.read()
-
-        # instance of beautifulsoup
-        soup = BeautifulSoup(url_dump, "lxml")
-
-        # search div class "i juris" on url_dump
-        result_not_treated = soup.findAll("div", {"class": "i juris"})
-
-        # treat result_not_treated for show date of jurisprudence and link to show
-        # initializate data_trated
-        data_treated = {}
-        # initialize link list
-        links_number_pages = {}
-
-        # update data_treated with link and data_link extrated from beautifulsoup
-        for i in range(len(result_not_treated)):
-            link = str(result_not_treated[i].find_all("a"))
-            link = link.replace("<a href=\"", "")
-            link = link.split("\"")
-            link = link[0]
-            link = link.replace("[", "")
-            data_link = str(result_not_treated[i].find_all("p", {"class": "info"}))
-            data_link = data_link.replace("<p class=\"info\"> ", "")
-            data_link = data_link.replace(" </p>", "")
-            data_link = data_link.replace("Data de publicação: ", "")
-            data_link = data_link.replace("[ ", "")
-            data_link = data_link.replace(" ]", "")
-            if data_link in data_treated:
-                data_treated.update({data_link + "(" + str(i) + ")": link})
-            data_treated.update({data_link: link})
-
-        # search number of pages on result and create a links for crawler
-        links_of_pages_not_treated = soup.findAll("a", {"class": "number"})
-        if links_of_pages_not_treated:
-
-            # get last page
-            number = len(links_of_pages_not_treated)
-            links_of_pages_not_treated = links_of_pages_not_treated[number - 1]
-            links_of_pages_last = str(links_of_pages_not_treated).replace("<a class=\"number\"", "")
-            links_of_pages_last = links_of_pages_last.replace("data-filter-name=\"page\"", "")
-            links_of_pages_last = links_of_pages_last.replace("data-filter-value=\"", "")
-            links_of_pages_last = links_of_pages_last.replace("rel=\"nofollow\">", "")
-            links_of_pages_last = links_of_pages_last.replace("</a>", "")
-            links_of_pages_last = links_of_pages_last.replace("\"", "")
-            links_of_pages_last = links_of_pages_last.split()
-            links_of_pages_last = links_of_pages_last[1]
-            links_of_pages_last = links_of_pages_last.replace("href=", "")
-            links_of_pages_last = links_of_pages_last.replace("&amp", "&p=")
-            links_of_pages_last = links_of_pages_last.split(";")
-            last_page = links_of_pages_last[1].split("p=")
-
-            # create a list for urls
-            for i in range(int(last_page[1]) + 1):
-                if i == 0:
-                    i += 1
-                links_number_pages.update({i: "https://www.jusbrasil.com.br" + links_of_pages_last[0] + str(
-                    i) + "&amp%3B" + str(links_of_pages_last[1])})
-
-        if links_number_pages:
-            req = urllib.request.Request(
-                url=links_number_pages[i],
-                data=None,
-                headers={
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-                }
-            )
-
-            # connect to jusbrasil for request a html content
-            with urllib.request.urlopen(req) as url:
-                # open html
-                url_dump = url.read()
-
-            # instance of beautifulsoup
-            soup = BeautifulSoup(url_dump, "lxml")
-
-            # search div class "i juris" on url_dump
-            result_not_treated = soup.findAll("div", {"class": "i juris"})
-
-            # treat result_not_treated for show date of jurisprudence and link to show
-            # update data_treated with link and data_link extrated from beautifulsoup
-            for i in range(len(result_not_treated)):
-                link = str(result_not_treated[i].find_all("a"))
-                link = link.replace("<a href=\"", "")
-                link = link.split("\"")
-                link = link[0]
-                link = link.replace("[", "")
-                data_link = str(result_not_treated[i].find_all("p", {"class": "info"}))
-                data_link = data_link.replace("<p class=\"info\"> ", "")
-                data_link = data_link.replace(" </p>", "")
-                data_link = data_link.replace("Data de publicação: ", "")
-                data_link = data_link.replace("[ ", "")
-                data_link = data_link.replace(" ]", "")
-                if data_link in data_treated:
-                    data_treated.update({data_link + "(" + str(i) + ")": link})
-                data_treated.update({data_link: link})
-            return data_treated
-        else:
-            return data_treated
-
+        return results
