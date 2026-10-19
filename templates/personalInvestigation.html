@@ -1,136 +1,188 @@
 {% extends "base.html" %}
-{% block title %}SPO — Personal & Social OSINT{% endblock %}
-{% block header_title %}Personal, Username, Email & Social Media Reconnaissance{% endblock %}
+{% block title %}SPO — Personal &amp; Social OSINT // IBM Carbon v11{% endblock %}
+{% block header_title %}01.4 // PERSONAL, USERNAME, EMAIL &amp; SOCIAL MEDIA RECONNAISSANCE{% endblock %}
 
 {% block content %}
-<div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-   <div class="flex items-center gap-2 mb-2">
-      <i class="material-icons text-purple-400">person_search</i>
-      <h2 class="text-lg font-semibold text-white">Personal & Social Media OSINT Engine</h2>
-   </div>
-   <p class="text-xs text-slate-400 mb-5">
-      Investigate a username/handle (e.g. <code class="text-purple-400">eriktonon</code>, <code class="text-purple-400">torvalds</code>) and/or email address across 10+ developer and social platforms, extract public GitHub commit emails, check Gravatar cryptographic hashes, and launch targeted social dorks.
-   </p>
+<section class="cds-panel" style="border-left:4px solid var(--cds-primary);" aria-labelledby="personal-h1">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="user-search" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+      <span>MOD-03 // PERSONAL &amp; SOCMINT ENGINE</span>
+    </div>
+    <span class="cds-tag cds-tag-blue">10+ PLATFORMS + GITHUB COMMITS + GRAVATAR</span>
+  </div>
 
-   <form action="{{ url_for('personalInvestigation') }}" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-      <div>
-         <label for="profile_facebook" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Username / Social Handle</label>
-         <input name="profile_facebook" id="profile_facebook" type="text" value="{{ recon.username if recon else '' }}" placeholder="eriktonon" required
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-purple-500">
+  <div class="cds-panel-body">
+    <div>
+      <h1 id="personal-h1" class="cds-page-h1"><strong>Personal &amp; Social Media</strong> OSINT Engine</h1>
+      <p class="cds-lead" style="margin-top:6px;">
+        Investigate a username/handle (e.g. <code class="mono">eriktonon</code>, <code class="mono">torvalds</code>) and/or email address across 10 developer and social platforms, extract public GitHub push commit emails, verify SHA-256 Gravatar profiles, and launch targeted social dorks.
+      </p>
+    </div>
+
+    <form action="{{ url_for('personalInvestigation') }}" method="POST" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:end;padding-top:6px;">
+      <div class="cds-field-group">
+        <label for="profile_facebook" class="cds-label">Username / Social Handle</label>
+        <input name="profile_facebook" id="profile_facebook" type="text" value="{{ recon.username if recon else '' }}" placeholder="eriktonon" required class="cds-input" />
       </div>
-      <div>
-         <label for="email" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Target Email (Optional)</label>
-         <input name="email" id="email" type="email" value="{{ recon.email if recon else '' }}" placeholder="target@domain.com"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-purple-500">
+
+      <div class="cds-field-group">
+        <label for="personal-email" class="cds-label">Target Email (Optional)</label>
+        <input name="email" id="personal-email" type="email" value="{{ recon.email if recon else '' }}" placeholder="operator@domain.com" class="cds-input" />
       </div>
-      <div>
-         <label for="project_id" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Investigation Case</label>
-         <select name="project_id" id="project_id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
-            <option value="">-- Unassigned --</option>
-            {% for p in user_projects %}
-               <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
-            {% endfor %}
-         </select>
+
+      <div class="cds-field-group">
+        <label for="personal-project-id" class="cds-label">Attach to Investigation Case</label>
+        <select name="project_id" id="personal-project-id" class="cds-select">
+          <option value="">-- Unassigned --</option>
+          {% for p in user_projects %}
+            <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
+          {% endfor %}
+        </select>
       </div>
-      <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-medium py-2.5 px-5 rounded-lg transition flex items-center justify-center gap-2">
-         <i class="material-icons text-base">person_search</i>
-         <span>Run Personal Recon</span>
-      </button>
-   </form>
-</div>
+
+      <div>
+        <button type="submit" class="cds-btn cds-btn-primary" style="width:100%;">
+          <span>Run Personal Recon</span>
+          <i data-lucide="search" style="width:16px;height:16px;" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 
 {% if recon %}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-   <!-- Identity Profile Card -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center gap-4">
-         {% if recon.avatar_url %}
-            <img src="{{ recon.avatar_url }}" alt="Avatar" class="w-16 h-16 rounded-full border-2 border-purple-500/40 object-cover">
-         {% else %}
-            <div class="w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
-               <i class="material-icons text-3xl">person</i>
-            </div>
-         {% endif %}
-         <div>
-            <h3 class="text-lg font-bold text-white">{{ recon.github.name or recon.gravatar.display_name or recon.username }}</h3>
-            <div class="text-xs font-mono text-purple-400">@{{ recon.username }} • {{ recon.found_count }}/{{ recon.platforms|length }} platforms</div>
-         </div>
+<section class="cds-grid-3" aria-label="Personal Identity, Platform Presence, and Social Pivots">
+  <!-- Cell 1: Identity Profile -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="user-check" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>IDENTITY PROFILE ATTRIBUTION</h2>
+      </div>
+      <span class="cds-tag cds-tag-blue">@{{ recon.username }}</span>
+    </div>
+
+    <div class="cds-panel-body">
+      <div style="display:flex;align-items:center;gap:16px;">
+        {% if recon.avatar_url %}
+          <img src="{{ recon.avatar_url }}" alt="Profile avatar for {{ recon.username }}" style="width:64px;height:64px;object-fit:cover;border:1px solid var(--cds-border);" />
+        {% else %}
+          <div style="width:64px;height:64px;background-color:var(--cds-layer-02);border:1px solid var(--cds-border);display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="user" style="width:28px;height:28px;color:var(--cds-link);" aria-hidden="true"></i>
+          </div>
+        {% endif %}
+        <div>
+          <div style="font-size:18px;font-weight:600;">{{ recon.github.name or recon.gravatar.display_name or recon.username }}</div>
+          <div class="mono" style="font-size:12px;color:var(--cds-link);">{{ recon.found_count }} / {{ recon.platforms|length }} PLATFORMS VERIFIED</div>
+        </div>
       </div>
 
       {% if recon.github.found %}
-         <p class="text-xs text-slate-300 bg-slate-900 p-3 rounded-lg border border-slate-800">{{ recon.github.bio or 'No public bio provided.' }}</p>
-         <dl class="space-y-2 text-xs">
-            {% if recon.github.company %}
-               <div class="flex justify-between"><dt class="text-slate-400 font-mono">Company:</dt><dd class="text-white">{{ recon.github.company }}</dd></div>
-            {% endif %}
-            {% if recon.github.location %}
-               <div class="flex justify-between"><dt class="text-slate-400 font-mono">Location:</dt><dd class="text-white">{{ recon.github.location }}</dd></div>
-            {% endif %}
-            {% if recon.github.blog %}
-               <div class="flex justify-between"><dt class="text-slate-400 font-mono">Website:</dt><dd class="text-cyan-400 truncate max-w-[180px]">{{ recon.github.blog }}</dd></div>
-            {% endif %}
-            <div class="flex justify-between"><dt class="text-slate-400 font-mono">GitHub Repos / Followers:</dt><dd class="font-mono text-emerald-400">{{ recon.github.public_repos }} / {{ recon.github.followers }}</dd></div>
-         </dl>
+        <div class="cds-kv-list">
+          <div class="cds-kv-item" style="grid-column:span 2;">
+            <div class="cds-kv-dt">GitHub Bio</div>
+            <div class="cds-kv-dd" style="font-size:12.5px;">{{ recon.github.bio or 'No public bio provided.' }}</div>
+          </div>
+          <div class="cds-kv-item">
+            <div class="cds-kv-dt">Organization</div>
+            <div class="cds-kv-dd">{{ recon.github.company or 'N/A' }}</div>
+          </div>
+          <div class="cds-kv-item">
+            <div class="cds-kv-dt">Location</div>
+            <div class="cds-kv-dd">{{ recon.github.location or 'N/A' }}</div>
+          </div>
+          <div class="cds-kv-item">
+            <div class="cds-kv-dt">Public Repos</div>
+            <div class="cds-kv-dd mono">{{ recon.github.public_repos }}</div>
+          </div>
+          <div class="cds-kv-item">
+            <div class="cds-kv-dt">Followers</div>
+            <div class="cds-kv-dd mono">{{ recon.github.followers }}</div>
+          </div>
+        </div>
 
-         {% if recon.github.commit_emails %}
-            <div class="pt-2">
-               <div class="text-xs font-mono uppercase text-amber-400 mb-1.5">Extracted Commit Author Emails</div>
-               <div class="space-y-1">
-                  {% for em in recon.github.commit_emails %}
-                     <div class="px-2.5 py-1.5 rounded bg-amber-500/10 border border-amber-500/30 font-mono text-xs text-amber-300 break-all">{{ em }}</div>
-                  {% endfor %}
-               </div>
-            </div>
-         {% endif %}
+        {% if recon.github.commit_emails %}
+          <div>
+            <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);margin-bottom:6px;">Extracted Git Commit Author Emails</div>
+            <div class="cds-terminal">{% for em in recon.github.commit_emails %}{{ em }}
+{% endfor %}</div>
+          </div>
+        {% endif %}
       {% endif %}
-   </div>
+    </div>
+  </div>
 
-   <!-- Multi-Platform Enumeration -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <h3 class="font-semibold text-white flex items-center gap-2">
-            <i class="material-icons text-emerald-400">hub</i> Platform Presence ({{ recon.found_count }} Found)
-         </h3>
+  <!-- Cell 2: Multi-Platform Enumeration Table -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="network" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <h2>PLATFORM PRESENCE ({{ recon.found_count }} FOUND)</h2>
       </div>
-      <div class="space-y-2 max-h-80 overflow-y-auto pr-1">
-         {% for p in recon.platforms %}
-            <div class="p-3 rounded-lg border flex items-center justify-between {{ 'bg-emerald-500/10 border-emerald-500/30' if p.exists else 'bg-slate-900/50 border-slate-800 opacity-60' }}">
-               <div class="flex items-center gap-2.5">
-                  <i class="material-icons text-base {{ 'text-emerald-400' if p.exists else 'text-slate-500' }}">{{ p.icon }}</i>
-                  <div>
-                     <div class="text-xs font-semibold text-white">{{ p.platform }}</div>
-                     <div class="text-[11px] text-slate-400">{{ p.details if p.exists else 'Not found' }}</div>
-                  </div>
-               </div>
-               {% if p.exists %}
-                  <a href="{{ p.url }}" target="_blank" rel="noopener" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono text-xs hover:bg-emerald-500/30">
-                     Open &nearr;
+    </div>
+
+    <div class="cds-table-wrap" style="max-height:420px;overflow-y:auto;">
+      <table class="cds-table">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in recon.platforms %}
+            <tr>
+              <td>
+                <div style="font-weight:600;">{{ p.platform }}</div>
+                <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);">{{ p.details if p.exists else 'HTTP 404' }}</div>
+              </td>
+              <td>
+                <span class="cds-tag {{ 'cds-tag-green' if p.exists else 'cds-tag-outline' }}">
+                  {{ 'FOUND' if p.exists else 'ABSENT' }}
+                </span>
+              </td>
+              <td>
+                {% if p.exists %}
+                  <a href="{{ p.url }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost cds-btn-sm">
+                    <span>OPEN</span>
+                    <i data-lucide="external-link" style="width:12px;height:12px;" aria-hidden="true"></i>
                   </a>
-               {% endif %}
-            </div>
-         {% endfor %}
-      </div>
-   </div>
+                {% else %}
+                  <span class="mono" style="font-size:11px;color:var(--cds-text-muted);">&mdash;</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-   <!-- Targeted Social Media & Public Record Dorks -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <h3 class="font-semibold text-white flex items-center gap-2">
-            <i class="material-icons text-cyan-400">manage_search</i> Social & Public Record Pivots
-         </h3>
+  <!-- Cell 3: Social & Public Record Pivots -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="compass" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
+        <h2>SOCIAL &amp; PUBLIC RECORD DORK PIVOTS</h2>
       </div>
-      <div class="space-y-2">
-         {% for label, dork_url in recon.social_dorks.items() %}
-            <a href="{{ dork_url }}" target="_blank" rel="noopener" class="block bg-slate-900 hover:bg-slate-800 p-3 rounded-lg border border-slate-800 transition">
-               <div class="flex items-center justify-between text-xs font-medium text-cyan-300">
-                  <span>{{ label }}</span>
-                  <i class="material-icons text-sm">open_in_new</i>
-               </div>
-               <div class="text-[11px] font-mono text-slate-500 truncate mt-1">{{ dork_url }}</div>
-            </a>
-         {% endfor %}
+    </div>
+
+    <div class="cds-panel-body">
+      <div style="display:flex;flex-direction:column;gap:1px;background-color:var(--cds-border);border:1px solid var(--cds-border);">
+        {% for label, dork_url in recon.social_dorks.items() %}
+          <a href="{{ dork_url }}" target="_blank" rel="noopener noreferrer" class="cds-tile-interactive" style="padding:14px 16px;gap:4px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:var(--cds-link);">
+              <span>{{ label }}</span>
+              <i data-lucide="external-link" style="width:14px;height:14px;" aria-hidden="true"></i>
+            </div>
+            <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ dork_url }}</div>
+          </a>
+        {% endfor %}
       </div>
-   </div>
-</div>
+    </div>
+  </div>
+</section>
 {% endif %}
 {% endblock %}

@@ -1,178 +1,234 @@
 {% extends "base.html" %}
-{% block title %}SPO — Command Center Dashboard{% endblock %}
-{% block header_title %}OSINT Command Center // Overview{% endblock %}
+{% block title %}SPO — Command Center // IBM Carbon Control Plane{% endblock %}
+{% block header_title %}01 // OSINT COMMAND CENTER &amp; TELEMETRY OVERVIEW{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="flex items-center justify-between text-slate-400 text-xs font-mono uppercase">
-         <span>Total Recon Scans</span>
-         <i class="material-icons text-emerald-400">radar</i>
-      </div>
-      <div class="text-3xl font-bold font-mono text-white mt-2">{{ stats.total_scans if stats else 0 }}</div>
-      <div class="text-xs text-slate-400 mt-1">Persisted in local SQLite vault</div>
-   </div>
+<!-- Carbon v11 Split Hero + 2x2 KPI Hairline Matrix -->
+<section class="cds-hero-split" aria-labelledby="dashboard-h1">
+  <div class="cds-hero-main">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="cds-eyebrow">IBM CARBON v11 &bull; BUILD TO MANAGE (BTM) &bull; SHIFT-LEFT SECOPS</div>
+      <h1 id="dashboard-h1" class="cds-page-h1"><strong>Sneak Peek OSINT</strong> Tactical Reconnaissance Control Plane</h1>
+      <p class="cds-lead">
+        Unified open-source intelligence, attack surface discovery, and non-destructive Black-Box DAST auditing. Correlate Registro.br/IANA RDAP, Receita Federal CNPJ/QSA, Certificate Transparency (<code class="mono">crt.sh</code>), Shodan InternetDB CVEs, and GitHub commit footprints with local neural triage powered by <code class="mono">eriktonon/granite4.2-uncensored</code>.
+      </p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:8px;">
+      <a href="{{ url_for('companyInvestigation') }}" class="cds-btn cds-btn-primary">
+        <span>Run Corporate &amp; Domain Recon</span>
+        <i data-lucide="arrow-right" style="width:16px;height:16px;" aria-hidden="true"></i>
+      </a>
+      <a href="{{ url_for('securityAudit') }}" class="cds-btn cds-btn-danger">
+        <span>Launch Strix DAST Audit</span>
+        <i data-lucide="shield-alert" style="width:16px;height:16px;" aria-hidden="true"></i>
+      </a>
+      <a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-secondary">
+        <span>Open Granite 4.2 Uncensored AI</span>
+        <i data-lucide="cpu" style="width:16px;height:16px;" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="flex items-center justify-between text-slate-400 text-xs font-mono uppercase">
-         <span>Investigation Cases</span>
-         <i class="material-icons text-cyan-400">folder_special</i>
+  <div class="cds-kpi-grid-2x2" role="region" aria-label="Operational Telemetry Metrics">
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>TOTAL RECON SCANS</span>
+        <i data-lucide="activity" style="width:14px;height:14px;color:var(--cds-link);" aria-hidden="true"></i>
       </div>
-      <div class="text-3xl font-bold font-mono text-white mt-2">{{ stats.projects if stats else 0 }}</div>
-      <div class="text-xs text-slate-400 mt-1"><a href="{{ url_for('projects') }}" class="text-cyan-400 hover:underline">Manage & export cases &rarr;</a></div>
-   </div>
+      <div class="cds-kpi-value" style="color:var(--cds-link);">{{ stats.total_scans if stats else 0 }}</div>
+      <div class="cds-kpi-sub">PERSISTED IN SQLITE WAL VAULT</div>
+    </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="flex items-center justify-between text-slate-400 text-xs font-mono uppercase">
-         <span>Corporate & Infra</span>
-         <i class="material-icons text-amber-400">domain</i>
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>INVESTIGATION CASES</span>
+        <i data-lucide="folder-kanban" style="width:14px;height:14px;color:var(--cds-success-text);" aria-hidden="true"></i>
       </div>
-      <div class="text-3xl font-bold font-mono text-white mt-2">{{ (stats.company_scans + stats.server_scans) if stats else 0 }}</div>
-      <div class="text-xs text-slate-400 mt-1">{{ stats.company_scans if stats else 0 }} Corporate • {{ stats.server_scans if stats else 0 }} Server</div>
-   </div>
+      <div class="cds-kpi-value" style="color:var(--cds-success-text);">{{ stats.projects if stats else 0 }}</div>
+      <div class="cds-kpi-sub">
+        <a href="{{ url_for('projects') }}" style="color:var(--cds-link);text-decoration:none;">MANAGE &amp; EXPORT BUNDLES &rarr;</a>
+      </div>
+    </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="flex items-center justify-between text-slate-400 text-xs font-mono uppercase">
-         <span>Personal & Social</span>
-         <i class="material-icons text-purple-400">person_search</i>
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>CORPORATE &amp; INFRA</span>
+        <i data-lucide="server" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-      <div class="text-3xl font-bold font-mono text-white mt-2">{{ stats.personal_scans if stats else 0 }}</div>
-      <div class="text-xs text-slate-400 mt-1"> API Keys: {{ stats.configured_keys|join(', ') if stats and stats.configured_keys else 'Zero-Key Mode Active' }}</div>
-   </div>
-</div>
+      <div class="cds-kpi-value">{{ (stats.company_scans + stats.server_scans) if stats else 0 }}</div>
+      <div class="cds-kpi-sub">{{ stats.company_scans if stats else 0 }} CORPORATE &bull; {{ stats.server_scans if stats else 0 }} SERVER</div>
+    </div>
 
-<!-- Quick Launch Modules -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-   <a href="{{ url_for('companyInvestigation') }}" class="group bg-spo-panel border border-spo-border hover:border-emerald-500/50 rounded-xl p-6 transition flex flex-col justify-between">
-      <div>
-         <div class="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
-            <i class="material-icons">domain</i>
-         </div>
-         <h3 class="text-lg font-semibold text-white group-hover:text-emerald-400 transition">Company & Domain Recon</h3>
-         <p class="text-sm text-slate-400 mt-2">
-            RDAP/WHOIS ownership, DNS records (A, MX, NS, TXT), Certificate Transparency subdomains (crt.sh + OTX), Receita Federal CNPJ/QSA (BrasilAPI), and Official Gazettes.
-         </p>
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>PERSONAL &amp; SOCMINT</span>
+        <i data-lucide="user-check" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-      <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-mono text-emerald-400">
-         <span>LAUNCH MODULE</span>
-         <i class="material-icons text-sm">arrow_forward</i>
-      </div>
-   </a>
+      <div class="cds-kpi-value">{{ stats.personal_scans if stats else 0 }}</div>
+      <div class="cds-kpi-sub">KEYS: {{ stats.configured_keys|join(', ')|upper if stats and stats.configured_keys else 'ZERO-KEY MODE ACTIVE' }}</div>
+    </div>
+  </div>
+</section>
 
-   <a href="{{ url_for('searchServers') }}" class="group bg-spo-panel border border-spo-border hover:border-cyan-500/50 rounded-xl p-6 transition flex flex-col justify-between">
-      <div>
-         <div class="w-11 h-11 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
-            <i class="material-icons">dns</i>
-         </div>
-         <h3 class="text-lg font-semibold text-white group-hover:text-cyan-400 transition">Server, IP & Threat Intel</h3>
-         <p class="text-sm text-slate-400 mt-2">
-            Zero-key Shodan InternetDB open ports, CPEs & CVE vulnerabilities, IP Geolocation/ASN, full Shodan banner search, VirusTotal v3 reputation, and OTX Passive DNS.
-         </p>
+<!-- 4-Module 1px Hairline Structural Matrix -->
+<section aria-label="Reconnaissance Operational Modules">
+  <div class="cds-grid-4">
+    <a href="{{ url_for('companyInvestigation') }}" class="cds-tile-interactive">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">MOD-01 // CORPORATE</span>
+          <i data-lucide="building-2" style="width:18px;height:18px;color:var(--cds-link);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:17px;font-weight:600;">Company &amp; Domain Recon</h2>
+        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
+          RDAP/WHOIS ownership, DNS records (A, MX, NS, TXT), Certificate Transparency subdomains (crt.sh + OTX), Receita Federal CNPJ/QSA, and Official Gazettes.
+        </p>
       </div>
-      <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-mono text-cyan-400">
-         <span>LAUNCH MODULE</span>
-         <i class="material-icons text-sm">arrow_forward</i>
+      <div class="mono" style="font-size:11.5px;color:var(--cds-link);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
+        <span>OPEN WORKSPACE</span>
+        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-   </a>
+    </a>
 
-   <a href="{{ url_for('personalInvestigation') }}" class="group bg-spo-panel border border-spo-border hover:border-purple-500/50 rounded-xl p-6 transition flex flex-col justify-between">
-      <div>
-         <div class="w-11 h-11 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-4">
-            <i class="material-icons">person_search</i>
-         </div>
-         <h3 class="text-lg font-semibold text-white group-hover:text-purple-400 transition">Personal & Social OSINT</h3>
-         <p class="text-sm text-slate-400 mt-2">
-            Concurrent username enumeration across 10 platforms, deep GitHub recon with commit author email extraction, SHA-256 Gravatar resolution, and Social Media dorks.
-         </p>
+    <a href="{{ url_for('searchServers') }}" class="cds-tile-interactive">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">MOD-02 // INFRASTRUCTURE</span>
+          <i data-lucide="server" style="width:18px;height:18px;color:var(--cds-link);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:17px;font-weight:600;">Server, IP &amp; Threat Intel</h2>
+        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
+          Zero-key Shodan InternetDB open TCP ports, CPE technology fingerprints &amp; unpatched CVEs, ASN/ISP geolocation, VirusTotal v3 reputation, and Passive DNS.
+        </p>
       </div>
-      <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-mono text-purple-400">
-         <span>LAUNCH MODULE</span>
-         <i class="material-icons text-sm">arrow_forward</i>
+      <div class="mono" style="font-size:11.5px;color:var(--cds-link);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
+        <span>OPEN WORKSPACE</span>
+        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-   </a>
+    </a>
 
-   <a href="{{ url_for('securityAudit') }}" class="group bg-spo-panel border border-spo-border hover:border-rose-500/50 rounded-xl p-6 transition flex flex-col justify-between">
-      <div>
-         <div class="w-11 h-11 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mb-4">
-            <i class="material-icons">shield</i>
-         </div>
-         <h3 class="text-lg font-semibold text-white group-hover:text-rose-400 transition">Strix DAST & Prevention</h3>
-         <p class="text-sm text-slate-400 mt-2">
-            PE-AGENTS-IBM Security & Strix Black-Box DAST surface auditor: OWASP Top 10 headers, TLS cipher inspection, SPF/DMARC anti-spoofing, SSRFGuard & Shift-Left Autofix.
-         </p>
+    <a href="{{ url_for('personalInvestigation') }}" class="cds-tile-interactive">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">MOD-03 // SOCMINT</span>
+          <i data-lucide="user-search" style="width:18px;height:18px;color:var(--cds-link);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:17px;font-weight:600;">Personal &amp; Social OSINT</h2>
+        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
+          Concurrent handle enumeration across 10 platforms, deep GitHub push event inspection for commit author emails, SHA-256 Gravatar resolution, and dorks.
+        </p>
       </div>
-      <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-mono text-rose-400">
-         <span>LAUNCH STRIX</span>
-         <i class="material-icons text-sm">arrow_forward</i>
+      <div class="mono" style="font-size:11.5px;color:var(--cds-link);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
+        <span>OPEN WORKSPACE</span>
+        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-   </a>
-</div>
+    </a>
 
-<!-- Granite 4.2 Uncensored SecOps AI Banner -->
-<div class="bg-gradient-to-r from-amber-500/10 via-spo-panel to-spo-panel border border-amber-500/30 rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-   <div class="flex items-start gap-4">
-      <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-         <i class="material-icons text-2xl">psychology</i>
+    <a href="{{ url_for('securityAudit') }}" class="cds-tile-interactive" style="border-top-color:#da1e28;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="mono" style="font-size:11px;color:var(--cds-danger-text);font-weight:600;">MOD-04 // STRIX APPSEC</span>
+          <i data-lucide="shield-check" style="width:18px;height:18px;color:var(--cds-danger-text);" aria-hidden="true"></i>
+        </div>
+        <h2 style="font-size:17px;font-weight:600;">Strix DAST &amp; Prevention</h2>
+        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
+          PE-AGENTS-IBM Security &amp; Strix Black-Box DAST surface auditor: OWASP Top 10 defensive headers, TLS 1.3 cipher verification, SPF/DMARC &amp; Shift-Left Autofix.
+        </p>
       </div>
-      <div>
-         <div class="flex flex-wrap items-center gap-2">
-            <span class="text-xs font-mono uppercase font-bold text-amber-400">Ollama SecOps Co-Pilot</span>
-            <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-slate-900 border border-slate-700 text-slate-300">eriktonon/granite4.2-uncensored</span>
-         </div>
-         <h3 class="text-base font-bold text-white mt-1">IBM Granite 4.2 8B Uncensored (Abliterated + SecOps LoRA • 128K Context)</h3>
-         <p class="text-xs text-slate-300 mt-1">
-            Correlate collected OSINT & Strix DAST evidence, model attack surfaces, generate custom reconnaissance dorks, and analyze CVEs/exploits locally via Ollama.
-         </p>
+      <div class="mono" style="font-size:11.5px;color:var(--cds-danger-text);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
+        <span>LAUNCH STRIX AUDITOR</span>
+        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-   </div>
-   <a href="{{ url_for('graniteAI') }}" class="px-4 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs shrink-0 flex items-center gap-2 transition">
-      <span>OPEN GRANITE 4.2 AI</span>
-      <i class="material-icons text-sm">arrow_forward</i>
-   </a>
-</div>
+    </a>
+  </div>
+</section>
 
-<!-- Recent Reconnaissance Activity -->
-<div class="bg-spo-panel border border-spo-border rounded-xl overflow-hidden">
-   <div class="px-6 py-4 border-b border-spo-border flex items-center justify-between">
-      <div class="flex items-center gap-2">
-         <i class="material-icons text-emerald-400 text-lg">history</i>
-         <h3 class="font-semibold text-white">Recent Reconnaissance Log</h3>
+<!-- Granite 4.2 Uncensored Neural Co-Pilot Strip -->
+<section class="cds-panel" aria-label="Ollama Granite 4.2 Uncensored Integration">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="cpu" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+      <span>NEURAL CO-PILOT // ERIKTONON/GRANITE4.2-UNCENSORED (IBM GRANITE 4.2 8B + SECOPS LORA)</span>
+    </div>
+    <span class="cds-tag cds-tag-blue">128K CONTEXT &bull; TEMP 0.2</span>
+  </div>
+  <div class="cds-panel-body" style="flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;">
+    <div style="max-width:780px;display:flex;flex-direction:column;gap:6px;">
+      <div style="font-size:15px;font-weight:600;">
+        Orthogonal Refusal Direction Abliterated (Layers 10–35) &amp; Fine-Tuned for OSINT / Red-Blue Team Triage
       </div>
-      <a href="{{ url_for('projects') }}" class="text-xs font-mono text-emerald-400 hover:underline">View All Cases &rarr;</a>
-   </div>
-   {% if recent_scans %}
-      <div class="overflow-x-auto">
-         <table class="w-full text-left text-sm">
-            <thead class="bg-slate-900/70 text-xs font-mono uppercase text-slate-400">
-               <tr>
-                  <th class="px-6 py-3">Module</th>
-                  <th class="px-6 py-3">Target</th>
-                  <th class="px-6 py-3">Case / Project</th>
-                  <th class="px-6 py-3">Intelligence Summary</th>
-                  <th class="px-6 py-3">Timestamp</th>
-               </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800">
-               {% for scan in recent_scans %}
-                  <tr class="hover:bg-slate-800/40">
-                     <td class="px-6 py-3 font-mono text-xs uppercase">
-                        <span class="px-2 py-0.5 rounded {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if scan.scan_type == 'company' else ('bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' if scan.scan_type == 'server' else 'bg-purple-500/10 text-purple-400 border border-purple-500/20') }}">
-                           {{ scan.scan_type }}
-                        </span>
-                     </td>
-                     <td class="px-6 py-3 font-mono font-medium text-white">{{ scan.target }}</td>
-                     <td class="px-6 py-3 text-slate-400">{{ scan.name_project or 'Unassigned' }}</td>
-                     <td class="px-6 py-3 text-slate-300">{{ scan.summary }}</td>
-                     <td class="px-6 py-3 font-mono text-xs text-slate-500">{{ scan.created_at }}</td>
-                  </tr>
-               {% endfor %}
-            </tbody>
-         </table>
-      </div>
-   {% else %}
-      <div class="p-8 text-center text-slate-400 text-sm">
-         No reconnaissance scans recorded yet. Select a module above to begin your investigation.
-      </div>
-   {% endif %}
-</div>
+      <p style="font-size:13px;color:var(--cds-text-secondary);">
+        Attach any recorded Company, Server, Personal, or Strix DAST scan directly into <code class="mono">eriktonon/granite4.2-uncensored</code> via local Ollama (with automatic Windows &harr; WSL2 Bridge) to generate attack surface correlations and Shift-Left fixes.
+      </p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
+      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" data-copy-text="ollama pull eriktonon/granite4.2-uncensored" aria-label="Copy ollama pull command">
+        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+        <span>ollama pull eriktonon/granite4.2-uncensored</span>
+      </button>
+      <a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-primary">
+        <span>Open Neural Console</span>
+        <i data-lucide="arrow-right" style="width:16px;height:16px;" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Reconnaissance Activity Carbon Data Table -->
+<section class="cds-panel" aria-labelledby="recent-recon-heading">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="database" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+      <h2 id="recent-recon-heading" style="font-size:12.5px;font-weight:600;">RECENT RECONNAISSANCE TELEMETRY LOG</h2>
+    </div>
+    <a href="{{ url_for('projects') }}" class="mono" style="font-size:11.5px;color:#78a9ff;text-decoration:none;">
+      VIEW ALL INVESTIGATION CASES &rarr;
+    </a>
+  </div>
+
+  <div class="cds-table-toolbar">
+    <div style="display:flex;align-items:center;gap:10px;flex:1;max-width:460px;">
+      <label for="dashboard-log-filter" class="cds-label" style="white-space:nowrap;">Filter Log:</label>
+      <input id="dashboard-log-filter" type="search" class="cds-input" style="padding:7px 12px;font-size:12.5px;" placeholder="Filter by target, module (company, server, strix) or summary..." data-filter-input=".recon-log-row" />
+    </div>
+    <div class="mono" style="font-size:11.5px;color:var(--cds-text-secondary);">
+      SHOWING {{ recent_scans|length if recent_scans else 0 }} RECORDED EVENTS
+    </div>
+  </div>
+
+  {% if recent_scans %}
+    <div class="cds-table-wrap">
+      <table class="cds-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Target Indicator</th>
+            <th>Case Assignment</th>
+            <th>Intelligence Summary</th>
+            <th>Timestamp (UTC)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for scan in recent_scans %}
+            <tr class="recon-log-row">
+              <td class="mono">
+                <span class="cds-tag {{ 'cds-tag-red' if scan.scan_type == 'strix' else ('cds-tag-blue' if scan.scan_type == 'granite_ai' else ('cds-tag-green' if scan.scan_type == 'company' else 'cds-tag-outline')) }}">
+                  {{ scan.scan_type }}
+                </span>
+              </td>
+              <td class="mono" style="font-weight:600;">{{ scan.target }}</td>
+              <td class="mono" style="font-size:12px;color:var(--cds-text-secondary);">{{ scan.name_project or 'UNASSIGNED' }}</td>
+              <td>{{ scan.summary }}</td>
+              <td class="mono" style="font-size:12px;color:var(--cds-text-secondary);white-space:nowrap;">{{ scan.created_at }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="cds-panel-body" style="align-items:center;text-align:center;padding:40px 24px;color:var(--cds-text-secondary);">
+      <p class="mono" style="font-size:13px;">NO RECONNAISSANCE SCANS RECORDED YET. SELECT AN OPERATIONAL MODULE ABOVE TO BEGIN.</p>
+    </div>
+  {% endif %}
+</section>
 {% endblock %}

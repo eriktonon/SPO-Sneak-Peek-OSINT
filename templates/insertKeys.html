@@ -1,110 +1,134 @@
 {% extends "base.html" %}
-{% block title %}SPO — API Keys & Ollama Vault{% endblock %}
-{% block header_title %}External Threat Intelligence Keys & Ollama Granite 4.2 Configuration{% endblock %}
+{% block title %}SPO — API Keys &amp; Ollama Vault // IBM Carbon v11{% endblock %}
+{% block header_title %}02.2 // EXTERNAL THREAT INTEL KEYS &amp; OLLAMA GRANITE 4.2 VAULT{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-   <div class="lg:col-span-2 bg-spo-panel border border-spo-border rounded-xl p-6 space-y-5">
-      <div class="flex items-center gap-2">
-         <i class="material-icons text-emerald-400">vpn_key</i>
-         <h2 class="text-lg font-semibold text-white">Configure External OSINT API Keys & Ollama Engine</h2>
+<section class="cds-split-asymmetric" aria-labelledby="keys-h1">
+  <!-- Left Panel: Configuration Form -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="key-round" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <span>SQLITE WAL CREDENTIAL &amp; MODEL VAULT</span>
       </div>
-      <p class="text-xs text-slate-400">
-         SPO v2.0 operates in <b>Zero-Key Mode</b> by default using Registro.br/IANA RDAP, BrasilAPI, ReceitaWS, crt.sh, HackerTarget, AlienVault OTX, Querido Diário, and Shodan InternetDB. Configure optional API keys and your local/remote <b>Ollama</b> instance (<code class="text-amber-400 font-mono">eriktonon/granite4.2-uncensored</code>) below.
-      </p>
+      <span class="cds-tag cds-tag-green">ZERO-KEY BASELINE ACTIVE</span>
+    </div>
 
-      <form action="{{ url_for('insertKeys') }}" method="POST" class="space-y-4">
-         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="cds-panel-body">
+      <div>
+        <h1 id="keys-h1" class="cds-page-h1"><strong>API Keys &amp; Ollama Granite 4.2</strong> Configuration</h1>
+        <p class="cds-lead" style="margin-top:6px;">
+          SPO v2.0 operates in <strong>Zero-Key Mode</strong> by default using Registro.br/IANA RDAP, BrasilAPI, ReceitaWS, <code class="mono">crt.sh</code>, HackerTarget, AlienVault OTX, Querido Diário, and Shodan InternetDB. Configure optional threat intel API keys and your local/remote Ollama endpoint (<code class="mono">eriktonon/granite4.2-uncensored</code>) below.
+        </p>
+      </div>
 
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1 pb-2 border-b border-slate-800">
-            <div>
-               <label for="ollama_host" class="block text-xs font-mono uppercase text-amber-400 mb-1.5">
-                  Ollama Endpoint URL
-               </label>
-               <input name="ollama_host" id="ollama_host" type="text"
-                  value="{{ configured_keys.get('ollama_host', 'http://localhost:11434') if configured_keys else 'http://localhost:11434' }}"
-                  placeholder="http://localhost:11434"
-                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
-            </div>
+      <form action="{{ url_for('insertKeys') }}" method="POST" style="display:flex;flex-direction:column;gap:16px;padding-top:6px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
-            <div>
-               <label for="ollama_model" class="block text-xs font-mono uppercase text-amber-400 mb-1.5">
-                  Ollama SecOps Model Image
-               </label>
-               <input name="ollama_model" id="ollama_model" type="text"
-                  value="{{ configured_keys.get('ollama_model', 'eriktonon/granite4.2-uncensored') if configured_keys else 'eriktonon/granite4.2-uncensored' }}"
-                  placeholder="eriktonon/granite4.2-uncensored"
-                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
-            </div>
-         </div>
+        <div class="cds-grid-2" style="border:none;background:transparent;gap:16px;">
+          <div class="cds-field-group">
+            <label for="ollama_host" class="cds-label">Ollama Endpoint URL</label>
+            <input name="ollama_host" id="ollama_host" type="text"
+              value="{{ configured_keys.get('ollama_host', 'http://localhost:11434') if configured_keys else 'http://localhost:11434' }}"
+              placeholder="http://localhost:11434" class="cds-input" />
+          </div>
 
-         <div>
-            <label for="shodan" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
-               Shodan API Key {% if configured_keys and configured_keys.get('shodan') %}<span class="text-emerald-400">({{ configured_keys.get('shodan') }})</span>{% endif %}
-            </label>
-            <input name="shodan" id="shodan" type="password" placeholder="Enter Shodan API Key..."
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-         </div>
+          <div class="cds-field-group">
+            <label for="ollama_model" class="cds-label">Ollama SecOps Model Image</label>
+            <input name="ollama_model" id="ollama_model" type="text"
+              value="{{ configured_keys.get('ollama_model', 'eriktonon/granite4.2-uncensored') if configured_keys else 'eriktonon/granite4.2-uncensored' }}"
+              placeholder="eriktonon/granite4.2-uncensored" class="cds-input" />
+          </div>
+        </div>
 
-         <div>
-            <label for="virustotal" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
-               VirusTotal v3 API Key {% if configured_keys and configured_keys.get('virustotal') %}<span class="text-emerald-400">({{ configured_keys.get('virustotal') }})</span>{% endif %}
-            </label>
-            <input name="virustotal" id="virustotal" type="password" placeholder="Enter VirusTotal v3 API Key..."
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-         </div>
+        <div class="cds-field-group">
+          <label for="shodan" class="cds-label">
+            Shodan Full Banner API Key {% if configured_keys and configured_keys.get('shodan') %}<span style="color:var(--cds-success-text);">({{ configured_keys.get('shodan') }})</span>{% endif %}
+          </label>
+          <input name="shodan" id="shodan" type="password" placeholder="Enter Shodan API Key..." class="cds-input" />
+        </div>
 
-         <div>
-            <label for="github" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">
-               GitHub Personal Access Token (Optional — Higher Rate Limits) {% if configured_keys and configured_keys.get('github') %}<span class="text-emerald-400">({{ configured_keys.get('github') }})</span>{% endif %}
-            </label>
-            <input name="github" id="github" type="password" placeholder="ghp_..."
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-         </div>
+        <div class="cds-field-group">
+          <label for="virustotal" class="cds-label">
+            VirusTotal v3 API Key {% if configured_keys and configured_keys.get('virustotal') %}<span style="color:var(--cds-success-text);">({{ configured_keys.get('virustotal') }})</span>{% endif %}
+          </label>
+          <input name="virustotal" id="virustotal" type="password" placeholder="Enter VirusTotal v3 API Key..." class="cds-input" />
+        </div>
 
-         <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-6 rounded-lg transition flex items-center gap-2">
-            <i class="material-icons text-base">save</i>
+        <div class="cds-field-group">
+          <label for="github" class="cds-label">
+            GitHub Personal Access Token (Optional — Higher Rate Limits) {% if configured_keys and configured_keys.get('github') %}<span style="color:var(--cds-success-text);">({{ configured_keys.get('github') }})</span>{% endif %}
+          </label>
+          <input name="github" id="github" type="password" placeholder="ghp_..." class="cds-input" />
+        </div>
+
+        <div>
+          <button type="submit" class="cds-btn cds-btn-primary">
             <span>Save Configuration to SQLite Vault</span>
-         </button>
+            <i data-lucide="save" style="width:16px;height:16px;" aria-hidden="true"></i>
+          </button>
+        </div>
       </form>
-   </div>
+    </div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <h3 class="font-semibold text-white text-sm font-mono uppercase text-slate-400">Provider Status Matrix</h3>
-      <div class="space-y-2.5 text-xs">
-         <div class="p-3 rounded-lg bg-slate-900 border border-amber-500/30 flex items-center justify-between">
-            <span>Ollama Granite 4.2 Uncensored</span>
-            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-mono">LOCAL / OLLAMA</span>
-         </div>
-         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
-            <span>Registro.br & IANA RDAP</span>
-            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
-         </div>
-         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
-            <span>BrasilAPI & ReceitaWS (CNPJ/QSA)</span>
-            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
-         </div>
-         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
-            <span>crt.sh + AlienVault OTX</span>
-            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
-         </div>
-         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
-            <span>Shodan InternetDB (Ports/CVEs)</span>
-            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">FREE / ACTIVE</span>
-         </div>
-         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
-            <span>Shodan Full Banner API</span>
-            <span class="px-2 py-0.5 rounded font-mono {{ 'bg-emerald-500/10 text-emerald-400' if configured_keys and configured_keys.get('shodan') else 'bg-slate-800 text-slate-400' }}">
-               {{ 'CONFIGURED' if configured_keys and configured_keys.get('shodan') else 'OPTIONAL KEY' }}
-            </span>
-         </div>
-         <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
-            <span>VirusTotal API v3</span>
-            <span class="px-2 py-0.5 rounded font-mono {{ 'bg-emerald-500/10 text-emerald-400' if configured_keys and configured_keys.get('virustotal') else 'bg-slate-800 text-slate-400' }}">
-               {{ 'CONFIGURED' if configured_keys and configured_keys.get('virustotal') else 'OPTIONAL KEY' }}
-            </span>
-         </div>
+  <!-- Right Panel: Provider Matrix -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="check-square" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>PROVIDER STATUS MATRIX</h2>
       </div>
-   </div>
-</div>
+    </div>
+
+    <div class="cds-table-wrap">
+      <table class="cds-table">
+        <thead>
+          <tr>
+            <th>Intelligence Provider</th>
+            <th>Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ollama Granite 4.2 Uncensored</strong></td>
+            <td><span class="cds-tag cds-tag-blue">LOCAL / WSL2 BRIDGE</span></td>
+          </tr>
+          <tr>
+            <td>Registro.br &amp; IANA RDAP</td>
+            <td><span class="cds-tag cds-tag-green">FREE / ACTIVE</span></td>
+          </tr>
+          <tr>
+            <td>BrasilAPI &amp; ReceitaWS (CNPJ/QSA)</td>
+            <td><span class="cds-tag cds-tag-green">FREE / ACTIVE</span></td>
+          </tr>
+          <tr>
+            <td>crt.sh + AlienVault OTX</td>
+            <td><span class="cds-tag cds-tag-green">FREE / ACTIVE</span></td>
+          </tr>
+          <tr>
+            <td>Shodan InternetDB (Ports/CVEs)</td>
+            <td><span class="cds-tag cds-tag-green">FREE / ACTIVE</span></td>
+          </tr>
+          <tr>
+            <td>Shodan Full Banner API</td>
+            <td>
+              <span class="cds-tag {{ 'cds-tag-green' if configured_keys and configured_keys.get('shodan') else 'cds-tag-outline' }}">
+                {{ 'CONFIGURED' if configured_keys and configured_keys.get('shodan') else 'OPTIONAL KEY' }}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>VirusTotal API v3</td>
+            <td>
+              <span class="cds-tag {{ 'cds-tag-green' if configured_keys and configured_keys.get('virustotal') else 'cds-tag-outline' }}">
+                {{ 'CONFIGURED' if configured_keys and configured_keys.get('virustotal') else 'OPTIONAL KEY' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 {% endblock %}

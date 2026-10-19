@@ -1,104 +1,147 @@
 {% extends "base.html" %}
-{% block title %}SPO — About, Maintainer & Crypto Support{% endblock %}
-{% block header_title %}About SPO — Maintainer Profile & Crypto Wallets{% endblock %}
+{% block title %}SPO — Maintainer Profile &amp; Crypto Support // IBM Carbon v11{% endblock %}
+{% block header_title %}03.3 // MAINTAINER PROFILE (ERIK TONON) &amp; CRYPTO SPONSORSHIP{% endblock %}
 
 {% block content %}
-<div class="space-y-6 max-w-5xl">
-   <!-- Author & Maintainer Card -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-      <div class="flex flex-col md:flex-row gap-6 items-start">
-         <img src="{{ url_for('static', filename='img/spoICO.png') }}" alt="SPO" class="w-20 h-20 rounded-xl border border-emerald-500/40 p-2 bg-slate-900">
-         <div class="space-y-4 flex-1">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-               <div>
-                  <h2 class="text-2xl font-bold text-white">SPO — Sneak Peek OSINT v2.0 (2026 Edition)</h2>
-                  <p class="text-xs font-mono text-emerald-400 mt-1">Tactical Open Source Intelligence & Strix Offensive-Defensive AppSec Platform • GPLv2 License</p>
-               </div>
-               <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer"
-                  class="px-4 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 text-xs font-mono font-semibold flex items-center gap-2 transition">
-                  <i class="material-icons text-sm">favorite</i>
-                  <span>Sponsor @eriktonon</span>
-               </a>
-            </div>
-
-            <p class="text-sm text-slate-300 leading-relaxed">
-               <strong>Sneak Peek OSINT (SPO)</strong> is an open-source intelligence and defensive security reconnaissance platform engineered with the <strong>Build to Manage (BTM)</strong> and <strong>Shift-Left AppSec</strong> philosophy. It empowers Security Researchers, Red/Blue Teams, Threat Intelligence Analysts, Compliance & Legal teams, and Investigative Journalists to correlate corporate, infrastructure, and identity intelligence with zero friction.
-            </p>
-
-            <!-- Erik Tonon Profile Block -->
-            <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-800 space-y-3">
-               <div class="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                     <div class="text-xs font-mono uppercase text-emerald-400">Lead Architect & Maintainer</div>
-                     <div class="text-lg font-bold text-white mt-0.5">Erik Tonon (<span class="font-mono text-cyan-400">@eriktonon</span>)</div>
-                  </div>
-                  <span class="px-2.5 py-1 text-xs font-mono rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                     PE-AGENTS-IBM Security & Strix Engine
-                  </span>
-               </div>
-               <p class="text-xs text-slate-300 leading-relaxed">
-                  Head of Platform Engineering & GenAI at <strong>IBM Consulting</strong> • Ex-Associate Director at <strong>BTG Pactual</strong> • Founder at <strong>EdgeSearch Labs</strong>. Specialist in Mission-Critical SRE, Build to Manage (BTM), Distributed Systems, Offensive-Defensive AppSec, and Autonomous Multi-Agent Architectures.
-               </p>
-               <div class="flex flex-wrap gap-3 pt-2 text-xs font-mono">
-                  <a href="https://eriktonon.com" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 transition">
-                     🌐 eriktonon.com
-                  </a>
-                  <a href="https://github.com/eriktonon" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition">
-                     💻 github.com/eriktonon
-                  </a>
-                  <a href="https://www.linkedin.com/in/eriktonon/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">
-                     🔗 linkedin.com/in/eriktonon
-                  </a>
-                  <a href="https://score.eriktonon.com" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition">
-                     🛡️ score.eriktonon.com (BTM Readiness)
-                  </a>
-               </div>
-            </div>
-         </div>
+<!-- Hero Split: Lead Architect Profile + Key Credentials -->
+<section class="cds-hero-split" aria-labelledby="about-h1">
+  <div class="cds-hero-main">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span class="cds-tag cds-tag-blue">LEAD ARCHITECT &amp; MAINTAINER</span>
+        <span class="cds-tag cds-tag-outline">PE-AGENTS-IBM SECURITY &amp; STRIX ENGINE</span>
+        <span class="cds-tag cds-tag-green">GPLV2 OPEN SOURCE</span>
       </div>
-   </div>
-
-   <!-- Crypto Donation Wallets -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-4">
-         <i class="material-icons text-amber-400">currency_bitcoin</i>
-         <h3 class="text-lg font-bold text-white">Support Open-Source Research — Official Crypto Wallets</h3>
-      </div>
-      <p class="text-xs text-slate-400 mb-4">
-         SPO is 100% free and open-source software (GPLv2). If this tool helps your security audits, OSINT investigations, or threat intelligence workflows, you can support ongoing development directly via crypto or <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer" class="text-emerald-400 underline">GitHub Sponsors</a>:
+      <h1 id="about-h1" class="cds-page-h1"><strong>Erik Tonon</strong> (<span class="mono" style="color:var(--cds-link);">@eriktonon</span>)</h1>
+      <p class="cds-lead">
+        Head of Platform Engineering &amp; Generative AI at <strong>IBM Consulting</strong> &bull; Ex-Associate Director at <strong>BTG Pactual</strong> &bull; Founder at <strong>EdgeSearch Labs</strong>. Specialist in Mission-Critical SRE, Build to Manage (BTM), Distributed Systems, Offensive-Defensive AppSec, and Autonomous Multi-Agent Architectures.
       </p>
+      <p class="cds-lead">
+        <strong>Sneak Peek OSINT (SPO v2.0)</strong> is engineered under the <strong>Build to Manage</strong> and <strong>Shift-Left Security</strong> methodology to give Security Researchers, Red/Blue Teams, Threat Intelligence Analysts, Compliance &amp; Legal teams, and Investigative Journalists a deterministic, zero-friction reconnaissance control plane.
+      </p>
+    </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
-            <div class="flex items-center justify-between">
-               <span class="text-xs font-mono font-bold uppercase text-amber-400">Bitcoin (BTC — Native SegWit)</span>
-               <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-amber-500/10 text-amber-300">BTC</span>
-            </div>
-            <div class="bg-slate-950 border border-slate-800 rounded p-2.5 font-mono text-xs text-slate-200 break-all select-all">
-               bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza
-            </div>
-         </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:6px;">
+      <a href="https://eriktonon.com" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-primary">
+        <span>eriktonon.com</span>
+        <i data-lucide="globe" style="width:15px;height:15px;" aria-hidden="true"></i>
+      </a>
+      <a href="https://github.com/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-secondary">
+        <span>github.com/eriktonon</span>
+        <i data-lucide="github" style="width:15px;height:15px;" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/eriktonon/" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost">
+        <span>linkedin.com/in/eriktonon</span>
+        <i data-lucide="linkedin" style="width:15px;height:15px;" aria-hidden="true"></i>
+      </a>
+      <a href="https://score.eriktonon.com" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost">
+        <span>score.eriktonon.com (BTM)</span>
+        <i data-lucide="shield-check" style="width:15px;height:15px;" aria-hidden="true"></i>
+      </a>
+      <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-danger">
+        <span>GitHub Sponsors (@eriktonon)</span>
+        <i data-lucide="heart" style="width:15px;height:15px;" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
 
-         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
-            <div class="flex items-center justify-between">
-               <span class="text-xs font-mono font-bold uppercase text-cyan-400">Ethereum (ETH / ERC-20 / Base / Polygon)</span>
-               <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-cyan-500/10 text-cyan-300">ETH</span>
-            </div>
-            <div class="bg-slate-950 border border-slate-800 rounded p-2.5 font-mono text-xs text-slate-200 break-all select-all">
-               0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92
-            </div>
-         </div>
-
-         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
-            <div class="flex items-center justify-between">
-               <span class="text-xs font-mono font-bold uppercase text-purple-400">Solana (SOL / SPL)</span>
-               <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-purple-500/10 text-purple-300">SOL</span>
-            </div>
-            <div class="bg-slate-950 border border-slate-800 rounded p-2.5 font-mono text-xs text-slate-200 break-all select-all">
-               3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq
-            </div>
-         </div>
+  <div class="cds-kpi-grid-2x2" role="region" aria-label="Platform Architecture Specifications">
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>RELEASE VERSION</span>
+        <i data-lucide="tag" style="width:14px;height:14px;" aria-hidden="true"></i>
       </div>
-   </div>
-</div>
+      <div class="cds-kpi-value" style="color:var(--cds-link);">v2.0.0</div>
+      <div class="cds-kpi-sub">2026 CARBON v11 EDITION</div>
+    </div>
+
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>SECURITY POSTURE</span>
+        <i data-lucide="shield" style="width:14px;height:14px;" aria-hidden="true"></i>
+      </div>
+      <div class="cds-kpi-value" style="color:var(--cds-success-text);">100 / 100</div>
+      <div class="cds-kpi-sub">STRIX WHITEBOX SAST GRADE A</div>
+    </div>
+
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>NEURAL SECOPS MODEL</span>
+        <i data-lucide="cpu" style="width:14px;height:14px;" aria-hidden="true"></i>
+      </div>
+      <div class="cds-kpi-value" style="font-size:20px;">GRANITE 4.2</div>
+      <div class="cds-kpi-sub">8B ABLITERATED + SECOPS LORA</div>
+    </div>
+
+    <div class="cds-kpi-tile">
+      <div class="cds-kpi-label">
+        <span>STORAGE ENGINE</span>
+        <i data-lucide="database" style="width:14px;height:14px;" aria-hidden="true"></i>
+      </div>
+      <div class="cds-kpi-value" style="font-size:20px;">SQLITE WAL</div>
+      <div class="cds-kpi-sub">ZERO-CONFIG LOCAL VAULT</div>
+    </div>
+  </div>
+</section>
+
+<!-- Official Crypto Wallets (3-Column 1px Hairline Grid with Copy Actions) -->
+<section class="cds-panel" aria-labelledby="crypto-heading">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="wallet" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
+      <h2 id="crypto-heading">SUPPORT OPEN-SOURCE RESEARCH // OFFICIAL CRYPTO WALLETS</h2>
+    </div>
+    <span class="cds-tag cds-tag-outline">DIRECT PEER-TO-PEER SPONSORSHIP</span>
+  </div>
+
+  <div class="cds-grid-3" style="border:none;">
+    <!-- BTC -->
+    <article class="cds-grid-cell" style="gap:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);text-transform:uppercase;">NETWORK // BITCOIN</div>
+          <h3 style="font-size:16px;font-weight:600;margin-top:2px;">Bitcoin (BTC &mdash; Native SegWit)</h3>
+        </div>
+        <span class="cds-tag cds-tag-amber">BTC</span>
+      </div>
+      <div class="cds-terminal" style="font-size:12px;user-select:all;">bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza</div>
+      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" style="width:100%;" data-copy-text="bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza" aria-label="Copy Bitcoin wallet address">
+        <span>COPY BTC ADDRESS</span>
+        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+      </button>
+    </article>
+
+    <!-- ETH -->
+    <article class="cds-grid-cell" style="gap:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);text-transform:uppercase;">NETWORK // EVM L1/L2</div>
+          <h3 style="font-size:16px;font-weight:600;margin-top:2px;">Ethereum (ETH / ERC-20 / Base)</h3>
+        </div>
+        <span class="cds-tag cds-tag-blue">ETH</span>
+      </div>
+      <div class="cds-terminal" style="font-size:12px;user-select:all;">0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92</div>
+      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" style="width:100%;" data-copy-text="0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92" aria-label="Copy Ethereum wallet address">
+        <span>COPY ETH ADDRESS</span>
+        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+      </button>
+    </article>
+
+    <!-- SOL -->
+    <article class="cds-grid-cell" style="gap:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);text-transform:uppercase;">NETWORK // SOLANA</div>
+          <h3 style="font-size:16px;font-weight:600;margin-top:2px;">Solana (SOL / SPL)</h3>
+        </div>
+        <span class="cds-tag cds-tag-green">SOL</span>
+      </div>
+      <div class="cds-terminal" style="font-size:12px;user-select:all;">3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq</div>
+      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" style="width:100%;" data-copy-text="3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq" aria-label="Copy Solana wallet address">
+        <span>COPY SOL ADDRESS</span>
+        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+      </button>
+    </article>
+  </div>
+</section>
 {% endblock %}

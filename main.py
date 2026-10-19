@@ -651,8 +651,50 @@ def aboutUS():
     return render_template("aboutus.html")
 
 
+@spo.route("/robots.txt")
+def robots_txt():
+    host_root = request.url_root.rstrip("/")
+    body = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /insertKeys\n"
+        "Disallow: /projects\n"
+        f"Sitemap: {host_root}/sitemap.xml\n"
+    )
+    return Response(body, mimetype="text/plain")
+
+
+@spo.route("/sitemap.xml")
+def sitemap_xml():
+    host_root = request.url_root.rstrip("/")
+    pages = [
+        "/",
+        "/dashboard",
+        "/companyInvestigation",
+        "/searchServers",
+        "/personalInvestigation",
+        "/securityAudit",
+        "/graniteAI",
+        "/aboutOSINT",
+        "/manual",
+        "/about",
+    ]
+    xml_items = "".join(
+        f"<url><loc>{host_root}{p}</loc><changefreq>weekly</changefreq></url>"
+        for p in pages
+    )
+    xml_doc = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"{xml_items}"
+        "</urlset>"
+    )
+    return Response(xml_doc, mimetype="application/xml")
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("SPO_PORT", 1337))
     host = os.environ.get("SPO_HOST", "0.0.0.0")
     debug = os.environ.get("SPO_DEBUG", "false").lower() in ("1", "true", "yes")
     spo.run(host=host, port=port, debug=debug)
+

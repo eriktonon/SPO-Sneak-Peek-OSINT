@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>SPO — Operator Registered</title>
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPO — Operator Provisioned // IBM Carbon v11</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/carbon-v11.css') }}" />
 </head>
-<body class="bg-[#090d16] text-slate-200 min-h-screen flex items-center justify-center p-4">
-   <div class="w-full max-w-md bg-[#111827] border border-emerald-500/30 rounded-2xl p-8 text-center space-y-4">
-      <div class="w-14 h-14 mx-auto rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-         <i class="material-icons text-3xl">verified_user</i>
+<body class="cds-auth-body">
+  <main class="cds-auth-main">
+    <section class="cds-auth-card" style="border-top-color:#24a148;" aria-labelledby="ok-h1">
+      <div class="cds-panel-header">
+        <span class="cds-panel-header-title">PROVISIONING COMPLETE</span>
+        <span class="cds-tag cds-tag-green">PBKDF2-SHA256</span>
       </div>
-      <h2 class="text-xl font-bold text-white">Operator Account Created</h2>
-      <p class="text-xs text-slate-400">Your credentials have been hashed with PBKDF2-SHA256 and stored in the vault.</p>
-      <a href="{{ url_for('login') }}" class="inline-block w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-4 rounded-lg transition">
-         Proceed to Login
-      </a>
-   </div>
+      <div class="cds-panel-body">
+        <h1 id="ok-h1" class="cds-page-h1" style="font-size:22px;"><strong>Operator Account Created</strong></h1>
+        <p style="font-size:13.5px;color:var(--cds-text-secondary);">
+          Your operator credentials have been salted and hashed with PBKDF2-SHA256 and committed to the local SQLite WAL vault.
+        </p>
+        <a href="{{ url_for('login') }}" class="cds-btn cds-btn-primary" style="width:100%;">
+          <span>Proceed to Operator Login</span>
+          <span class="mono" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

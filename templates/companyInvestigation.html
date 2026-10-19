@@ -1,252 +1,288 @@
 {% extends "base.html" %}
-{% block title %}SPO — Company & Domain Investigation{% endblock %}
-{% block header_title %}Corporate, Domain & Legal OSINT Reconnaissance{% endblock %}
+{% block title %}SPO — Company &amp; Domain Recon // IBM Carbon v11{% endblock %}
+{% block header_title %}01.2 // CORPORATE, DOMAIN, CNPJ/QSA &amp; LEGAL RECONNAISSANCE{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-   <!-- Search Form -->
-   <div class="lg:col-span-2 bg-spo-panel border border-spo-border rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-4">
-         <i class="material-icons text-emerald-400">domain</i>
-         <h2 class="text-lg font-semibold text-white">Company & Domain Reconnaissance</h2>
+<!-- Top Asymmetric Split: Corporate/Domain Search + Quick Case Creator -->
+<section class="cds-split-asymmetric" aria-labelledby="company-h1">
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="building-2" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <span>MOD-01 // CORPORATE &amp; DOMAIN RECONNAISSANCE</span>
       </div>
-      <p class="text-xs text-slate-400 mb-5">
-         Enter a target domain (e.g. <code class="text-emerald-400">petrobras.com.br</code>, <code class="text-emerald-400">itau.com.br</code>) and/or a Brazilian CNPJ. SPO automatically queries Registro.br/IANA RDAP, DNS records, Certificate Transparency logs (<code class="text-emerald-400">crt.sh</code> + AlienVault OTX), BrasilAPI/ReceitaWS (QSA & CNAEs), and Querido Diário / Jusbrasil legal databases.
-      </p>
+      <span class="cds-tag cds-tag-blue">RDAP + BRASILAPI + CRT.SH</span>
+    </div>
 
-      <form action="{{ url_for('companyInvestigation') }}" method="POST" class="space-y-4">
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-               <label for="domain" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Target Domain</label>
-               <input name="domain" id="domain" type="text" value="{{ domain_name }}" placeholder="example.com.br"
-                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-            </div>
-            <div>
-               <label for="cnpj_input" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Direct CNPJ (Optional / Auto-detected for .br)</label>
-               <input name="cnpj_input" id="cnpj_input" type="text" value="{{ cnpj }}" placeholder="00.000.000/0001-91"
-                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-            </div>
-         </div>
-
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-            <div>
-               <label for="project_id" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Attach to Investigation Case</label>
-               <select name="project_id" id="project_id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-                  <option value="">-- Quick Recon (Unassigned) --</option>
-                  {% for p in user_projects %}
-                     <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
-                  {% endfor %}
-               </select>
-            </div>
-            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-5 rounded-lg transition flex items-center justify-center gap-2">
-               <i class="material-icons text-base">travel_explore</i>
-               <span>Run Corporate & Domain Recon</span>
-            </button>
-         </div>
-      </form>
-   </div>
-
-   <!-- Quick Case Creator -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-4">
-         <i class="material-icons text-cyan-400">create_new_folder</i>
-         <h3 class="text-base font-semibold text-white">Start New Investigation Case</h3>
+    <div class="cds-panel-body">
+      <div>
+        <h1 id="company-h1" class="cds-page-h1"><strong>Company, Domain &amp; QSA</strong> Intelligence Engine</h1>
+        <p class="cds-lead" style="margin-top:6px;">
+          Enter a target domain (e.g. <code class="mono">petrobras.com.br</code>, <code class="mono">itau.com.br</code>) and/or a 14-digit Brazilian CNPJ. Queries Registro.br/IANA RDAP, DNS records, Certificate Transparency logs (<code class="mono">crt.sh</code> + OTX), BrasilAPI/ReceitaWS (QSA partners &amp; CNAEs), and Querido Diário / Jusbrasil legal databases.
+        </p>
       </div>
-      <p class="text-xs text-slate-400 mb-4">
-         Group all domain, company, server, and personal OSINT evidence into an exportable project case.
-      </p>
-      <form action="{{ url_for('companyInvestigation') }}" method="POST" class="space-y-3">
-         <div>
-            <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Case Name</label>
-            <input name="nameOfProject" type="text" placeholder="Operation Red Horizon" required
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
-         </div>
-         <div>
-            <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Scope / Target Notes</label>
-            <input name="scopeOfProject" type="text" placeholder="M&A Due Diligence / Red Team Recon"
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
-         </div>
-         <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-cyan-300 text-sm font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
-            <i class="material-icons text-sm">add</i> Create Case
-         </button>
+
+      <form action="{{ url_for('companyInvestigation') }}" method="POST" style="display:flex;flex-direction:column;gap:16px;padding-top:6px;">
+        <div class="cds-grid-2" style="border:none;background:transparent;gap:16px;">
+          <div class="cds-field-group">
+            <label for="domain" class="cds-label">Target Domain</label>
+            <input name="domain" id="domain" type="text" value="{{ domain_name }}" placeholder="petrobras.com.br" class="cds-input" />
+          </div>
+          <div class="cds-field-group">
+            <label for="cnpj_input" class="cds-label">Direct CNPJ (Optional / Auto-detected for .br)</label>
+            <input name="cnpj_input" id="cnpj_input" type="text" value="{{ cnpj }}" placeholder="33.000.167/0001-01" class="cds-input" />
+          </div>
+        </div>
+
+        <div class="cds-grid-2" style="border:none;background:transparent;gap:16px;align-items:end;">
+          <div class="cds-field-group">
+            <label for="company-project-id" class="cds-label">Attach to Investigation Case</label>
+            <select name="project_id" id="company-project-id" class="cds-select">
+              <option value="">-- Quick Recon (Unassigned) --</option>
+              {% for p in user_projects %}
+                <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="cds-btn cds-btn-primary" style="width:100%;">
+            <span>Execute Corporate &amp; Domain Recon</span>
+            <i data-lucide="search" style="width:16px;height:16px;" aria-hidden="true"></i>
+          </button>
+        </div>
       </form>
-   </div>
-</div>
+    </div>
+  </div>
+
+  <!-- Right Cell: Quick Case Creator -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="folder-plus" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>INITIALIZE INVESTIGATION CASE</h2>
+      </div>
+    </div>
+    <div class="cds-panel-body">
+      <p style="font-size:13px;color:var(--cds-text-secondary);">
+        Group domain, corporate QSA, server CVE, and personal OSINT evidence into an auditable case bundle.
+      </p>
+      <form action="{{ url_for('companyInvestigation') }}" method="POST" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="cds-field-group">
+          <label for="quick-case-name" class="cds-label">Case Identifier</label>
+          <input id="quick-case-name" name="nameOfProject" type="text" placeholder="OP-RED-HORIZON-2026" required class="cds-input" />
+        </div>
+        <div class="cds-field-group">
+          <label for="quick-case-scope" class="cds-label">Scope / Target Notes</label>
+          <input id="quick-case-scope" name="scopeOfProject" type="text" placeholder="M&amp;A Due Diligence / External Surface" class="cds-input" />
+        </div>
+        <button type="submit" class="cds-btn cds-btn-secondary" style="width:100%;">
+          <span>Create Investigation Case</span>
+          <i data-lucide="plus" style="width:16px;height:16px;" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
 
 {% if domain_name or cnpj %}
-<!-- Results Grid -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-   <!-- RDAP / WHOIS & DNS Panel -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-emerald-400">language</i>
-            <h3 class="font-semibold text-white">RDAP / WHOIS & DNS Intelligence</h3>
-         </div>
-         <span class="text-xs font-mono text-emerald-400">{{ domain_name or 'N/A' }}</span>
+<!-- Results 2x2 Carbon Hairline Grid -->
+<section class="cds-grid-2" aria-label="Corporate and Domain Intelligence Results">
+  <!-- Panel 1: RDAP / WHOIS & DNS -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="globe" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <h2>RDAP / WHOIS &amp; DNS RECORDS</h2>
       </div>
+      <span class="cds-tag cds-tag-blue">{{ domain_name or 'N/A' }}</span>
+    </div>
 
-      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-         <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-            <dt class="text-xs font-mono text-slate-400">Owner / Registrant</dt>
-            <dd class="font-medium text-white mt-1">{{ ownerDomainInfo.get('owner') or 'Redacted / N/A' }}</dd>
-         </div>
-         <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-            <dt class="text-xs font-mono text-slate-400">Owner Document (CNPJ/CPF)</dt>
-            <dd class="font-mono text-emerald-400 mt-1">{{ ownerDomainInfo.get('ownerid') or cnpj or 'N/A' }}</dd>
-         </div>
-         <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-            <dt class="text-xs font-mono text-slate-400">Contact / Abuse Email</dt>
-            <dd class="font-mono text-xs text-slate-200 mt-1 break-all">{{ ownerDomainInfo.get('owneremail') or 'N/A' }}</dd>
-         </div>
-         <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-            <dt class="text-xs font-mono text-slate-400">Created / Expires</dt>
-            <dd class="font-mono text-xs text-slate-200 mt-1">{{ (ownerDomainInfo.get('created') or 'N/A')[:10] }} &rarr; {{ (ownerDomainInfo.get('expires') or 'N/A')[:10] }}</dd>
-         </div>
-      </dl>
+    <div class="cds-panel-body">
+      <div class="cds-kv-list">
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Owner / Registrant</div>
+          <div class="cds-kv-dd">{{ ownerDomainInfo.get('owner') or 'Redacted / N/A' }}</div>
+        </div>
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Registrant Tax ID (CNPJ/CPF)</div>
+          <div class="cds-kv-dd mono" style="color:var(--cds-link);">{{ ownerDomainInfo.get('ownerid') or cnpj or 'N/A' }}</div>
+        </div>
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Contact / Abuse Email</div>
+          <div class="cds-kv-dd mono" style="font-size:12px;">{{ ownerDomainInfo.get('owneremail') or 'N/A' }}</div>
+        </div>
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Registration Lifecycle</div>
+          <div class="cds-kv-dd mono" style="font-size:12px;">{{ (ownerDomainInfo.get('created') or 'N/A')[:10] }} &rarr; {{ (ownerDomainInfo.get('expires') or 'N/A')[:10] }}</div>
+        </div>
+      </div>
 
       {% if ownerDomainInfo.get('dns') %}
-      <div class="space-y-2 pt-2">
-         <div class="text-xs font-mono uppercase text-slate-400">DNS Records (A / MX / NS / TXT)</div>
-         <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 font-mono text-xs space-y-1.5">
-            <div><span class="text-emerald-400">A:</span> {{ ownerDomainInfo['dns'].get('A')|join(', ') or 'None' }}</div>
-            <div><span class="text-cyan-400">MX:</span> {{ ownerDomainInfo['dns'].get('MX')|join(', ') or 'None' }}</div>
-            <div><span class="text-amber-400">NS:</span> {{ ownerDomainInfo.get('nameservers')|join(', ') or ownerDomainInfo['dns'].get('NS')|join(', ') or 'None' }}</div>
-            {% if ownerDomainInfo['dns'].get('TXT') %}
-               <div class="text-slate-400 break-all"><span class="text-purple-400">TXT:</span> {{ ownerDomainInfo['dns'].get('TXT')|join(' | ') }}</div>
-            {% endif %}
-         </div>
-      </div>
+        <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);">Authoritative DNS Resource Records</div>
+        <div class="cds-terminal">A  : {{ ownerDomainInfo['dns'].get('A')|join(', ') or 'None' }}
+MX : {{ ownerDomainInfo['dns'].get('MX')|join(', ') or 'None' }}
+NS : {{ ownerDomainInfo.get('nameservers')|join(', ') or ownerDomainInfo['dns'].get('NS')|join(', ') or 'None' }}{% if ownerDomainInfo['dns'].get('TXT') %}
+TXT: {{ ownerDomainInfo['dns'].get('TXT')|join(' | ') }}{% endif %}</div>
       {% endif %}
-   </div>
+    </div>
+  </div>
 
-   <!-- Corporate CNPJ & QSA Intelligence -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-amber-400">business</i>
-            <h3 class="font-semibold text-white">Corporate Registry (Receita Federal / BrasilAPI)</h3>
-         </div>
-         <span class="text-xs font-mono text-amber-400">{{ domainInfo.get('source') or 'CNPJ Lookup' }}</span>
+  <!-- Panel 2: Corporate Registry (BrasilAPI / Receita Federal) -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="landmark" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>CORPORATE REGISTRY (RECEITA FEDERAL / BRASILAPI)</h2>
       </div>
+      <span class="cds-tag cds-tag-outline">{{ domainInfo.get('source') or 'CNPJ LOOKUP' }}</span>
+    </div>
 
+    <div class="cds-panel-body">
       {% if domainInfo and domainInfo.get('social_name') %}
-         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 sm:col-span-2">
-               <dt class="text-xs font-mono text-slate-400">Razão Social / Legal Name</dt>
-               <dd class="font-semibold text-white mt-0.5">{{ domainInfo.get('social_name') }} <span class="text-xs font-mono text-emerald-400">({{ domainInfo.get('cnpj_formatted') }})</span></dd>
-            </div>
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-               <dt class="text-xs font-mono text-slate-400">Fantasy Name & Status</dt>
-               <dd class="text-slate-200 mt-0.5">{{ domainInfo.get('fantasy_name') }} • <span class="text-emerald-400 font-mono text-xs">{{ domainInfo.get('isActive') }}</span></dd>
-            </div>
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-               <dt class="text-xs font-mono text-slate-400">Capital Social & Size</dt>
-               <dd class="font-mono text-slate-200 mt-0.5">{{ domainInfo.get('capital_social') or 'N/A' }} ({{ domainInfo.get('business_size') }})</dd>
-            </div>
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 sm:col-span-2">
-               <dt class="text-xs font-mono text-slate-400">Primary Activity (CNAE) & Legal Nature</dt>
-               <dd class="text-slate-200 mt-0.5 text-xs">{{ domainInfo.get('type_business') }} — {{ domainInfo.get('legal_nature') }}</dd>
-            </div>
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 sm:col-span-2">
-               <dt class="text-xs font-mono text-slate-400">Registered Address & Contact</dt>
-               <dd class="text-slate-300 mt-0.5 text-xs">{{ domainInfo.get('address') }} {% if domainInfo.get('phone') %}• Tel: {{ domainInfo.get('phone') }}{% endif %} {% if domainInfo.get('email') %}• {{ domainInfo.get('email') }}{% endif %}</dd>
-            </div>
-         </dl>
+        <div class="cds-kv-list">
+          <div class="cds-kv-item" style="grid-column:span 2;">
+            <div class="cds-kv-dt">Legal Corporate Name (Razão Social)</div>
+            <div class="cds-kv-dd">{{ domainInfo.get('social_name') }} <span class="mono" style="color:var(--cds-link);">({{ domainInfo.get('cnpj_formatted') }})</span></div>
+          </div>
+          <div class="cds-kv-item">
+            <div class="cds-kv-dt">Trade Name &amp; Status</div>
+            <div class="cds-kv-dd">{{ domainInfo.get('fantasy_name') }} &bull; <span class="cds-tag cds-tag-green">{{ domainInfo.get('isActive') }}</span></div>
+          </div>
+          <div class="cds-kv-item">
+            <div class="cds-kv-dt">Share Capital (Capital Social)</div>
+            <div class="cds-kv-dd mono">{{ domainInfo.get('capital_social') or 'N/A' }} ({{ domainInfo.get('business_size') }})</div>
+          </div>
+          <div class="cds-kv-item" style="grid-column:span 2;">
+            <div class="cds-kv-dt">Primary Economic Activity (CNAE) &amp; Legal Nature</div>
+            <div class="cds-kv-dd" style="font-size:12.5px;">{{ domainInfo.get('type_business') }} &mdash; {{ domainInfo.get('legal_nature') }}</div>
+          </div>
+          <div class="cds-kv-item" style="grid-column:span 2;">
+            <div class="cds-kv-dt">Registered Headquarters &amp; Contact</div>
+            <div class="cds-kv-dd" style="font-size:12.5px;">{{ domainInfo.get('address') }} {% if domainInfo.get('phone') %}&bull; Tel: {{ domainInfo.get('phone') }}{% endif %} {% if domainInfo.get('email') %}&bull; {{ domainInfo.get('email') }}{% endif %}</div>
+          </div>
+        </div>
 
-         {% if domainInfo.get('partners') %}
-         <div>
-            <div class="text-xs font-mono uppercase text-slate-400 mb-2">QSA — Quadro de Sócios e Administradores ({{ domainInfo['partners']|length }})</div>
-            <div class="max-h-40 overflow-y-auto space-y-1.5 pr-1">
-               {% for partner in domainInfo['partners'] %}
-                  <div class="bg-slate-900 px-3 py-2 rounded border border-slate-800 flex items-center justify-between text-xs">
-                     <span class="font-medium text-white">{{ partner.name }}</span>
-                     <span class="font-mono text-slate-400">{{ partner.role }} {% if partner.since %}({{ partner.since }}){% endif %}</span>
-                  </div>
-               {% endfor %}
-            </div>
-         </div>
-         {% endif %}
+        {% if domainInfo.get('partners') %}
+          <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);">QSA — Corporate Officers &amp; Shareholders ({{ domainInfo['partners']|length }})</div>
+          <div class="cds-table-wrap" style="max-height:180px;overflow-y:auto;border:1px solid var(--cds-border);">
+            <table class="cds-table">
+              <thead>
+                <tr>
+                  <th>Partner / Officer Name</th>
+                  <th>Qualification &amp; Entry</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for partner in domainInfo['partners'] %}
+                  <tr>
+                    <td style="font-weight:600;">{{ partner.name }}</td>
+                    <td class="mono" style="font-size:12px;">{{ partner.role }} {% if partner.since %}({{ partner.since }}){% endif %}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
 
-         <div class="flex flex-wrap gap-2 pt-2">
-            {% if domainInfo.get('public_contracts') %}
-               <a href="{{ domainInfo.get('public_contracts') }}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono hover:bg-emerald-500/20">
-                  Portal da Transparência &nearr;
-               </a>
-            {% endif %}
-            {% if domainInfo.get('biddings') %}
-               <a href="{{ domainInfo.get('biddings') }}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono hover:bg-cyan-500/20">
-                  PNCP Licitações & Editais &nearr;
-               </a>
-            {% endif %}
-         </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          {% if domainInfo.get('public_contracts') %}
+            <a href="{{ domainInfo.get('public_contracts') }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost cds-btn-sm">
+              <span>Portal da Transparência</span>
+              <i data-lucide="external-link" style="width:13px;height:13px;" aria-hidden="true"></i>
+            </a>
+          {% endif %}
+          {% if domainInfo.get('biddings') %}
+            <a href="{{ domainInfo.get('biddings') }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost cds-btn-sm">
+              <span>PNCP Licitações &amp; Editais</span>
+              <i data-lucide="external-link" style="width:13px;height:13px;" aria-hidden="true"></i>
+            </a>
+          {% endif %}
+        </div>
       {% else %}
-         <div class="p-6 text-center text-slate-400 text-sm bg-slate-900/40 rounded-lg border border-slate-800">
-            No Brazilian CNPJ was automatically linked to this domain. To inspect corporate records, QSA partners, and government contracts, enter a 14-digit CNPJ in the search form above.
-         </div>
+        <div style="padding:24px;border:1px solid var(--cds-border);background-color:var(--cds-layer-02);">
+          <p class="mono" style="font-size:12.5px;color:var(--cds-text-secondary);">
+            NO BRAZILIAN CNPJ AUTOMATICALLY LINKED TO THIS DOMAIN. ENTER A 14-DIGIT CNPJ ABOVE TO QUERY RECEITA FEDERAL QSA &amp; PUBLIC CONTRACTS.
+          </p>
+        </div>
       {% endif %}
-   </div>
+    </div>
+  </div>
 
-   <!-- Subdomains (Certificate Transparency + Passive DNS) -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-cyan-400">grain</i>
-            <h3 class="font-semibold text-white">Discovered Subdomains ({{ subdomain|length if subdomain else 0 }})</h3>
-         </div>
-         <span class="text-xs font-mono text-slate-400">crt.sh + HackerTarget + OTX</span>
+  <!-- Panel 3: Discovered Subdomains (Certificate Transparency + Passive DNS) -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="network" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <h2>DISCOVERED SUBDOMAINS ({{ subdomain|length if subdomain else 0 }})</h2>
       </div>
+      <span class="cds-tag cds-tag-outline">CRT.SH + HACKERTARGET + OTX</span>
+    </div>
 
-      {% if subdomains_detailed %}
-         <div class="max-h-72 overflow-y-auto divide-y divide-slate-800 bg-slate-900 rounded-lg border border-slate-800">
+    <div class="cds-table-toolbar">
+      <label for="subdomain-filter" class="cds-label">Filter Subdomains:</label>
+      <input id="subdomain-filter" type="search" class="cds-input" style="max-width:280px;padding:6px 10px;font-size:12px;" placeholder="Filter host or IP..." data-filter-input=".subdomain-row" />
+    </div>
+
+    {% if subdomains_detailed %}
+      <div class="cds-table-wrap" style="max-height:320px;overflow-y:auto;">
+        <table class="cds-table">
+          <thead>
+            <tr>
+              <th>Subdomain Hostname</th>
+              <th>Resolved IPv4</th>
+            </tr>
+          </thead>
+          <tbody>
             {% for item in subdomains_detailed %}
-               <div class="px-3.5 py-2 flex items-center justify-between text-xs font-mono">
-                  <span class="text-slate-200">{{ item.subdomain }}</span>
-                  {% if item.ip %}
-                     <span class="text-emerald-400">{{ item.ip }}</span>
-                  {% else %}
-                     <span class="text-slate-600">unresolved</span>
-                  {% endif %}
-               </div>
+              <tr class="subdomain-row">
+                <td class="mono" style="font-size:12.5px;">{{ item.subdomain }}</td>
+                <td class="mono" style="font-size:12.5px;color:{{ 'var(--cds-success-text)' if item.ip else 'var(--cds-text-muted)' }};">
+                  {{ item.ip or 'UNRESOLVED' }}
+                </td>
+              </tr>
             {% endfor %}
-         </div>
-      {% elif subdomain %}
-         <div class="max-h-72 overflow-y-auto space-y-1 bg-slate-900 p-3 rounded-lg border border-slate-800 font-mono text-xs">
-            {% for sub in subdomain %}
-               <div class="text-slate-200">{{ sub }}</div>
-            {% endfor %}
-         </div>
-      {% else %}
-         <div class="p-6 text-center text-slate-400 text-sm">No subdomains enumerated for this target.</div>
-      {% endif %}
-   </div>
-
-   <!-- Official Gazettes, Jurisprudence & Compliance -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-purple-400">gavel</i>
-            <h3 class="font-semibold text-white">Official Gazettes, Jurisprudence & Sanctions</h3>
-         </div>
-         <span class="text-xs font-mono text-slate-400">Querido Diário + Legal Dorks</span>
+          </tbody>
+        </table>
       </div>
+    {% elif subdomain %}
+      <div class="cds-panel-body">
+        <div class="cds-terminal" style="max-height:280px;">{% for sub in subdomain %}{{ sub }}
+{% endfor %}</div>
+      </div>
+    {% else %}
+      <div class="cds-panel-body">
+        <p class="mono" style="font-size:12.5px;color:var(--cds-text-secondary);">NO SUBDOMAINS ENUMERATED FOR THIS TARGET.</p>
+      </div>
+    {% endif %}
+  </div>
 
+  <!-- Panel 4: Official Gazettes, Jurisprudence & Compliance -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="scale" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
+        <h2>OFFICIAL GAZETTES, JURISPRUDENCE &amp; SANCTIONS</h2>
+      </div>
+      <span class="cds-tag cds-tag-outline">QUERIDO DIÁRIO + LEGAL DORKS</span>
+    </div>
+
+    <div class="cds-panel-body">
       {% if jurisprudence %}
-         <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
-            {% for label, link in jurisprudence.items() %}
-               <a href="{{ link }}" target="_blank" rel="noopener" class="block bg-slate-900 hover:bg-slate-800/80 p-3 rounded-lg border border-slate-800 transition">
-                  <div class="flex items-center justify-between text-xs font-medium text-purple-300">
-                     <span>{{ label }}</span>
-                     <i class="material-icons text-sm">open_in_new</i>
-                  </div>
-                  <div class="text-[11px] font-mono text-slate-500 truncate mt-1">{{ link }}</div>
-               </a>
-            {% endfor %}
-         </div>
+        <div style="display:flex;flex-direction:column;gap:1px;background-color:var(--cds-border);border:1px solid var(--cds-border);max-height:320px;overflow-y:auto;">
+          {% for label, link in jurisprudence.items() %}
+            <a href="{{ link }}" target="_blank" rel="noopener noreferrer" class="cds-tile-interactive" style="padding:14px 16px;gap:4px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:var(--cds-link);">
+                <span>{{ label }}</span>
+                <i data-lucide="external-link" style="width:14px;height:14px;" aria-hidden="true"></i>
+              </div>
+              <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ link }}</div>
+            </a>
+          {% endfor %}
+        </div>
       {% else %}
-         <div class="p-6 text-center text-slate-400 text-sm">No jurisprudence or gazette links generated yet.</div>
+        <p class="mono" style="font-size:12.5px;color:var(--cds-text-secondary);">NO JURISPRUDENCE OR OFFICIAL GAZETTE LINKS GENERATED YET.</p>
       {% endif %}
-   </div>
-</div>
+    </div>
+  </div>
+</section>
 {% endif %}
 {% endblock %}

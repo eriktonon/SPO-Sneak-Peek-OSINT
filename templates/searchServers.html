@@ -1,200 +1,214 @@
 {% extends "base.html" %}
-{% block title %}SPO — Server, IP & Threat Intelligence{% endblock %}
-{% block header_title %}Infrastructure, Open Ports, CVEs & Passive DNS Recon{% endblock %}
+{% block title %}SPO — Server, IP &amp; Threat Intel // IBM Carbon v11{% endblock %}
+{% block header_title %}01.3 // INFRASTRUCTURE, OPEN PORTS, CVES &amp; PASSIVE DNS RECON{% endblock %}
 
 {% block content %}
-<div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-   <div class="flex items-center gap-2 mb-2">
-      <i class="material-icons text-cyan-400">dns</i>
-      <h2 class="text-lg font-semibold text-white">Server, IP & Vulnerability Reconnaissance</h2>
-   </div>
-   <p class="text-xs text-slate-400 mb-5">
-      Inspect any IPv4 address, hostname, or Shodan query. Works out-of-the-box with <b>zero API keys</b> via Shodan InternetDB (open ports, CPEs, CVEs), IP Geolocation/ASN, and AlienVault OTX Passive DNS — and automatically unlocks deep banner grabbing & VirusTotal v3 reputation when keys are configured in the <a href="{{ url_for('insertKeys') }}" class="text-cyan-400 underline">API Keys Vault</a>.
-   </p>
+<section class="cds-panel" style="border-left:4px solid var(--cds-primary);" aria-labelledby="servers-h1">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="server" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+      <span>MOD-02 // INFRASTRUCTURE &amp; THREAT INTELLIGENCE</span>
+    </div>
+    <span class="cds-tag cds-tag-blue">SHODAN INTERNETDB + OTX + VT V3</span>
+  </div>
 
-   <form action="{{ url_for('searchServers') }}" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-      <div class="md:col-span-2">
-         <label for="target" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Target IP, Hostname, or Shodan Dork</label>
-         <input name="target" id="target" type="text" value="{{ target_query }}" placeholder="1.1.1.1 or scanme.nmap.org" required
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-cyan-500">
+  <div class="cds-panel-body">
+    <div>
+      <h1 id="servers-h1" class="cds-page-h1"><strong>Server, IP &amp; Vulnerability</strong> Reconnaissance</h1>
+      <p class="cds-lead" style="margin-top:6px;">
+        Inspect any IPv4 address, hostname, or Shodan query. Operates out-of-the-box in <strong>Zero-Key Mode</strong> via Shodan InternetDB (open TCP ports, CPEs, CVEs), IP Geolocation/ASN, and AlienVault OTX Passive DNS — and unlocks raw service banner grabbing &amp; VirusTotal v3 reputation when keys are configured in the <a href="{{ url_for('insertKeys') }}" style="color:var(--cds-link);">API Keys Vault</a>.
+      </p>
+    </div>
+
+    <form action="{{ url_for('searchServers') }}" method="POST" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end;padding-top:6px;">
+      <div class="cds-field-group" style="grid-column:span 2;">
+        <label for="server-target" class="cds-label">Target IPv4, Hostname, or Shodan Dork</label>
+        <input name="target" id="server-target" type="text" value="{{ target_query }}" placeholder="1.1.1.1 or scanme.nmap.org" required class="cds-input" />
       </div>
+
+      <div class="cds-field-group">
+        <label for="server-project-id" class="cds-label">Attach to Investigation Case</label>
+        <select name="project_id" id="server-project-id" class="cds-select">
+          <option value="">-- Unassigned --</option>
+          {% for p in user_projects %}
+            <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
       <div>
-         <label for="project_id" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Investigation Case</label>
-         <select name="project_id" id="project_id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
-            <option value="">-- Unassigned --</option>
-            {% for p in user_projects %}
-               <option value="{{ p.id_project }}" {{ 'selected' if selected_project_id == p.id_project else '' }}>{{ p.name_project }}</option>
-            {% endfor %}
-         </select>
+        <button type="submit" class="cds-btn cds-btn-primary" style="width:100%;">
+          <span>Execute Infrastructure Scan</span>
+          <i data-lucide="radar" style="width:16px;height:16px;" aria-hidden="true"></i>
+        </button>
       </div>
-      <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2.5 px-5 rounded-lg transition flex items-center justify-center gap-2">
-         <i class="material-icons text-base">radar</i>
-         <span>Scan Target</span>
-      </button>
-   </form>
-</div>
+    </form>
+  </div>
+</section>
 
 {% if server_result %}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-   <!-- Host Overview & Geolocation -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <h3 class="font-semibold text-white flex items-center gap-2">
-            <i class="material-icons text-cyan-400">router</i> Host & ASN Identity
-         </h3>
-         <span class="font-mono text-xs text-emerald-400">{{ server_result.ip or 'Unresolved' }}</span>
+<section class="cds-grid-3" aria-label="Host Identity, Open Ports, and CVE Intelligence">
+  <!-- Cell 1: Host & ASN Identity -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="globe" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <h2>HOST &amp; ASN IDENTITY</h2>
       </div>
-      <dl class="space-y-2.5 text-sm">
-         <div class="flex justify-between">
-            <dt class="text-slate-400 text-xs font-mono">Target Query</dt>
-            <dd class="font-mono text-white">{{ server_result.target }}</dd>
-         </div>
-         <div class="flex justify-between">
-            <dt class="text-slate-400 text-xs font-mono">Resolved IPv4</dt>
-            <dd class="font-mono text-emerald-400">{{ server_result.ip or 'N/A' }}</dd>
-         </div>
-         <div class="flex justify-between">
-            <dt class="text-slate-400 text-xs font-mono">ISP / Org</dt>
-            <dd class="text-slate-200 text-right">{{ server_result.geo.get('isp') or server_result.geo.get('org') or 'N/A' }}</dd>
-         </div>
-         <div class="flex justify-between">
-            <dt class="text-slate-400 text-xs font-mono">ASN</dt>
-            <dd class="font-mono text-xs text-cyan-300">{{ server_result.geo.get('as') or 'N/A' }}</dd>
-         </div>
-         <div class="flex justify-between">
-            <dt class="text-slate-400 text-xs font-mono">Location</dt>
-            <dd class="text-slate-200">{{ server_result.geo.get('city') or '' }} {{ server_result.geo.get('regionName') or '' }} ({{ server_result.geo.get('country') or 'N/A' }})</dd>
-         </div>
-         <div class="flex justify-between">
-            <dt class="text-slate-400 text-xs font-mono">Reverse DNS</dt>
-            <dd class="font-mono text-xs text-slate-300 break-all">{{ server_result.geo.get('reverse') or (server_result.hostnames|join(', ')) or 'N/A' }}</dd>
-         </div>
-      </dl>
-   </div>
+      <span class="cds-tag cds-tag-green">{{ server_result.ip or 'UNRESOLVED' }}</span>
+    </div>
 
-   <!-- Open Ports & CPEs (Shodan InternetDB) -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <h3 class="font-semibold text-white flex items-center gap-2">
-            <i class="material-icons text-emerald-400">settings_ethernet</i> Open Ports & CPEs
-         </h3>
-         <span class="text-xs font-mono text-slate-400">Shodan InternetDB</span>
+    <div class="cds-panel-body">
+      <div class="cds-kv-list" style="grid-template-columns:1fr;">
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Target Indicator</div>
+          <div class="cds-kv-dd mono">{{ server_result.target }} &rarr; {{ server_result.ip or 'N/A' }}</div>
+        </div>
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">ISP / Organization</div>
+          <div class="cds-kv-dd">{{ server_result.geo.get('isp') or server_result.geo.get('org') or 'N/A' }}</div>
+        </div>
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Autonomous System (ASN)</div>
+          <div class="cds-kv-dd mono" style="color:var(--cds-link);">{{ server_result.geo.get('as') or 'N/A' }}</div>
+        </div>
+        <div class="cds-kv-item">
+          <div class="cds-kv-dt">Geolocation &amp; Reverse DNS</div>
+          <div class="cds-kv-dd mono" style="font-size:12px;">
+            {{ server_result.geo.get('city') or '' }} {{ server_result.geo.get('regionName') or '' }} ({{ server_result.geo.get('country') or 'N/A' }})
+            <br />PTR: {{ server_result.geo.get('reverse') or (server_result.hostnames|join(', ')) or 'N/A' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cell 2: Open Ports & CPEs -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="hard-drive" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>OPEN PORTS &amp; CPE FINGERPRINTS</h2>
+      </div>
+      <span class="cds-tag cds-tag-outline">INTERNETDB</span>
+    </div>
+
+    <div class="cds-panel-body">
+      <div>
+        <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);margin-bottom:8px;">Open TCP Ports ({{ server_result.ports|length }})</div>
+        {% if server_result.ports %}
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            {% for port in server_result.ports %}
+              <span class="cds-tag cds-tag-green">{{ port }}/TCP</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="mono" style="font-size:12px;color:var(--cds-text-secondary);">NO OPEN PORTS INDEXED IN INTERNETDB.</p>
+        {% endif %}
       </div>
 
       <div>
-         <div class="text-xs font-mono uppercase text-slate-400 mb-2">Open Ports ({{ server_result.ports|length }})</div>
-         {% if server_result.ports %}
-            <div class="flex flex-wrap gap-2">
-               {% for port in server_result.ports %}
-                  <span class="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 font-mono text-xs text-emerald-300">
-                     {{ port }}/tcp
-                  </span>
-               {% endfor %}
-            </div>
-         {% else %}
-            <p class="text-xs text-slate-500">No open ports indexed in InternetDB for this IP.</p>
-         {% endif %}
+        <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);margin-bottom:8px;">Detected CPEs ({{ server_result.cpes|length }})</div>
+        {% if server_result.cpes %}
+          <div class="cds-terminal" style="max-height:180px;">{% for cpe in server_result.cpes %}{{ cpe }}
+{% endfor %}</div>
+        {% else %}
+          <p class="mono" style="font-size:12px;color:var(--cds-text-secondary);">NO CPE FINGERPRINTS LISTED.</p>
+        {% endif %}
       </div>
+    </div>
+  </div>
 
-      <div>
-         <div class="text-xs font-mono uppercase text-slate-400 mb-2">Detected CPEs / Technologies</div>
-         {% if server_result.cpes %}
-            <div class="max-h-36 overflow-y-auto space-y-1 font-mono text-xs bg-slate-900 p-2.5 rounded border border-slate-800">
-               {% for cpe in server_result.cpes %}
-                  <div class="text-cyan-300">{{ cpe }}</div>
-               {% endfor %}
-            </div>
-         {% else %}
-            <p class="text-xs text-slate-500">No CPE fingerprints listed.</p>
-         {% endif %}
+  <!-- Cell 3: CVEs & Threat Intel Reputation -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="shield-alert" style="width:15px;height:15px;color:#ff8389;" aria-hidden="true"></i>
+        <h2>CVES &amp; THREAT REPUTATION</h2>
       </div>
-   </div>
+      <span class="cds-tag cds-tag-outline">{{ vt_result.source if vt_result else 'OTX + VT' }}</span>
+    </div>
 
-   <!-- Vulnerabilities (CVEs) & Threat Intel Reputation -->
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-         <h3 class="font-semibold text-white flex items-center gap-2">
-            <i class="material-icons text-rose-400">shield</i> CVEs & Threat Intel
-         </h3>
-         <span class="text-xs font-mono text-slate-400">{{ vt_result.source if vt_result else 'OTX + VT' }}</span>
-      </div>
-
+    <div class="cds-panel-body">
       {% if vt_result %}
-      <div class="grid grid-cols-3 gap-2 text-center">
-         <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2">
-            <div class="text-lg font-bold font-mono text-rose-400">{{ vt_result.malicious }}</div>
-            <div class="text-[10px] font-mono uppercase text-rose-300">Malicious</div>
-         </div>
-         <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2">
-            <div class="text-lg font-bold font-mono text-amber-400">{{ vt_result.suspicious }}</div>
-            <div class="text-[10px] font-mono uppercase text-amber-300">Suspicious</div>
-         </div>
-         <div class="bg-purple-500/10 border border-purple-500/30 rounded-lg p-2">
-            <div class="text-lg font-bold font-mono text-purple-400">{{ vt_result.otx_pulses }}</div>
-            <div class="text-[10px] font-mono uppercase text-purple-300">OTX Pulses</div>
-         </div>
-      </div>
+        <div class="cds-grid-3">
+          <div class="cds-kpi-tile" style="padding:12px;">
+            <span class="cds-kpi-label">MALICIOUS</span>
+            <span class="cds-kpi-value" style="font-size:22px;color:var(--cds-danger-text);">{{ vt_result.malicious }}</span>
+          </div>
+          <div class="cds-kpi-tile" style="padding:12px;">
+            <span class="cds-kpi-label">SUSPICIOUS</span>
+            <span class="cds-kpi-value" style="font-size:22px;color:var(--cds-warning-text);">{{ vt_result.suspicious }}</span>
+          </div>
+          <div class="cds-kpi-tile" style="padding:12px;">
+            <span class="cds-kpi-label">OTX PULSES</span>
+            <span class="cds-kpi-value" style="font-size:22px;color:var(--cds-link);">{{ vt_result.otx_pulses }}</span>
+          </div>
+        </div>
       {% endif %}
 
       <div>
-         <div class="text-xs font-mono uppercase text-slate-400 mb-2">Known Vulnerabilities ({{ server_result.vulns|length }})</div>
-         {% if server_result.vulns %}
-            <div class="max-h-40 overflow-y-auto flex flex-wrap gap-1.5">
-               {% for cve in server_result.vulns %}
-                  <a href="https://nvd.nist.gov/vuln/detail/{{ cve }}" target="_blank" rel="noopener"
-                     class="px-2 py-0.5 rounded bg-rose-500/15 border border-rose-500/40 font-mono text-xs text-rose-300 hover:bg-rose-500/25">
-                     {{ cve }} &nearr;
-                  </a>
-               {% endfor %}
-            </div>
-         {% else %}
-            <p class="text-xs text-emerald-400 font-mono">0 unpatched CVEs flagged in Shodan InternetDB.</p>
-         {% endif %}
+        <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);margin-bottom:8px;">Known Vulnerabilities ({{ server_result.vulns|length }})</div>
+        {% if server_result.vulns %}
+          <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:170px;overflow-y:auto;">
+            {% for cve in server_result.vulns %}
+              <a href="https://nvd.nist.gov/vuln/detail/{{ cve }}" target="_blank" rel="noopener noreferrer" class="cds-tag cds-tag-red" style="text-decoration:none;">
+                <span>{{ cve }}</span>
+                <i data-lucide="external-link" style="width:11px;height:11px;" aria-hidden="true"></i>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="mono" style="font-size:12px;color:var(--cds-success-text);">0 UNPATCHED CVES FLAGGED IN SHODAN INTERNETDB.</p>
+        {% endif %}
       </div>
-   </div>
-</div>
+    </div>
+  </div>
+</section>
 
-<!-- Passive DNS Resolutions & Shodan Banners -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-3">
-      <h3 class="font-semibold text-white flex items-center gap-2">
-         <i class="material-icons text-purple-400">swap_horiz</i> Passive DNS Resolutions ({{ vt_result.resolutions|length if vt_result else 0 }})
-      </h3>
+<!-- Bottom 2-Column Grid: Passive DNS & Service Banners -->
+<section class="cds-grid-2" aria-label="Passive DNS Resolutions and Shodan Banners">
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="arrow-left-right" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+        <h2>PASSIVE DNS RESOLUTIONS ({{ vt_result.resolutions|length if vt_result else 0 }})</h2>
+      </div>
+    </div>
+    <div class="cds-panel-body">
       {% if vt_result and vt_result.resolutions %}
-         <div class="max-h-64 overflow-y-auto bg-slate-900 p-3 rounded-lg border border-slate-800 font-mono text-xs space-y-1">
-            {% for res in vt_result.resolutions %}
-               <div class="text-slate-200">{{ res }}</div>
-            {% endfor %}
-         </div>
+        <div class="cds-terminal" style="max-height:260px;">{% for res in vt_result.resolutions %}{{ res }}
+{% endfor %}</div>
       {% else %}
-         <p class="text-xs text-slate-400">No passive DNS resolutions returned for this indicator.</p>
+        <p class="mono" style="font-size:12.5px;color:var(--cds-text-secondary);">NO PASSIVE DNS RESOLUTIONS RETURNED FOR THIS INDICATOR.</p>
       {% endif %}
-   </div>
+    </div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-3">
-      <h3 class="font-semibold text-white flex items-center gap-2">
-         <i class="material-icons text-amber-400">terminal</i> Service Banners (Shodan API)
-      </h3>
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="terminal" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
+        <h2>SERVICE BANNERS (SHODAN FULL API)</h2>
+      </div>
+    </div>
+    <div class="cds-panel-body">
       {% if server_result.shodan_banners %}
-         <div class="max-h-64 overflow-y-auto space-y-2">
-            {% for b in server_result.shodan_banners %}
-               <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 font-mono text-xs">
-                  <div class="flex justify-between text-amber-400 font-semibold">
-                     <span>{{ b.ip_str }}:{{ b.port }}/{{ b.transport }}</span>
-                     <span>{{ b.product }} {{ b.version }}</span>
-                  </div>
-                  <pre class="text-slate-400 mt-1 whitespace-pre-wrap break-all text-[11px]">{{ b.data }}</pre>
-               </div>
-            {% endfor %}
-         </div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-height:260px;overflow-y:auto;">
+          {% for b in server_result.shodan_banners %}
+            <div class="cds-terminal">
+              <div style="color:#78a9ff;font-weight:600;margin-bottom:4px;">{{ b.ip_str }}:{{ b.port }}/{{ b.transport }} &mdash; {{ b.product }} {{ b.version }}</div>{{ b.data }}</div>
+          {% endfor %}
+        </div>
       {% elif server_result.shodan_error %}
-         <p class="text-xs text-rose-400 font-mono">Shodan API Error: {{ server_result.shodan_error }}</p>
+        <p class="mono" style="font-size:12.5px;color:var(--cds-danger-text);">SHODAN API ERROR: {{ server_result.shodan_error }}</p>
       {% else %}
-         <p class="text-xs text-slate-400">
-            InternetDB port & CVE scan completed in zero-key mode. Add a Shodan API key in <a href="{{ url_for('insertKeys') }}" class="text-cyan-400 underline">API Keys Vault</a> to grab raw service banners.
-         </p>
+        <p class="mono" style="font-size:12.5px;color:var(--cds-text-secondary);">
+          INTERNETDB PORT &amp; CVE SCAN COMPLETED IN ZERO-KEY MODE. CONFIGURE A SHODAN API KEY IN <a href="{{ url_for('insertKeys') }}" style="color:var(--cds-link);">API KEYS VAULT</a> TO GRAB RAW SERVICE BANNERS.
+        </p>
       {% endif %}
-   </div>
-</div>
+    </div>
+  </div>
+</section>
 {% endif %}
 {% endblock %}

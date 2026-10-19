@@ -1,161 +1,297 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>{% block title %}SPO — Sneak Peek OSINT v2.0{% endblock %}</title>
-   <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/png" />
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-   <script src="https://cdn.tailwindcss.com"></script>
-   <script>
-      tailwind.config = {
-         darkMode: 'class',
-         theme: {
-            extend: {
-               fontFamily: {
-                  sans: ['Inter', 'sans-serif'],
-                  mono: ['JetBrains Mono', 'monospace'],
-               },
-               colors: {
-                  spo: {
-                     bg: '#090d16',
-                     panel: '#111827',
-                     border: '#1f2937',
-                     accent: '#10b981',
-                     cyan: '#06b6d4',
-                  }
-               }
-            }
-         }
-      }
-   </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}SPO — Sneak Peek OSINT v2.0 // IBM Carbon Control Plane{% endblock %}</title>
+  <meta name="description" content="SPO (Sneak Peek OSINT v2.0) — Tactical Open Source Intelligence, Strix DAST AppSec & IBM Granite 4.2 Uncensored SecOps Platform by Erik Tonon." />
+  <meta name="author" content="Erik Tonon (@eriktonon)" />
+  <meta property="og:title" content="SPO — Sneak Peek OSINT v2.0 // Tactical Control Plane" />
+  <meta property="og:description" content="Open Source Intelligence, Strix Black-Box DAST & IBM Granite 4.2 Uncensored SecOps Co-Pilot." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}" />
+  <link rel="alternate icon" type="image/png" href="{{ url_for('static', filename='img/spoICO.png') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/carbon-v11.css') }}" />
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('spo_carbon_theme');
+        if (saved === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body class="bg-spo-bg text-slate-200 font-sans min-h-screen flex">
-   <!-- Tactical Sidebar -->
-   <aside class="w-64 bg-spo-panel border-r border-spo-border flex flex-col fixed inset-y-0 left-0 z-30">
-      <div class="p-5 border-b border-spo-border flex items-center gap-3">
-         <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-            <i class="material-icons">device_hub</i>
-         </div>
-         <div>
-            <div class="font-mono font-bold tracking-wider text-sm text-white">SNEAK PEEK OSINT</div>
-            <div class="text-xs font-mono text-emerald-400">SPO v{{ app_version or '2.0.0' }} • LIVE</div>
-         </div>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Carbon v11 UI Shell Header (48px Sticky) -->
+  <header class="cds-shell-header">
+    <div class="cds-header-left">
+      <button type="button" id="mobile-nav-toggle" class="cds-mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="spo-side-nav">
+        <i data-lucide="menu" style="width:18px;height:18px;" aria-hidden="true"></i>
+      </button>
+      <a href="{{ url_for('dashboard') }}" class="cds-brand-link" aria-label="SPO Command Center Home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="22" viewBox="160 200 145 62" fill="none" role="img" aria-label="IBM 8-bar vector">
+          <path fill="#0F62FE" d="M164.6 255.3h26.2v3.4h-26.2zm0-7.1h26.2v3.4h-26.2zm7.5-7.2h11.2v3.4h-11.2zm0-7.1h11.2v3.4h-11.2zm0-7.2h11.2v3.4h-11.2zm0-7.1h11.2v3.4h-11.2zm-7.5-7.2h26.2v3.4h-26.2zm0-7.1h26.2v3.4h-26.2z"/>
+          <path fill="#0F62FE" d="M194.6 255.3v3.4h27.6c3.5 0 6.8-1.3 9.3-3.4h-36.9z"/>
+          <path fill="#0F62FE" d="M194.6 248.2v3.4h40c.6-1.1 1.1-2.2 1.4-3.4h-41.4z"/>
+          <path fill="#0F62FE" d="M202 241h11.2v3.4H202zm29.8-7.1H202v3.4h32.5c-.7-1.3-1.6-2.5-2.7-3.4zm-29.8-7.2v3.4h29.7c1.1-1 2-2.1 2.8-3.4H202z"/>
+          <path fill="#0F62FE" d="M235.9 215.8c-.3-1.2-.8-2.3-1.4-3.4h-39.9v3.4h41.3z"/>
+          <path fill="#0F62FE" d="M231.4 208.7c-2.5-2.1-5.7-3.4-9.3-3.4h-27.6v3.4h36.9z"/>
+          <path fill="#0F62FE" d="M202 219.6h11.2v3.4H202zm22.5 3.4H236c.3-1.1.4-2.2.4-3.4h-11.9v3.4zm0 18v3.4h11.9c0-1.2-.1-2.3-.4-3.4h-11.5z"/>
+          <path fill="#0F62FE" d="M239.5 255.3h18.7v3.4h-18.7z"/>
+          <path fill="#0F62FE" d="M239.5 248.2h18.7v3.4h-18.7z"/>
+          <path fill="#0F62FE" d="M247 241h11.2v3.4H247z"/>
+          <path fill="#0F62FE" d="M247 233.9h11.2v3.4H247z"/>
+          <path fill="#0F62FE" d="M247 226.7h11.2v3.4H247z"/>
+          <path fill="#0F62FE" d="M280.7 255.3h18.7v3.4h-18.7zm0-7.1h18.7v3.4h-18.7zm0-7.2h11.2v3.4h-11.2zm0-7.1h11.2v3.4h-11.2zm0-3.8h11.2v-3.4h-21.1l-1.1 3.4h9.8l1.2-3.2zm11.2-10.5h-18.6l-1.1 3.4h19.7zm-13.6-14.3l-1.2 3.4h22.3v-3.4zm-8.9 53.4l1.2-3.4h-2.4zm-2.5-7.1h5.1l1.1-3.4h-7.4zm-2.5-7.2h10.1l1.2-3.4h-12.5zm-2.5-7.1H277l1.2-3.4h-17.5zm6.1-10.6h-9.8v.2l1.2 3.2h9.8z"/>
+          <path fill="#0F62FE" d="M247 223h19.7l-1.1-3.4H247z"/>
+          <path fill="#0F62FE" d="M274.6 215.8h24.8v-3.4h-23.6z"/>
+          <path fill="#0F62FE" d="M263.1 212.4h-23.6v3.4h24.8z"/>
+          <path fill="#0F62FE" d="M260.6 205.3h-21.1v3.4h22.3z"/>
+        </svg>
+        <span class="cds-header-divider" aria-hidden="true"></span>
+        <span class="cds-header-title">
+          <span class="hide-mobile">Security &amp; OSINT Research &nbsp;/&nbsp;</span>
+          <strong>SPO — Sneak Peek OSINT v{{ app_version or '2.0.0' }}</strong>
+        </span>
+      </a>
+    </div>
+
+    <div class="cds-header-actions">
+      <a href="{{ url_for('graniteAI') }}" class="cds-header-action" title="Open Granite 4.2 Uncensored SecOps AI">
+        <i data-lucide="cpu" style="width:14px;height:14px;color:#0f62fe;" aria-hidden="true"></i>
+        <span class="hide-mobile">eriktonon/granite4.2-uncensored</span>
+      </a>
+      <a href="{{ url_for('securityAudit') }}" class="cds-header-action" title="Open Strix DAST & OWASP Prevention">
+        <i data-lucide="shield-alert" style="width:14px;height:14px;color:#da1e28;" aria-hidden="true"></i>
+        <span class="hide-mobile">Strix DAST</span>
+      </a>
+      <button type="button" id="theme-toggle" class="cds-header-action" aria-label="Toggle Light and Dark Theme" title="Toggle Carbon Light / Dark Theme">
+        <i data-lucide="sun-moon" style="width:15px;height:15px;" aria-hidden="true"></i>
+        <span id="theme-label" class="hide-mobile">CARBON G100</span>
+      </button>
+      <a href="{{ url_for('projects') }}" class="cds-header-action primary">
+        <i data-lucide="folder-plus" style="width:14px;height:14px;" aria-hidden="true"></i>
+        <span>Cases</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Carbon v11 Left Side Navigation Rail -->
+  <aside id="spo-side-nav" class="cds-side-nav" aria-label="Workspace Side Rail">
+    <nav class="cds-nav-scroll" aria-label="Primary OSINT Navigation">
+      <div class="cds-nav-section">01 // Operations</div>
+      <a href="{{ url_for('dashboard') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'dashboard' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="layout-grid" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Command Center</span>
+        </span>
+        <span class="mono" style="font-size:10px;opacity:0.7;">BTM</span>
+      </a>
+      <a href="{{ url_for('companyInvestigation') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'companyInvestigation' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="building-2" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Company &amp; Domain</span>
+        </span>
+        <span class="mono" style="font-size:10px;opacity:0.7;">RDAP</span>
+      </a>
+      <a href="{{ url_for('searchServers') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'searchServers' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="server" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Servers &amp; Threat Intel</span>
+        </span>
+        <span class="mono" style="font-size:10px;opacity:0.7;">CVE</span>
+      </a>
+      <a href="{{ url_for('personalInvestigation') }}" class="cds-nav-link {{ 'active' if request.endpoint in ('personalInvestigation', 'personalTrace') else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="user-search" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Personal &amp; Social Recon</span>
+        </span>
+        <span class="mono" style="font-size:10px;opacity:0.7;">SOCMINT</span>
+      </a>
+      <a href="{{ url_for('securityAudit') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'securityAudit' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="shield-check" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Strix DAST &amp; Security</span>
+        </span>
+        <span class="cds-tag cds-tag-red" style="padding:1px 5px;font-size:10px;">STRIX</span>
+      </a>
+      <a href="{{ url_for('graniteAI') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'graniteAI' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="cpu" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Granite 4.2 SecOps AI</span>
+        </span>
+        <span class="cds-tag cds-tag-blue" style="padding:1px 5px;font-size:10px;">LLM</span>
+      </a>
+
+      <div class="cds-nav-section">02 // Evidence &amp; Vault</div>
+      <a href="{{ url_for('projects') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'projects' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="folder-kanban" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Investigation Cases</span>
+        </span>
+        {% if user_projects %}
+          <span class="cds-tag cds-tag-outline" style="padding:1px 6px;font-size:10px;">{{ user_projects|length }}</span>
+        {% endif %}
+      </a>
+      <a href="{{ url_for('insertKeys') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'insertKeys' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="key-round" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>API Keys &amp; Ollama Vault</span>
+        </span>
+      </a>
+
+      <div class="cds-nav-section">03 // Reference &amp; Governance</div>
+      <a href="{{ url_for('aboutOSINT') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'aboutOSINT' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="compass" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>OSINT Methodology</span>
+        </span>
+      </a>
+      <a href="{{ url_for('manual') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'manual' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="book-open" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>Operator Manual</span>
+        </span>
+      </a>
+      <a href="{{ url_for('aboutUS') }}" class="cds-nav-link {{ 'active' if request.endpoint == 'aboutUS' else '' }}">
+        <span class="cds-nav-link-inner">
+          <i data-lucide="award" style="width:16px;height:16px;" aria-hidden="true"></i>
+          <span>About &amp; Crypto Support</span>
+        </span>
+      </a>
+    </nav>
+
+    <div class="cds-nav-footer">
+      <div style="min-width:0;">
+        <div class="mono" style="font-size:12px;font-weight:600;color:var(--cds-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          OP // {{ current_user or 'eriktonon' }}
+        </div>
+        <div class="mono" style="font-size:10.5px;color:var(--cds-success-text);">
+          SQLITE WAL • SSRFGUARD ON
+        </div>
       </div>
+      <a href="{{ url_for('exit') }}" class="cds-btn cds-btn-ghost cds-btn-sm" aria-label="Sign out operator session" title="Sign out">
+        <i data-lucide="log-out" style="width:14px;height:14px;" aria-hidden="true"></i>
+      </a>
+    </div>
+  </aside>
 
-      <nav class="flex-1 overflow-y-auto p-3 space-y-1 text-sm">
-         <div class="px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-slate-500">Operations</div>
-         <a href="{{ url_for('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'dashboard' else 'text-slate-300' }}">
-            <i class="material-icons text-lg">space_dashboard</i>
-            <span>Command Center</span>
-         </a>
-         <a href="{{ url_for('companyInvestigation') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'companyInvestigation' else 'text-slate-300' }}">
-            <i class="material-icons text-lg">domain</i>
-            <span>Company & Domain</span>
-         </a>
-         <a href="{{ url_for('searchServers') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'searchServers' else 'text-slate-300' }}">
-            <i class="material-icons text-lg">dns</i>
-            <span>Servers & Threat Intel</span>
-         </a>
-         <a href="{{ url_for('personalInvestigation') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint in ('personalInvestigation', 'personalTrace') else 'text-slate-300' }}">
-            <i class="material-icons text-lg">person_search</i>
-            <span>Personal & Social Recon</span>
-         </a>
-         <a href="{{ url_for('securityAudit') }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-rose-500/10 text-rose-400 border border-rose-500/20' if request.endpoint == 'securityAudit' else 'text-slate-300' }}">
-            <span class="flex items-center gap-3">
-               <i class="material-icons text-lg text-rose-400">shield</i>
-               <span>Strix DAST & Security</span>
-            </span>
-            <span class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-rose-500/20 text-rose-300">STRIX</span>
-         </a>
-         <a href="{{ url_for('graniteAI') }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-amber-500/10 text-amber-400 border border-amber-500/20' if request.endpoint == 'graniteAI' else 'text-slate-300' }}">
-            <span class="flex items-center gap-3">
-               <i class="material-icons text-lg text-amber-400">psychology</i>
-               <span>Granite 4.2 SecOps AI</span>
-            </span>
-            <span class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-amber-500/20 text-amber-300">LLM</span>
-         </a>
-
-         <div class="pt-4 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-slate-500">Evidence & Vault</div>
-         <a href="{{ url_for('projects') }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'projects' else 'text-slate-300' }}">
-            <span class="flex items-center gap-3">
-               <i class="material-icons text-lg">folder_special</i>
-               <span>Investigation Cases</span>
-            </span>
-            {% if user_projects %}
-            <span class="px-2 py-0.5 text-xs font-mono rounded bg-slate-800 text-slate-300">{{ user_projects|length }}</span>
-            {% endif %}
-         </a>
-         <a href="{{ url_for('insertKeys') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'insertKeys' else 'text-slate-300' }}">
-            <i class="material-icons text-lg">vpn_key</i>
-            <span>API Keys Vault</span>
-         </a>
-
-         <div class="pt-4 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-slate-500">Knowledge Base</div>
-         <a href="{{ url_for('aboutOSINT') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'aboutOSINT' else 'text-slate-400' }}">
-            <i class="material-icons text-lg">school</i>
-            <span>OSINT Methodology</span>
-         </a>
-         <a href="{{ url_for('manual') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'manual' else 'text-slate-400' }}">
-            <i class="material-icons text-lg">menu_book</i>
-            <span>Operator Manual</span>
-         </a>
-         <a href="{{ url_for('aboutUS') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'aboutUS' else 'text-slate-400' }}">
-            <i class="material-icons text-lg">badge</i>
-            <span>About & Credits</span>
-         </a>
-      </nav>
-
-      <div class="p-4 border-t border-spo-border bg-slate-900/60 flex items-center justify-between">
-         <div class="flex items-center gap-2.5 truncate">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <div class="truncate">
-               <div class="text-xs font-medium text-white truncate">{{ current_user or 'Operator' }}</div>
-               <div class="text-[11px] font-mono text-slate-400">SQLite WAL + Strix Active</div>
-            </div>
-         </div>
-         <a href="{{ url_for('exit') }}" title="Logout" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition">
-            <i class="material-icons text-lg">logout</i>
-         </a>
+  <!-- Main Workspace -->
+  <div class="cds-workspace">
+    <div class="cds-context-bar">
+      <div class="cds-breadcrumb">
+        {% block header_title %}IBM CARBON v11 CONTROL PLANE // TACTICAL OSINT WORKSPACE{% endblock %}
       </div>
-   </aside>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span class="cds-tag cds-tag-outline">ZERO-KEY OSINT</span>
+        <span class="cds-tag cds-tag-outline">OWASP A01–A10</span>
+        <span class="cds-tag cds-tag-blue">GRANITE 4.2 8B</span>
+      </div>
+    </div>
 
-   <!-- Main Content -->
-   <div class="flex-1 ml-64 flex flex-col min-h-screen">
-      <!-- Top Bar -->
-      <header class="h-14 border-b border-spo-border bg-spo-panel/80 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-20">
-         <div class="flex items-center gap-3">
-            <span class="text-xs font-mono uppercase tracking-widest text-slate-400">{% block header_title %}Tactical OSINT Workspace{% endblock %}</span>
-         </div>
-         <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
-            <a href="{{ url_for('graniteAI') }}" class="px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition">
-               🧠 eriktonon/granite4.2-uncensored
-            </a>
-            <span class="hidden xl:inline px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-emerald-400">RDAP + BrasilAPI + InternetDB + Strix</span>
-            <a href="{{ url_for('projects') }}" class="hover:text-white flex items-center gap-1">
-               <i class="material-icons text-sm">add_circle_outline</i> New Case
-            </a>
-         </div>
-      </header>
-
-      <!-- Flash Messages -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-         {% if messages %}
-            <div class="px-8 pt-6 space-y-2">
-               {% for category, message in messages %}
-                  <div class="px-4 py-3 rounded-lg border text-sm flex items-center gap-3 {{ 'bg-rose-500/10 border-rose-500/30 text-rose-300' if category == 'error' else 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' }}">
-                     <i class="material-icons text-base">{{ 'error_outline' if category == 'error' else 'check_circle' }}</i>
-                     <span>{{ message }}</span>
-                  </div>
-               {% endfor %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="max-width:1520px;width:100%;margin:16px auto 0 auto;padding:0 24px;display:flex;flex-direction:column;gap:8px;" role="region" aria-label="System notifications">
+          {% for category, message in messages %}
+            <div class="cds-alert {{ 'error' if category == 'error' else 'success' }}" role="alert">
+              <i data-lucide="{{ 'alert-triangle' if category == 'error' else 'check-square' }}" style="width:16px;height:16px;flex-shrink:0;" aria-hidden="true"></i>
+              <span class="mono" style="font-size:12.5px;">{{ message }}</span>
             </div>
-         {% endif %}
-      {% endwith %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
-      <main class="p-8 flex-1 space-y-6">
-         {% block content %}{% endblock %}
-      </main>
-   </div>
+    <main id="main-content" class="cds-main-container" tabindex="-1">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer style="background-color:#161616;color:#c6c6c6;border-top:1px solid #393939;padding:16px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;font-size:12px;">
+      <div class="mono">
+        SPO — Sneak Peek OSINT v{{ app_version or '2.0.0' }} &bull; IBM Carbon Design System v11 &bull; Maintained by <a href="https://eriktonon.com" target="_blank" rel="noopener noreferrer" style="color:#78a9ff;text-decoration:none;">Erik Tonon (@eriktonon)</a>
+      </div>
+      <div class="mono" style="display:flex;gap:16px;">
+        <a href="https://github.com/eriktonon/SPO-Sneak-Peek-OSINT" target="_blank" rel="noopener noreferrer" style="color:#c6c6c6;text-decoration:none;">GitHub</a>
+        <a href="https://ollama.com/eriktonon/granite4.2-uncensored" target="_blank" rel="noopener noreferrer" style="color:#c6c6c6;text-decoration:none;">Ollama Granite 4.2</a>
+        <a href="{{ url_for('aboutUS') }}" style="color:#78a9ff;text-decoration:none;">Crypto Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script>
+    (function() {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      // Theme Toggle (Carbon Gray 100 Dark <-> Carbon Gray 10 Light)
+      var htmlEl = document.documentElement;
+      var themeBtn = document.getElementById('theme-toggle');
+      var themeLabel = document.getElementById('theme-label');
+
+      function syncThemeLabel() {
+        if (!themeLabel) return;
+        themeLabel.textContent = htmlEl.classList.contains('dark') ? 'CARBON G100' : 'CARBON G10';
+      }
+      syncThemeLabel();
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', function() {
+          htmlEl.classList.toggle('dark');
+          var mode = htmlEl.classList.contains('dark') ? 'dark' : 'light';
+          try { localStorage.setItem('spo_carbon_theme', mode); } catch (e) {}
+          syncThemeLabel();
+        });
+      }
+
+      // Mobile Navigation Drawer Toggle
+      var navToggle = document.getElementById('mobile-nav-toggle');
+      var sideNav = document.getElementById('spo-side-nav');
+      if (navToggle && sideNav) {
+        navToggle.addEventListener('click', function() {
+          var isOpen = sideNav.classList.toggle('open');
+          navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+      }
+
+      // Real-Time Table / List Filter (No Fake UI - Don Norman / Steve Krug)
+      document.querySelectorAll('[data-filter-input]').forEach(function(input) {
+        var targetSelector = input.getAttribute('data-filter-input');
+        input.addEventListener('input', function() {
+          var query = (input.value || '').toLowerCase().trim();
+          document.querySelectorAll(targetSelector).forEach(function(row) {
+            var text = (row.textContent || '').toLowerCase();
+            row.style.display = (!query || text.indexOf(query) !== -1) ? '' : 'none';
+          });
+        });
+      });
+
+      // One-Click Copy to Clipboard
+      document.querySelectorAll('[data-copy-text]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var val = btn.getAttribute('data-copy-text') || '';
+          if (!val) return;
+          navigator.clipboard.writeText(val).then(function() {
+            var orig = btn.innerHTML;
+            btn.textContent = 'COPIED';
+            setTimeout(function() {
+              btn.innerHTML = orig;
+              if (window.lucide) window.lucide.createIcons();
+            }, 1400);
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

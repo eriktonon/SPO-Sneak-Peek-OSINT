@@ -1,232 +1,277 @@
 {% extends "base.html" %}
-{% block title %}SPO — Strix Security & OWASP Prevention{% endblock %}
-{% block header_title %}Strix Offensive-Defensive DAST & Shift-Left Prevention // PE-AGENTS-IBM Security{% endblock %}
+{% block title %}SPO — Strix DAST &amp; OWASP Prevention // IBM Carbon v11{% endblock %}
+{% block header_title %}01.5 // STRIX OFFENSIVE-DEFENSIVE DAST &amp; SHIFT-LEFT PREVENTION{% endblock %}
 
 {% block content %}
-<!-- Search / Audit Form -->
-<div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
-      <div>
-         <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 text-[11px] font-mono uppercase rounded bg-rose-500/10 text-rose-400 border border-rose-500/30">/pentest-strix</span>
-            <span class="px-2 py-0.5 text-[11px] font-mono uppercase rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">/PE-AGENTS-IBM Segurança</span>
-         </div>
-         <h2 class="text-xl font-bold text-white mt-2">Strix Surface DAST & OWASP Top 10 Prevention Auditor</h2>
-         <p class="text-xs text-slate-400 mt-1">
-            Non-destructive Black-Box DAST surface analysis (HTTP Defensive Headers, TLS/SSL Cipher & Cert, Sensitive Path Exposure, DNS SPF/DMARC Anti-Spoofing) with Shift-Left Autofix Prevention snippets. Protected by <span class="text-emerald-400 font-mono">SSRFGuard</span>.
-         </p>
-      </div>
-   </div>
+<!-- Audit Input Panel -->
+<section class="cds-panel" style="border-left:4px solid #da1e28;" aria-labelledby="strix-h1">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="shield-alert" style="width:15px;height:15px;color:#ff8389;" aria-hidden="true"></i>
+      <span>/PENTEST-STRIX &amp; /PE-AGENTS-IBM SEGURANÇA</span>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <span class="cds-tag cds-tag-red">BLACK-BOX DAST</span>
+      <span class="cds-tag cds-tag-green">SSRFGUARD ACTIVE</span>
+    </div>
+  </div>
 
-   <form method="POST" action="{{ url_for('securityAudit') }}" class="grid grid-cols-1 md:grid-cols-12 gap-4">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <div class="md:col-span-6">
-         <label class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Target Domain or External URL</label>
-         <input type="text" name="target" value="{{ target_query or '' }}" placeholder="e.g. example.com or https://eriktonon.com" required
-                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-emerald-500">
+  <div class="cds-panel-body">
+    <div>
+      <h1 id="strix-h1" class="cds-page-h1"><strong>Strix Surface DAST</strong> &amp; OWASP Top 10 Prevention Auditor</h1>
+      <p class="cds-lead" style="margin-top:6px;">
+        Non-destructive Black-Box DAST surface analysis (HTTP Defensive Headers, TLS/SSL Cipher &amp; Certificate verification, Sensitive Path Exposure probing, DNS SPF/DMARC Anti-Spoofing) with reproducible PoC commands and Shift-Left Autofix snippets. Protected by <code class="mono" style="color:var(--cds-success-text);">SSRFGuard</code> (blocks RFC1918 &amp; gateway <code class="mono">192.168.3.1</code>).
+      </p>
+    </div>
+
+    <form method="POST" action="{{ url_for('securityAudit') }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end;padding-top:8px;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+
+      <div class="cds-field-group" style="grid-column:span 2;">
+        <label for="strix-target" class="cds-label">Target Domain or External URL</label>
+        <input id="strix-target" type="text" name="target" value="{{ target_query or '' }}" placeholder="example.com or https://eriktonon.com" required class="cds-input" />
       </div>
-      <div class="md:col-span-4">
-         <label class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Attach to Investigation Case</label>
-         <select name="project_id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-            <option value="">-- Standalone Security Audit --</option>
-            {% for p in user_projects %}
-               <option value="{{ p.id_project }}" {% if selected_project_id == p.id_project %}selected{% endif %}>{{ p.name_project }}</option>
-            {% endfor %}
-         </select>
+
+      <div class="cds-field-group">
+        <label for="strix-project-id" class="cds-label">Attach to Investigation Case</label>
+        <select id="strix-project-id" name="project_id" class="cds-select">
+          <option value="">-- Standalone Security Audit --</option>
+          {% for p in user_projects %}
+            <option value="{{ p.id_project }}" {% if selected_project_id == p.id_project %}selected{% endif %}>{{ p.name_project }}</option>
+          {% endfor %}
+        </select>
       </div>
-      <div class="md:col-span-2 flex items-end">
-         <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-semibold py-2.5 px-4 rounded-lg text-sm transition flex items-center justify-center gap-2">
-            <i class="material-icons text-base">shield</i>
-            <span>Run Strix</span>
-         </button>
+
+      <div>
+        <button type="submit" class="cds-btn cds-btn-danger" style="width:100%;">
+          <span>Execute Strix DAST Audit</span>
+          <i data-lucide="shield-check" style="width:16px;height:16px;" aria-hidden="true"></i>
+        </button>
       </div>
-   </form>
-</div>
+    </form>
+  </div>
+</section>
 
 {% if audit_report and not audit_report.error %}
-<!-- Audit Posture Score & TLS/DNS Summary -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5 flex items-center justify-between">
-      <div>
-         <div class="text-xs font-mono uppercase text-slate-400">AppSec Posture Score</div>
-         <div class="text-3xl font-bold font-mono text-white mt-1">{{ audit_report.score }}/100</div>
-         <div class="text-xs text-slate-400 mt-1">Target: <span class="text-emerald-400 font-mono">{{ audit_report.hostname }}</span></div>
-      </div>
-      <div class="w-14 h-14 rounded-xl flex items-center justify-center font-mono text-2xl font-bold border {{ 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400' if audit_report.score >= 80 else ('bg-amber-500/10 border-amber-500/40 text-amber-400' if audit_report.score >= 60 else 'bg-rose-500/10 border-rose-500/40 text-rose-400') }}">
-         {{ audit_report.grade }}
-      </div>
-   </div>
+<!-- 4-Tile KPI Strip -->
+<section class="cds-kpi-strip-4" aria-label="Strix Audit Posture Summary">
+  <div class="cds-kpi-tile">
+    <div class="cds-kpi-label">
+      <span>APPSEC POSTURE SCORE</span>
+      <span class="cds-tag {{ 'cds-tag-green' if audit_report.score >= 80 else ('cds-tag-amber' if audit_report.score >= 60 else 'cds-tag-red') }}">
+        GRADE {{ audit_report.grade }}
+      </span>
+    </div>
+    <div class="cds-kpi-value">{{ audit_report.score }} / 100</div>
+    <div class="cds-kpi-sub">TARGET: {{ audit_report.hostname }}</div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="text-xs font-mono uppercase text-slate-400">TLS / Cryptographic Layer</div>
-      <div class="text-lg font-bold font-mono text-white mt-1">
-         {{ audit_report.tls.protocol or 'No TLS (Plain HTTP)' }}
-      </div>
-      <div class="text-xs text-slate-400 mt-1 truncate">
-         Cipher: {{ audit_report.tls.cipher or 'N/A' }}
-      </div>
-   </div>
+  <div class="cds-kpi-tile">
+    <div class="cds-kpi-label">
+      <span>TLS / CRYPTOGRAPHIC LAYER</span>
+      <i data-lucide="lock" style="width:14px;height:14px;" aria-hidden="true"></i>
+    </div>
+    <div class="cds-kpi-value" style="font-size:22px;color:var(--cds-success-text);">
+      {{ audit_report.tls.protocol or 'PLAIN HTTP' }}
+    </div>
+    <div class="cds-kpi-sub">CIPHER: {{ audit_report.tls.cipher or 'N/A' }}</div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="text-xs font-mono uppercase text-slate-400">DNS Email Anti-Spoofing</div>
-      <div class="flex items-center gap-2 mt-2">
-         <span class="px-2.5 py-1 rounded text-xs font-mono {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' if audit_report.dns_email.spf_present else 'bg-rose-500/10 text-rose-400 border border-rose-500/30' }}">
-            SPF: {{ 'ACTIVE' if audit_report.dns_email.spf_present else 'MISSING' }}
-         </span>
-         <span class="px-2.5 py-1 rounded text-xs font-mono {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' if audit_report.dns_email.dmarc_present else 'bg-rose-500/10 text-rose-400 border border-rose-500/30' }}">
-            DMARC: {{ 'ACTIVE' if audit_report.dns_email.dmarc_present else 'MISSING' }}
-         </span>
-      </div>
-      <div class="text-xs text-slate-400 mt-2">Anti-Phishing & Domain Integrity</div>
-   </div>
+  <div class="cds-kpi-tile">
+    <div class="cds-kpi-label">
+      <span>DNS EMAIL ANTI-SPOOFING</span>
+      <i data-lucide="mail-check" style="width:14px;height:14px;" aria-hidden="true"></i>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <span class="cds-tag {{ 'cds-tag-green' if audit_report.dns_email.spf_present else 'cds-tag-red' }}">
+        SPF: {{ 'ACTIVE' if audit_report.dns_email.spf_present else 'MISSING' }}
+      </span>
+      <span class="cds-tag {{ 'cds-tag-green' if audit_report.dns_email.dmarc_present else 'cds-tag-red' }}">
+        DMARC: {{ 'ACTIVE' if audit_report.dns_email.dmarc_present else 'MISSING' }}
+      </span>
+    </div>
+    <div class="cds-kpi-sub">ANTI-PHISHING &amp; DOMAIN INTEGRITY</div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-      <div class="text-xs font-mono uppercase text-slate-400">OWASP Findings / Passed</div>
-      <div class="text-lg font-bold font-mono mt-1">
-         <span class="text-rose-400">{{ audit_report.findings|length }} Findings</span>
-         <span class="text-slate-600 mx-1">/</span>
-         <span class="text-emerald-400">{{ audit_report.passed_controls|length }} Passed</span>
-      </div>
-      <div class="text-xs font-mono text-slate-500 mt-1">{{ audit_report.scanned_at }}</div>
-   </div>
-</div>
+  <div class="cds-kpi-tile">
+    <div class="cds-kpi-label">
+      <span>OWASP FINDINGS / PASSED</span>
+      <i data-lucide="list-checks" style="width:14px;height:14px;" aria-hidden="true"></i>
+    </div>
+    <div class="cds-kpi-value" style="font-size:22px;">
+      <span style="color:var(--cds-danger-text);">{{ audit_report.findings|length }} FAIL</span>
+      <span style="color:var(--cds-text-secondary);"> / </span>
+      <span style="color:var(--cds-success-text);">{{ audit_report.passed_controls|length }} PASS</span>
+    </div>
+    <div class="cds-kpi-sub">{{ audit_report.scanned_at }}</div>
+  </div>
+</section>
 
-<!-- Findings & Shift-Left Autofix Snippets -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-   <div class="lg:col-span-2 bg-spo-panel border border-spo-border rounded-xl overflow-hidden">
-      <div class="px-6 py-4 border-b border-spo-border flex items-center justify-between">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-rose-400 text-lg">bug_report</i>
-            <h3 class="font-semibold text-white">Strix DAST Findings & Shift-Left Autofix</h3>
-         </div>
-         <span class="text-xs font-mono text-slate-400">{{ audit_report.final_url }} (HTTP {{ audit_report.http_status }})</span>
+<!-- Findings & Verified Controls Asymmetric Split -->
+<section class="cds-split-asymmetric" aria-label="Strix Findings and Defensive Controls">
+  <!-- Left: Findings + Shift-Left Autofix -->
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="bug" style="width:15px;height:15px;color:#ff8389;" aria-hidden="true"></i>
+        <h2>STRIX DAST FINDINGS &amp; SHIFT-LEFT AUTOFIX</h2>
       </div>
+      <span class="mono" style="font-size:11.5px;color:#c6c6c6;">{{ audit_report.final_url }} (HTTP {{ audit_report.http_status }})</span>
+    </div>
 
-      {% if audit_report.findings %}
-         <div class="divide-y divide-slate-800">
-            {% for f in audit_report.findings %}
-               <div class="p-5 space-y-3">
-                  <div class="flex flex-wrap items-center justify-between gap-2">
-                     <div class="flex items-center gap-2">
-                        <span class="px-2 py-0.5 text-xs font-mono font-bold rounded {{ 'bg-rose-500/20 text-rose-300 border border-rose-500/40' if f.severity in ('CRITICAL', 'HIGH') else ('bg-amber-500/20 text-amber-300 border border-amber-500/40' if f.severity == 'MEDIUM' else 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40') }}">
-                           {{ f.severity }} • CVSS {{ f.cvss }}
-                        </span>
-                        <span class="text-xs font-mono text-slate-400">{{ f.id }} • {{ f.cwe }} • {{ f.owasp }}</span>
-                     </div>
-                  </div>
-                  <div class="text-sm font-semibold text-white">{{ f.title }}</div>
-                  <div class="text-xs text-slate-300"><strong>Evidence:</strong> <code class="font-mono text-amber-300">{{ f.evidence }}</code></div>
-                  <div class="text-xs text-slate-300"><strong>Preventive Remediation:</strong> {{ f.remediation }}</div>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3">
-                        <div class="text-[10px] font-mono uppercase text-slate-500 mb-1">Reproducible PoC Command</div>
-                        <pre class="text-xs font-mono text-rose-300 overflow-x-auto">{{ f.poc }}</pre>
-                     </div>
-                     <div class="bg-slate-950 border border-emerald-900/40 rounded-lg p-3">
-                        <div class="text-[10px] font-mono uppercase text-emerald-400 mb-1">Shift-Left Autofix Snippet</div>
-                        <pre class="text-xs font-mono text-emerald-300 overflow-x-auto">{{ f.autofix_snippet }}</pre>
-                     </div>
-                  </div>
-               </div>
-            {% endfor %}
-         </div>
+    {% if audit_report.findings %}
+      <div style="display:flex;flex-direction:column;gap:1px;background-color:var(--cds-border);">
+        {% for f in audit_report.findings %}
+          <article class="cds-grid-cell" style="gap:12px;">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+                <span class="cds-tag {{ 'cds-tag-red' if f.severity in ('CRITICAL', 'HIGH') else ('cds-tag-amber' if f.severity == 'MEDIUM' else 'cds-tag-blue') }}">
+                  {{ f.severity }} &bull; CVSS {{ f.cvss }}
+                </span>
+                <span class="mono" style="font-size:12px;color:var(--cds-text-secondary);">{{ f.id }} &bull; {{ f.cwe }} &bull; {{ f.owasp }}</span>
+              </div>
+              <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" data-copy-text="{{ f.autofix_snippet }}" aria-label="Copy autofix snippet">
+                <i data-lucide="copy" style="width:12px;height:12px;" aria-hidden="true"></i>
+                <span>COPY AUTOFIX</span>
+              </button>
+            </div>
+
+            <h3 style="font-size:15px;font-weight:600;">{{ f.title }}</h3>
+            <div style="font-size:13px;color:var(--cds-text-secondary);">
+              <strong>Evidence:</strong> <code class="mono" style="color:var(--cds-text-primary);">{{ f.evidence }}</code>
+            </div>
+            <div style="font-size:13px;color:var(--cds-text-secondary);">
+              <strong>Preventive Remediation:</strong> {{ f.remediation }}
+            </div>
+
+            <div class="cds-grid-2">
+              <div style="background-color:var(--cds-code-bg);padding:12px;">
+                <div class="mono" style="font-size:10.5px;color:#ff8389;text-transform:uppercase;margin-bottom:6px;">Reproducible PoC Command</div>
+                <pre class="mono" style="font-size:11.5px;color:#f4f4f4;white-space:pre-wrap;word-break:break-word;">{{ f.poc }}</pre>
+              </div>
+              <div style="background-color:var(--cds-code-bg);padding:12px;">
+                <div class="mono" style="font-size:10.5px;color:#42be65;text-transform:uppercase;margin-bottom:6px;">Shift-Left Autofix Snippet</div>
+                <pre class="mono" style="font-size:11.5px;color:#f4f4f4;white-space:pre-wrap;word-break:break-word;">{{ f.autofix_snippet }}</pre>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="cds-panel-body" style="color:var(--cds-success-text);">
+        <p class="mono">ZERO SURFACE VULNERABILITIES DETECTED. TARGET SATISFIES ALL INSPECTED OWASP CONTROLS.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Right: Verified Controls + Captured HTTP Headers -->
+  <div class="cds-panel" style="border:none;justify-content:flex-start;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="check-circle-2" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>VERIFIED CONTROLS &amp; HTTP HEADERS</h2>
+      </div>
+    </div>
+
+    <div class="cds-panel-body">
+      <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);">Passed Defensive Controls ({{ audit_report.passed_controls|length }})</div>
+      {% if audit_report.passed_controls %}
+        <div style="display:flex;flex-direction:column;gap:1px;background-color:var(--cds-border);border:1px solid var(--cds-border);">
+          {% for ctrl in audit_report.passed_controls %}
+            <div style="background-color:var(--cds-layer-02);padding:12px 14px;">
+              <div class="mono" style="font-size:12px;font-weight:600;color:var(--cds-success-text);">{{ ctrl.control }}</div>
+              <div class="mono" style="font-size:11.5px;color:var(--cds-text-secondary);margin-top:4px;word-break:break-word;">{{ ctrl.detail }}</div>
+            </div>
+          {% endfor %}
+        </div>
       {% else %}
-         <div class="p-8 text-center text-emerald-400 font-mono text-sm">
-            Zero surface vulnerabilities detected! Target satisfies all inspected OWASP Top 10 controls.
-         </div>
+        <p class="mono" style="font-size:12px;color:var(--cds-text-secondary);">No passed controls recorded.</p>
       {% endif %}
-   </div>
 
-   <!-- Passed Controls & Raw HTTP Response Headers -->
-   <div class="space-y-6">
-      <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-         <div class="flex items-center gap-2 mb-3">
-            <i class="material-icons text-emerald-400 text-lg">verified_user</i>
-            <h3 class="font-semibold text-white text-sm">Verified Defensive Controls</h3>
-         </div>
-         {% if audit_report.passed_controls %}
-            <ul class="space-y-2.5 text-xs">
-               {% for ctrl in audit_report.passed_controls %}
-                  <li class="bg-slate-900/90 border border-slate-800 rounded-lg p-3">
-                     <div class="font-mono font-semibold text-emerald-400">{{ ctrl.control }}</div>
-                     <div class="text-slate-400 mt-0.5 break-all">{{ ctrl.detail }}</div>
-                  </li>
-               {% endfor %}
-            </ul>
-         {% else %}
-            <p class="text-xs text-slate-500">No defensive controls verified.</p>
-         {% endif %}
-      </div>
-
-      <div class="bg-spo-panel border border-spo-border rounded-xl p-5">
-         <div class="flex items-center gap-2 mb-3">
-            <i class="material-icons text-cyan-400 text-lg">http</i>
-            <h3 class="font-semibold text-white text-sm">Captured HTTP Response Headers</h3>
-         </div>
-         <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 max-h-64 overflow-y-auto space-y-1.5 text-xs font-mono">
-            {% for hk, hv in audit_report.headers.items() %}
-               <div><span class="text-cyan-400">{{ hk }}:</span> <span class="text-slate-300 break-all">{{ hv }}</span></div>
-            {% endfor %}
-         </div>
-      </div>
-   </div>
-</div>
+      <div class="mono" style="font-size:11px;text-transform:uppercase;color:var(--cds-text-secondary);padding-top:8px;">Captured HTTP Response Headers</div>
+      <div class="cds-terminal" style="max-height:280px;">{% for hk, hv in audit_report.headers.items() %}{{ hk }}: {{ hv }}
+{% endfor %}</div>
+    </div>
+  </div>
+</section>
 {% endif %}
 
-<!-- Internal SPO Shift-Left Prevention Matrix & Live Security Event Log -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-      <div class="flex items-center justify-between mb-4">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-emerald-400">security</i>
-            <h3 class="font-semibold text-white">SPO Internal Shift-Left Prevention Matrix (PE-AGENTS-IBM)</h3>
-         </div>
-         <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">OWASP Top 10 Enforced</span>
+<!-- Internal SPO Shift-Left Prevention Matrix & OWASP A09 Telemetry -->
+<section class="cds-grid-2" aria-label="Internal Shift-Left Prevention Matrix and Security Telemetry">
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="shield" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
+        <h2>SPO SHIFT-LEFT PREVENTION MATRIX (PE-AGENTS-IBM)</h2>
       </div>
-      <div class="space-y-3">
-         {% for item in prevention_matrix %}
-            <div class="bg-slate-900/80 border border-slate-800 rounded-lg p-3.5 flex items-start justify-between gap-4">
-               <div>
-                  <div class="flex items-center gap-2">
-                     <span class="text-xs font-mono font-bold text-emerald-400">{{ item.code }}</span>
-                     <span class="text-sm font-semibold text-white">{{ item.control }}</span>
-                  </div>
-                  <p class="text-xs text-slate-400 mt-1">{{ item.description }}</p>
-               </div>
-               <span class="px-2 py-0.5 text-[10px] font-mono uppercase rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0">{{ item.status }}</span>
-            </div>
-         {% endfor %}
-      </div>
-   </div>
+      <span class="cds-tag cds-tag-green">OWASP TOP 10 ENFORCED</span>
+    </div>
+    <div class="cds-table-wrap">
+      <table class="cds-table">
+        <thead>
+          <tr>
+            <th>OWASP ID</th>
+            <th>Preventive Control</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in prevention_matrix %}
+            <tr>
+              <td class="mono" style="font-weight:600;color:var(--cds-link);white-space:nowrap;">{{ item.code }}</td>
+              <td>
+                <div style="font-weight:600;">{{ item.control }}</div>
+                <div style="font-size:12px;color:var(--cds-text-secondary);margin-top:2px;">{{ item.description }}</div>
+              </td>
+              <td><span class="cds-tag cds-tag-green">{{ item.status }}</span></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
-      <div class="flex items-center justify-between mb-4">
-         <div class="flex items-center gap-2">
-            <i class="material-icons text-amber-400">policy</i>
-            <h3 class="font-semibold text-white">Real-Time Security Telemetry (OWASP A09 Audit Trail)</h3>
-         </div>
-         <span class="text-xs font-mono text-slate-400">SSRFGuard & RateLimiter Events</span>
+  <div class="cds-panel" style="border:none;">
+    <div class="cds-panel-header">
+      <div class="cds-panel-header-title">
+        <i data-lucide="activity" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
+        <h2>REAL-TIME SECURITY TELEMETRY (OWASP A09 AUDIT TRAIL)</h2>
       </div>
-      {% if security_events %}
-         <div class="space-y-2.5 max-h-96 overflow-y-auto">
+      <span class="cds-tag cds-tag-outline">SSRFGUARD &amp; RATELIMITER</span>
+    </div>
+
+    {% if security_events %}
+      <div class="cds-table-wrap">
+        <table class="cds-table">
+          <thead>
+            <tr>
+              <th>Severity / Event</th>
+              <th>Telemetry Detail</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
             {% for ev in security_events %}
-               <div class="bg-slate-900/80 border border-slate-800 rounded-lg p-3 text-xs font-mono">
-                  <div class="flex items-center justify-between">
-                     <span class="{{ 'text-rose-400 font-bold' if ev.severity in ('CRITICAL', 'HIGH') else 'text-emerald-400' }}">
-                        [{{ ev.severity }}] {{ ev.event_type }}
-                     </span>
-                     <span class="text-slate-500">{{ ev.timestamp }}</span>
-                  </div>
-                  <div class="text-slate-300 mt-1">{{ ev.message }}</div>
-                  <div class="text-slate-500 text-[11px] mt-0.5">IP: {{ ev.client_ip }} • Operator: {{ ev.username }}</div>
-               </div>
+              <tr>
+                <td class="mono" style="white-space:nowrap;">
+                  <span class="cds-tag {{ 'cds-tag-red' if ev.severity in ('CRITICAL', 'HIGH') else 'cds-tag-green' }}">{{ ev.severity }}</span>
+                  <div style="font-size:11.5px;margin-top:4px;font-weight:600;">{{ ev.event_type }}</div>
+                </td>
+                <td>
+                  <div>{{ ev.message }}</div>
+                  <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);margin-top:3px;">IP: {{ ev.client_ip }} &bull; OP: {{ ev.username }}</div>
+                </td>
+                <td class="mono" style="font-size:11.5px;color:var(--cds-text-secondary);white-space:nowrap;">{{ ev.timestamp }}</td>
+              </tr>
             {% endfor %}
-         </div>
-      {% else %}
-         <div class="p-8 text-center text-slate-400 text-xs font-mono">
-            No SSRF blocks or Brute-Force lockouts triggered in the current session. All guardrails nominal.
-         </div>
-      {% endif %}
-   </div>
-</div>
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="cds-panel-body" style="justify-content:center;align-items:center;text-align:center;">
+        <p class="mono" style="font-size:12.5px;color:var(--cds-text-secondary);">NO SSRF BLOCKS OR BRUTE-FORCE LOCKOUTS TRIGGERED. ALL GUARDRAILS NOMINAL.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
 {% endblock %}

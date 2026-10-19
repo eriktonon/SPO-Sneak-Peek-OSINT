@@ -1,43 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>SPO — Sneak Peek OSINT // Operator Login</title>
-   <link rel="icon" href="{{ url_for('static', filename='img/spoICO.png') }}" type="image/png" />
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-   <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPO — Operator Authentication // IBM Carbon v11</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/carbon-v11.css') }}" />
 </head>
-<body class="bg-[#090d16] text-slate-200 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-   <div id="particles-js" class="absolute inset-0 z-0 opacity-40"></div>
-   <div class="relative z-10 w-full max-w-md bg-[#111827]/95 backdrop-blur border border-slate-800 rounded-2xl p-8 shadow-2xl">
-      <div class="text-center mb-6">
-         <div class="w-14 h-14 mx-auto rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-3">
-            <i class="material-icons text-3xl">device_hub</i>
-         </div>
-         <h1 class="font-mono font-bold tracking-widest text-lg text-white">SNEAK PEEK OSINT</h1>
-         <p class="text-xs font-mono text-emerald-400 mt-1">Tactical Reconnaissance Console v2.0</p>
-      </div>
+<body class="cds-auth-body">
+  <header class="cds-shell-header">
+    <div class="cds-header-left">
+      <svg xmlns="http://www.w3.org/2000/svg" width="52" height="22" viewBox="160 200 145 62" fill="none" role="img" aria-label="IBM 8-bar vector">
+        <path fill="#0F62FE" d="M164.6 255.3h26.2v3.4h-26.2zm0-7.1h26.2v3.4h-26.2zm7.5-7.2h11.2v3.4h-11.2zm0-7.1h11.2v3.4h-11.2zm0-7.2h11.2v3.4h-11.2zm0-7.1h11.2v3.4h-11.2zm-7.5-7.2h26.2v3.4h-26.2zm0-7.1h26.2v3.4h-26.2z"/>
+        <path fill="#0F62FE" d="M194.6 255.3v3.4h27.6c3.5 0 6.8-1.3 9.3-3.4h-36.9z"/>
+        <path fill="#0F62FE" d="M194.6 248.2v3.4h40c.6-1.1 1.1-2.2 1.4-3.4h-41.4z"/>
+        <path fill="#0F62FE" d="M202 241h11.2v3.4H202zm29.8-7.1H202v3.4h32.5c-.7-1.3-1.6-2.5-2.7-3.4zm-29.8-7.2v3.4h29.7c1.1-1 2-2.1 2.8-3.4H202z"/>
+        <path fill="#0F62FE" d="M235.9 215.8c-.3-1.2-.8-2.3-1.4-3.4h-39.9v3.4h41.3z"/>
+        <path fill="#0F62FE" d="M231.4 208.7c-2.5-2.1-5.7-3.4-9.3-3.4h-27.6v3.4h36.9z"/>
+        <path fill="#0F62FE" d="M202 219.6h11.2v3.4H202zm22.5 3.4H236c.3-1.1.4-2.2.4-3.4h-11.9v3.4zm0 18v3.4h11.9c0-1.2-.1-2.3-.4-3.4h-11.5z"/>
+        <path fill="#0F62FE" d="M239.5 255.3h18.7v3.4h-18.7z"/>
+        <path fill="#0F62FE" d="M239.5 248.2h18.7v3.4h-18.7z"/>
+        <path fill="#0F62FE" d="M247 241h11.2v3.4H247z"/>
+        <path fill="#0F62FE" d="M247 233.9h11.2v3.4H247z"/>
+        <path fill="#0F62FE" d="M247 226.7h11.2v3.4H247z"/>
+        <path fill="#0F62FE" d="M280.7 255.3h18.7v3.4h-18.7zm0-7.1h18.7v3.4h-18.7zm0-7.2h11.2v3.4h-11.2zm0-7.1h11.2v3.4h-11.2zm0-3.8h11.2v-3.4h-21.1l-1.1 3.4h9.8l1.2-3.2zm11.2-10.5h-18.6l-1.1 3.4h19.7zm-13.6-14.3l-1.2 3.4h22.3v-3.4zm-8.9 53.4l1.2-3.4h-2.4zm-2.5-7.1h5.1l1.1-3.4h-7.4zm-2.5-7.2h10.1l1.2-3.4h-12.5zm-2.5-7.1H277l1.2-3.4h-17.5zm6.1-10.6h-9.8v.2l1.2 3.2h9.8z"/>
+        <path fill="#0F62FE" d="M247 223h19.7l-1.1-3.4H247z"/>
+        <path fill="#0F62FE" d="M274.6 215.8h24.8v-3.4h-23.6z"/>
+        <path fill="#0F62FE" d="M263.1 212.4h-23.6v3.4h24.8z"/>
+        <path fill="#0F62FE" d="M260.6 205.3h-21.1v3.4h22.3z"/>
+      </svg>
+      <span class="cds-header-divider" aria-hidden="true"></span>
+      <span class="cds-header-title"><strong>SPO — Sneak Peek OSINT v2.0</strong> // Operator Access</span>
+    </div>
+  </header>
 
-      <form action="{{ url_for('login') }}" method="POST" class="space-y-4">
-         <div>
-            <label for="user" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Operator Username</label>
-            <input name="user" id="user" type="text" required autocomplete="username" placeholder="operator"
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-         </div>
-         <div>
-            <label for="password" class="block text-xs font-mono uppercase text-slate-400 mb-1.5">Password</label>
-            <input name="password" id="password" type="password" required autocomplete="current-password" placeholder="••••••••"
-               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
-         </div>
-         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2">
-            <i class="material-icons text-base">login</i>
-            <span>Authenticate</span>
-         </button>
-      </form>
-   </div>
-   <script src="{{ url_for('static', filename='js/particles.js-master/particles.js') }}"></script>
-   <script src="{{ url_for('static', filename='js/configParticle.js') }}"></script>
+  <main class="cds-auth-main" style="padding-top:72px;">
+    <section class="cds-auth-card" aria-labelledby="login-h1">
+      <div class="cds-panel-header">
+        <span class="cds-panel-header-title">AUTHENTICATION GATEWAY // PBKDF2-SHA256</span>
+        <span class="cds-tag cds-tag-blue">CARBON v11</span>
+      </div>
+      <div class="cds-panel-body">
+        <div>
+          <div class="cds-eyebrow">TACTICAL RECONNAISSANCE CONTROL PLANE</div>
+          <h1 id="login-h1" class="cds-page-h1" style="font-size:24px;margin-top:4px;"><strong>Sign in</strong> to Sneak Peek OSINT</h1>
+        </div>
+
+        <form action="{{ url_for('login') }}" method="POST" style="display:flex;flex-direction:column;gap:16px;">
+          <div class="cds-field-group">
+            <label for="user" class="cds-label">Operator Username</label>
+            <input name="user" id="user" type="text" required autocomplete="username" placeholder="eriktonon" class="cds-input" />
+          </div>
+          <div class="cds-field-group">
+            <label for="password" class="cds-label">Password</label>
+            <input name="password" id="password" type="password" required autocomplete="current-password" placeholder="••••••••••••" class="cds-input" />
+          </div>
+          <button type="submit" class="cds-btn cds-btn-primary" style="width:100%;">
+            <span>Authenticate Session</span>
+            <span class="mono" aria-hidden="true">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

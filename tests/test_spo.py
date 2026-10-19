@@ -237,3 +237,16 @@ def test_flask_routes_security_headers_and_author_wallets(temp_db, monkeypatch):
         assert ssrf_res.status_code == 200
         assert b"192.168.3.1" in ssrf_res.data
 
+        # Verify IBM Carbon v11 CSS & SEO endpoints (/robots.txt, /sitemap.xml)
+        css_res = client.get("/static/css/carbon-v11.css")
+        assert css_res.status_code == 200
+        assert b"border-radius: 0px !important" in css_res.data
+
+        robots_res = client.get("/robots.txt")
+        assert robots_res.status_code == 200
+        assert b"Sitemap:" in robots_res.data
+
+        sitemap_res = client.get("/sitemap.xml")
+        assert sitemap_res.status_code == 200
+        assert b"<urlset" in sitemap_res.data
+

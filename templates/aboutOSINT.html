@@ -1,42 +1,54 @@
 {% extends "base.html" %}
-{% block title %}SPO — OSINT Methodology & Intelligence Cycle{% endblock %}
-{% block header_title %}OSINT Intelligence Cycle & Methodology{% endblock %}
+{% block title %}SPO — OSINT Methodology &amp; Intelligence Cycle // IBM Carbon v11{% endblock %}
+{% block header_title %}03.1 // OSINT INTELLIGENCE CYCLE &amp; METHODOLOGY{% endblock %}
 
 {% block content %}
-<div class="bg-spo-panel border border-spo-border rounded-xl p-6 space-y-4">
-   <h2 class="text-xl font-bold text-white flex items-center gap-2">
-      <i class="material-icons text-emerald-400">school</i> Open Source Intelligence (OSINT) Methodology
-   </h2>
-   <p class="text-sm text-slate-300 leading-relaxed">
-      <b>Open Source Intelligence (OSINT)</b> is the structured collection, correlation, and analysis of publicly available data from the internet, public registries, DNS/RDAP infrastructure, certificate transparency logs, official gazettes, and developer platforms to produce actionable intelligence.
-   </p>
+<section class="cds-panel" style="border-left:4px solid var(--cds-primary);" aria-labelledby="osint-h1">
+  <div class="cds-panel-header">
+    <div class="cds-panel-header-title">
+      <i data-lucide="compass" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
+      <span>INTELLIGENCE DOCTRINE // 5-PHASE OSINT LIFECYCLE</span>
+    </div>
+    <span class="cds-tag cds-tag-blue">BUILD TO MANAGE</span>
+  </div>
 
-   <div class="grid grid-cols-1 md:grid-cols-5 gap-4 pt-2">
-      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-         <div class="text-xs font-mono text-emerald-400">PHASE 01</div>
-         <div class="font-semibold text-white mt-1">Planning & Scope</div>
-         <p class="text-xs text-slate-400 mt-1.5">Define target organization, domains, CNPJs, or handles inside an Investigation Case.</p>
-      </div>
-      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-         <div class="text-xs font-mono text-cyan-400">PHASE 02</div>
-         <div class="font-semibold text-white mt-1">Collection</div>
-         <p class="text-xs text-slate-400 mt-1.5">Query RDAP, DNS, crt.sh, BrasilAPI QSA, Shodan InternetDB, OTX, and GitHub events.</p>
-      </div>
-      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-         <div class="text-xs font-mono text-amber-400">PHASE 03</div>
-         <div class="font-semibold text-white mt-1">Processing</div>
-         <p class="text-xs text-slate-400 mt-1.5">Normalize CNPJ documents, deduplicate subdomains, resolve IPs, and extract commit emails.</p>
-      </div>
-      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-         <div class="text-xs font-mono text-purple-400">PHASE 04</div>
-         <div class="font-semibold text-white mt-1">Correlation</div>
-         <p class="text-xs text-slate-400 mt-1.5">Pivot from domain registrant CNPJ to QSA partners, government contracts, and open CVEs.</p>
-      </div>
-      <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-         <div class="text-xs font-mono text-rose-400">PHASE 05</div>
-         <div class="font-semibold text-white mt-1">Dissemination</div>
-         <p class="text-xs text-slate-400 mt-1.5">Export structured JSON evidence packages for legal, red-team, or compliance reporting.</p>
-      </div>
-   </div>
-</div>
+  <div class="cds-panel-body">
+    <h1 id="osint-h1" class="cds-page-h1"><strong>Open Source Intelligence (OSINT)</strong> Operational Methodology</h1>
+    <p class="cds-lead">
+      <strong>Open Source Intelligence (OSINT)</strong> is the structured collection, verification, correlation, and analysis of publicly available indicators across internet registries, DNS/RDAP infrastructure, Certificate Transparency logs, corporate tax filings, official gazettes, and developer repositories to produce auditable security and due-diligence decisions.
+    </p>
+  </div>
+
+  <div class="cds-grid-5" style="border-left:none;border-right:none;border-bottom:none;">
+    <article class="cds-grid-cell" style="gap:10px;">
+      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 01</span>
+      <h2 style="font-size:15px;font-weight:600;">Planning &amp; Scope</h2>
+      <p style="font-size:13px;color:var(--cds-text-secondary);">Define target organization, domains, 14-digit CNPJs, IPv4 ranges, or handles inside an auditable Investigation Case.</p>
+    </article>
+
+    <article class="cds-grid-cell" style="gap:10px;">
+      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 02</span>
+      <h2 style="font-size:15px;font-weight:600;">Collection</h2>
+      <p style="font-size:13px;color:var(--cds-text-secondary);">Query Registro.br/IANA RDAP, authoritative DNS, crt.sh, BrasilAPI QSA, Shodan InternetDB, OTX, and GitHub events.</p>
+    </article>
+
+    <article class="cds-grid-cell" style="gap:10px;">
+      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 03</span>
+      <h2 style="font-size:15px;font-weight:600;">Normalization</h2>
+      <p style="font-size:13px;color:var(--cds-text-secondary);">Normalize tax identifiers, deduplicate CT log subdomains, resolve active A records, and extract commit author emails.</p>
+    </article>
+
+    <article class="cds-grid-cell" style="gap:10px;">
+      <span class="cds-tag cds-tag-blue" style="align-self:flex-start;">PHASE 04</span>
+      <h2 style="font-size:15px;font-weight:600;">Neural Correlation</h2>
+      <p style="font-size:13px;color:var(--cds-text-secondary);">Correlate domain registrant CNPJ with QSA officers, unpatched CVEs, and Strix DAST posture via Granite 4.2 Uncensored.</p>
+    </article>
+
+    <article class="cds-grid-cell" style="gap:10px;">
+      <span class="cds-tag cds-tag-green" style="align-self:flex-start;">PHASE 05</span>
+      <h2 style="font-size:15px;font-weight:600;">Dissemination</h2>
+      <p style="font-size:13px;color:var(--cds-text-secondary);">Export structured JSON evidence bundles and Shift-Left remediation snippets for engineering, legal, or red-team action.</p>
+    </article>
+  </div>
+</section>
 {% endblock %}
