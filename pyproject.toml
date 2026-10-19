@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "spo-sneak-peek-osint"
 version = "2.0.0"
-description = "SPO - Sneak Peek OSINT: Tactical Open Source Intelligence Framework for Corporate, Infrastructure, Legal & Personal Reconnaissance"
+description = "SPO - Sneak Peek OSINT: Tactical Open Source Intelligence & Strix Offensive-Defensive AppSec Framework"
 readme = "README.md"
 license = { text = "GPL-2.0-only" }
 requires-python = ">=3.10"
 authors = [
-    { name = "Victor de Queiroz" },
-    { name = "Erik Tonon" }
+    { name = "Erik Tonon", email = "erik@eriktonon.com" }
 ]
+urls = { Homepage = "https://eriktonon.com", Repository = "https://github.com/eriktonon/SPO-Sneak-Peek-OSINT", Sponsor = "https://github.com/sponsors/eriktonon" }
 dependencies = [
     "Flask>=3.0.0,<4.0.0",
     "Werkzeug>=3.0.0,<4.0.0",

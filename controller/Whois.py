@@ -44,14 +44,14 @@ class Whois:
         return doc
 
     def _query_rdap(self, domain: str) -> Dict[str, Any]:
-        rdap_urls = []
+        rdap_endpoints = []
         if domain.endswith(".br"):
-            rdap_urls.append(f"https://rdap.registro.br/domain/{domain}")
-        rdap_urls.append(f"https://rdap.org/domain/{domain}")
+            rdap_endpoints.append(f"https://rdap.registro.br/domain/{domain}")
+        rdap_endpoints.append(f"https://rdap.org/domain/{domain}")
 
-        for url in rdap_urls:
+        for rdap_endpoint in rdap_endpoints:
             try:
-                resp = requests.get(url, headers=self.HEADERS, timeout=8)
+                resp = requests.get(rdap_endpoint, headers=self.HEADERS, timeout=8)
                 if resp.status_code == 200:
                     return resp.json()
             except Exception:

@@ -2,9 +2,10 @@
 """
 Password hashing and verification utility for SPO.
 Upgraded from legacy static-salt SHA-256 to Werkzeug PBKDF2/Scrypt password hashing,
-with automatic backward-compatible verification for legacy hashes.
+with constant-time backward-compatible verification for legacy hashes.
 """
 import hashlib
+import hmac
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -21,6 +22,6 @@ class PasswdHash:
             return False
         if stored_hash.startswith(("pbkdf2:", "scrypt:")):
             return check_password_hash(stored_hash, candidate_passwd)
-        # Fallback for legacy SHA-256 + "potato" salt from SPO v1
+        # Constant-time fallback for legacy SHA-256 + "potato" salt from SPO v1
         legacy_hash = hashlib.sha256((candidate_passwd + "potato").encode("utf-8")).hexdigest()
-        return stored_hash == legacy_hash
+        return hmac.compare_digest(stored_hash, legacy_hash)

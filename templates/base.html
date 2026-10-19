@@ -62,6 +62,13 @@
             <i class="material-icons text-lg">person_search</i>
             <span>Personal & Social Recon</span>
          </a>
+         <a href="{{ url_for('securityAudit') }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-rose-500/10 text-rose-400 border border-rose-500/20' if request.endpoint == 'securityAudit' else 'text-slate-300' }}">
+            <span class="flex items-center gap-3">
+               <i class="material-icons text-lg text-rose-400">shield</i>
+               <span>Strix DAST & Security</span>
+            </span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-rose-500/20 text-rose-300">NEW</span>
+         </a>
 
          <div class="pt-4 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-slate-500">Evidence & Vault</div>
          <a href="{{ url_for('projects') }}" class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-800/80 transition {{ 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' if request.endpoint == 'projects' else 'text-slate-300' }}">

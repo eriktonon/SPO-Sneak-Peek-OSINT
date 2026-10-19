@@ -239,6 +239,10 @@ class SpoDAO:
             "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'personal';",
             (uid,),
         )
+        strix_scans = self.connection.select(
+            "SELECT COUNT(*) AS cnt FROM scan_history WHERE id_user = ? AND scan_type = 'strix';",
+            (uid,),
+        )
         keys = self.getAllApiKeys(uid)
         return {
             "projects": int((proj_count or {}).get("cnt", 0)),
@@ -246,5 +250,7 @@ class SpoDAO:
             "company_scans": int((company_scans or {}).get("cnt", 0)),
             "server_scans": int((server_scans or {}).get("cnt", 0)),
             "personal_scans": int((personal_scans or {}).get("cnt", 0)),
+            "strix_scans": int((strix_scans or {}).get("cnt", 0)),
             "configured_keys": list(keys.keys()),
         }
+

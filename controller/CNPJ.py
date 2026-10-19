@@ -57,9 +57,9 @@ class CNPJ:
         }
 
     def _fetch_brasilapi(self, cnpj_digits: str) -> Optional[Dict[str, Any]]:
-        url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj_digits}"
+        endpoint = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj_digits}"
         try:
-            resp = requests.get(url, headers=self.HEADERS, timeout=10)
+            resp = requests.get(endpoint, headers=self.HEADERS, timeout=10)
             if resp.status_code != 200:
                 return None
             d = resp.json()
@@ -117,9 +117,9 @@ class CNPJ:
             return None
 
     def _fetch_receitaws(self, cnpj_digits: str) -> Optional[Dict[str, Any]]:
-        url = f"https://receitaws.com.br/v1/cnpj/{cnpj_digits}"
+        endpoint = f"https://receitaws.com.br/v1/cnpj/{cnpj_digits}"
         try:
-            resp = requests.get(url, headers=self.HEADERS, timeout=10)
+            resp = requests.get(endpoint, headers=self.HEADERS, timeout=10)
             if resp.status_code != 200:
                 return None
             d = resp.json()

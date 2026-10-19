@@ -1,5 +1,5 @@
 # -*- coding:UTF-8 -*-
-__author__ = "Victor de Queiroz & Erik Tonon"
+__author__ = "Erik Tonon (@eriktonon)"
 """
              ██████  ██▓███   ▒█████  
            ▒██    ▒ ▓██░  ██▒▒██▒  ██▒
@@ -12,9 +12,10 @@ __author__ = "Victor de Queiroz & Erik Tonon"
                  ░               ░ ░
 
         S n e a k    P e e k   O S I N T  v2.0 (2026 Edition)
+        Lead Architect & Maintainer: Erik Tonon (https://eriktonon.com)
 
-SPO is an open-source intelligence (OSINT) reconnaissance platform for
-Security Researchers, Pentesters, Threat Analysts, Lawyers, HR, and Journalists.
+SPO is an open-source intelligence (OSINT) & offensive-defensive security
+reconnaissance platform powered by Strix DAST & PE-AGENTS-IBM Security.
 Licensed under GPLv2.
 """
 import os
@@ -37,6 +38,7 @@ from controller import (
     Facebook,
     Jurisprudence,
     Shodan,
+    StrixSecurity,
     Subdomain,
     VirusTotal,
     Whois,
@@ -46,8 +48,14 @@ from controller import (
 spo = Flask(__name__, template_folder="templates", static_folder="static")
 spo.secret_key = os.environ.get("SPO_SECRET_KEY") or secrets.token_hex(32)
 spo.permanent_session_lifetime = timedelta(minutes=60)
+spo.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.environ.get("SPO_HTTPS_ONLY", "false").lower() in ("1", "true", "yes"),
+    MAX_CONTENT_LENGTH=2 * 1024 * 1024,
+)
 
-# Controllers & DAO instances
+# Controllers, Security Guards & DAO instances
 dao = spoDAO.SpoDAO()
 whois_ctrl = Whois.Whois()
 cnpj_ctrl = CNPJ.CNPJ()
@@ -56,6 +64,8 @@ subdomain_ctrl = Subdomain.Subdomains()
 facebook_ctrl = Facebook.Facebook()
 shodan_ctrl = Shodan.Shodan()
 vt_ctrl = VirusTotal.VirusTotal()
+strix_auditor = StrixSecurity.StrixSecurityAuditor()
+rate_limiter = StrixSecurity.LoginRateLimiter(max_attempts=5, window_seconds=300, lockout_seconds=300)
 
 
 def login_required(view_func):
@@ -76,10 +86,7 @@ def make_session_permanent():
 
 @spo.after_request
 def apply_security_headers(response: Response) -> Response:
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    return response
+    return StrixSecurity.SecurityHeadersMiddleware.apply_headers(response)
 
 
 @spo.context_processor
@@ -95,12 +102,19 @@ def inject_globals():
         "current_user": session.get("user"),
         "user_projects": projects,
         "app_version": "2.0.0",
+        "csrf_token": StrixSecurity.CSRFShield.get_or_create_token(session),
     }
 
 
 @spo.route("/health")
 def health():
-    return jsonify({"status": "ok", "service": "SPO-Sneak-Peek-OSINT", "version": "2.0.0"}), 200
+    return jsonify({
+        "status": "ok",
+        "service": "SPO-Sneak-Peek-OSINT",
+        "version": "2.0.0",
+        "maintainer": "Erik Tonon (@eriktonon)",
+        "security_engine": "PE-AGENTS-IBM Strix Shift-Left Active",
+    }), 200
 
 
 @spo.route("/exit")
@@ -130,14 +144,33 @@ def login():
         return redirect(url_for("wellcome"))
 
     if request.method == "POST":
+        client_ip = request.headers.get("X-Forwarded-For", request.remote_addr or "127.0.0.1").split(",")[0].strip()
+        locked, remaining_secs = rate_limiter.is_locked(client_ip)
+        if locked:
+            flash(f"Brute-Force Shield Active: Too many failed login attempts. Retry in {remaining_secs}s.", "error")
+            return render_template("passwordFail.html"), 429
+
         get_user = (request.form.get("user") or "").strip()
         get_passwd = request.form.get("password") or ""
 
         if dao.testLogin(get_user, get_passwd):
+            rate_limiter.reset(client_ip)
             session["user"] = get_user
             session["isAuthenticated"] = True
             session["id"] = dao.getIDUser(get_user)
+            StrixSecurity.SecurityAuditLogger.log_event(
+                event_type="AUTH_LOGIN_SUCCESS",
+                severity="INFO",
+                message=f"Operator '{get_user}' authenticated successfully.",
+                client_ip=client_ip,
+                username=get_user,
+            )
             return redirect(url_for("dashboard"))
+
+        is_now_locked, info_val = rate_limiter.record_failure(client_ip, username=get_user or "anonymous")
+        if is_now_locked:
+            flash(f"Brute-Force Shield Active: IP locked for {info_val}s due to repeated failures.", "error")
+            return render_template("passwordFail.html"), 429
         return render_template("passwordFail.html"), 401
 
     if session.get("isAuthenticated"):
@@ -213,6 +246,12 @@ def companyInvestigation():
 
         raw_domain = (request.form.get("domain") or "").strip()
         raw_cnpj = (request.form.get("cnpj_input") or "").strip()
+
+        if raw_domain:
+            valid_target, guard_msg = StrixSecurity.SSRFGuard.validate_target(raw_domain)
+            if not valid_target:
+                flash(guard_msg, "error")
+                raw_domain = ""
 
         if raw_domain or raw_cnpj:
             if raw_domain:
@@ -344,13 +383,19 @@ def searchServers():
             selected_project_id = int(raw_project_id)
 
         if target_query:
+            valid_target, guard_msg = StrixSecurity.SSRFGuard.validate_target(target_query)
+            if not valid_target:
+                flash(guard_msg, "error")
+                target_query = ""
+
+        if target_query:
             shodan_row = dao.getApiKey(uid, "shodan")
             vt_row = dao.getApiKey(uid, "virustotal")
             shodan_key = shodan_row["key_value"] if shodan_row else os.environ.get("SHODAN_API_KEY")
             vt_key = vt_row["key_value"] if vt_row else os.environ.get("VIRUSTOTAL_API_KEY")
 
             server_result = shodan_ctrl.search(shodan_key, target_query)
-            vt_result = vt_ctrl.analyzeTarget( server_result.get("ip") or target_query, api_key=vt_key)
+            vt_result = vt_ctrl.analyzeTarget(server_result.get("ip") or target_query, api_key=vt_key)
 
             ports_cnt = len(server_result.get("ports", []))
             vulns_cnt = len(server_result.get("vulns", []))
@@ -369,6 +414,49 @@ def searchServers():
         target_query=target_query,
         server_result=server_result,
         vt_result=vt_result,
+        selected_project_id=selected_project_id,
+    )
+
+
+@spo.route("/securityAudit", methods=["GET", "POST"])
+@login_required
+def securityAudit():
+    uid = session.get("id")
+    audit_report = None
+    target_query = ""
+    selected_project_id = None
+
+    if request.method == "POST":
+        target_query = (request.form.get("target") or "").strip()
+        raw_project_id = request.form.get("project_id")
+        if raw_project_id and str(raw_project_id).isdigit():
+            selected_project_id = int(raw_project_id)
+
+        if target_query:
+            audit_report = strix_auditor.audit_target(target_query)
+            if audit_report.get("blocked_by_ssrf_guard"):
+                flash(audit_report.get("error") or "Blocked by SSRFGuard.", "error")
+            elif audit_report.get("error"):
+                flash(audit_report["error"], "error")
+            else:
+                findings_cnt = len(audit_report.get("findings", []))
+                score = audit_report.get("score", 0)
+                grade = audit_report.get("grade", "N/A")
+                dao.saveScanResult(
+                    uid,
+                    scan_type="strix",
+                    target=audit_report.get("hostname") or target_query,
+                    summary=f"Strix Posture: {score}/100 (Grade {grade}) • {findings_cnt} OWASP findings",
+                    payload=audit_report,
+                    project_id=selected_project_id,
+                )
+
+    return render_template(
+        "securityAudit.html",
+        target_query=target_query,
+        audit_report=audit_report,
+        prevention_matrix=StrixSecurity.StrixSecurityAuditor.get_internal_prevention_matrix(),
+        security_events=StrixSecurity.SecurityAuditLogger.recent_events(limit=15),
         selected_project_id=selected_project_id,
     )
 

@@ -1,29 +1,101 @@
 {% extends "base.html" %}
-{% block title %}SPO — About & Credits{% endblock %}
-{% block header_title %}About SPO — Sneak Peek OSINT{% endblock %}
+{% block title %}SPO — About, Maintainer & Crypto Support{% endblock %}
+{% block header_title %}About SPO — Maintainer Profile & Crypto Wallets{% endblock %}
 
 {% block content %}
-<div class="bg-spo-panel border border-spo-border rounded-xl p-6 max-w-4xl">
-   <div class="flex flex-col md:flex-row gap-6 items-start">
-      <img src="{{ url_for('static', filename='img/spoICO.png') }}" alt="SPO" class="w-20 h-20 rounded-xl border border-slate-700 p-2 bg-slate-900">
-      <div class="space-y-4">
-         <div>
-            <h2 class="text-2xl font-bold text-white">SPO — Sneak Peek OSINT v2.0</h2>
-            <p class="text-xs font-mono text-emerald-400 mt-1">Open Source Intelligence Reconnaissance Framework • GPLv2 License</p>
-         </div>
-         <p class="text-sm text-slate-300 leading-relaxed">
-            Sneak Peek OSINT was created for security researchers, penetration testers, threat intelligence analysts, lawyers, HR professionals, and investigative journalists to gather and correlate publicly available intelligence quickly and responsibly.
-         </p>
-         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs">
-            <div class="bg-slate-900 p-4 rounded-lg border border-slate-800">
-               <div class="font-mono text-slate-400 uppercase">Original Creator (2018)</div>
-               <div class="font-semibold text-white text-sm mt-1">Victor de Queiroz</div>
-               <div class="text-slate-400 mt-1">Security Researcher & Python Developer (CATx003@protonmail.com)</div>
+<div class="space-y-6 max-w-5xl">
+   <!-- Author & Maintainer Card -->
+   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
+      <div class="flex flex-col md:flex-row gap-6 items-start">
+         <img src="{{ url_for('static', filename='img/spoICO.png') }}" alt="SPO" class="w-20 h-20 rounded-xl border border-emerald-500/40 p-2 bg-slate-900">
+         <div class="space-y-4 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+               <div>
+                  <h2 class="text-2xl font-bold text-white">SPO — Sneak Peek OSINT v2.0 (2026 Edition)</h2>
+                  <p class="text-xs font-mono text-emerald-400 mt-1">Tactical Open Source Intelligence & Strix Offensive-Defensive AppSec Platform • GPLv2 License</p>
+               </div>
+               <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer"
+                  class="px-4 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 text-xs font-mono font-semibold flex items-center gap-2 transition">
+                  <i class="material-icons text-sm">favorite</i>
+                  <span>Sponsor @eriktonon</span>
+               </a>
             </div>
-            <div class="bg-slate-900 p-4 rounded-lg border border-slate-800">
-               <div class="font-mono text-emerald-400 uppercase">v2.0 Architecture & Modernization (2026)</div>
-               <div class="font-semibold text-white text-sm mt-1">Erik Tonon</div>
-               <div class="text-slate-400 mt-1">RDAP, BrasilAPI, Shodan InternetDB, crt.sh, OTX, SQLite Vault & Tactical UI</div>
+
+            <p class="text-sm text-slate-300 leading-relaxed">
+               <strong>Sneak Peek OSINT (SPO)</strong> is an open-source intelligence and defensive security reconnaissance platform engineered with the <strong>Build to Manage (BTM)</strong> and <strong>Shift-Left AppSec</strong> philosophy. It empowers Security Researchers, Red/Blue Teams, Threat Intelligence Analysts, Compliance & Legal teams, and Investigative Journalists to correlate corporate, infrastructure, and identity intelligence with zero friction.
+            </p>
+
+            <!-- Erik Tonon Profile Block -->
+            <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-800 space-y-3">
+               <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                     <div class="text-xs font-mono uppercase text-emerald-400">Lead Architect & Maintainer</div>
+                     <div class="text-lg font-bold text-white mt-0.5">Erik Tonon (<span class="font-mono text-cyan-400">@eriktonon</span>)</div>
+                  </div>
+                  <span class="px-2.5 py-1 text-xs font-mono rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                     PE-AGENTS-IBM Security & Strix Engine
+                  </span>
+               </div>
+               <p class="text-xs text-slate-300 leading-relaxed">
+                  Head of Platform Engineering & GenAI at <strong>IBM Consulting</strong> • Ex-Associate Director at <strong>BTG Pactual</strong> • Founder at <strong>EdgeSearch Labs</strong>. Specialist in Mission-Critical SRE, Build to Manage (BTM), Distributed Systems, Offensive-Defensive AppSec, and Autonomous Multi-Agent Architectures.
+               </p>
+               <div class="flex flex-wrap gap-3 pt-2 text-xs font-mono">
+                  <a href="https://eriktonon.com" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 transition">
+                     🌐 eriktonon.com
+                  </a>
+                  <a href="https://github.com/eriktonon" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition">
+                     💻 github.com/eriktonon
+                  </a>
+                  <a href="https://www.linkedin.com/in/eriktonon/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">
+                     🔗 linkedin.com/in/eriktonon
+                  </a>
+                  <a href="https://score.eriktonon.com" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition">
+                     🛡️ score.eriktonon.com (BTM Readiness)
+                  </a>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Crypto Donation Wallets -->
+   <div class="bg-spo-panel border border-spo-border rounded-xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+         <i class="material-icons text-amber-400">currency_bitcoin</i>
+         <h3 class="text-lg font-bold text-white">Support Open-Source Research — Official Crypto Wallets</h3>
+      </div>
+      <p class="text-xs text-slate-400 mb-4">
+         SPO is 100% free and open-source software (GPLv2). If this tool helps your security audits, OSINT investigations, or threat intelligence workflows, you can support ongoing development directly via crypto or <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer" class="text-emerald-400 underline">GitHub Sponsors</a>:
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+               <span class="text-xs font-mono font-bold uppercase text-amber-400">Bitcoin (BTC — Native SegWit)</span>
+               <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-amber-500/10 text-amber-300">BTC</span>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded p-2.5 font-mono text-xs text-slate-200 break-all select-all">
+               bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza
+            </div>
+         </div>
+
+         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+               <span class="text-xs font-mono font-bold uppercase text-cyan-400">Ethereum (ETH / ERC-20 / Base / Polygon)</span>
+               <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-cyan-500/10 text-cyan-300">ETH</span>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded p-2.5 font-mono text-xs text-slate-200 break-all select-all">
+               0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92
+            </div>
+         </div>
+
+         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+               <span class="text-xs font-mono font-bold uppercase text-purple-400">Solana (SOL / SPL)</span>
+               <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-purple-500/10 text-purple-300">SOL</span>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded p-2.5 font-mono text-xs text-slate-200 break-all select-all">
+               3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq
             </div>
          </div>
       </div>

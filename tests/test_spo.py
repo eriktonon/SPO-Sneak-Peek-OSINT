@@ -2,7 +2,8 @@
 """
 Automated Verification Suite for SPO - Sneak Peek OSINT v2.0.
 Tests password hashing, SQL injection defense, SQLite DAO persistence,
-authentication guards, case management, and OSINT controllers.
+Strix SSRFGuard (including 192.168.3.1 guardrail), LoginRateLimiter,
+OWASP defensive headers, authentication guards, case management, and OSINT controllers.
 """
 import os
 import tempfile
@@ -13,6 +14,12 @@ from controller.validatorSQLI import ValidateSQLI
 from controller.spoDAO import SpoDAO
 from controller.CNPJ import CNPJ
 from controller.Whois import Whois
+from controller.StrixSecurity import (
+    CSRFShield,
+    LoginRateLimiter,
+    SSRFGuard,
+    StrixSecurityAuditor,
+)
 
 
 @pytest.fixture()
@@ -46,6 +53,55 @@ def test_sqli_validator_catches_index_zero_and_payloads():
     assert v.validatorSQLI("admin' --") is True
     assert v.validatorSQLI("SELECT * FROM user_spo") is True
     assert v.validatorSQLI("eriktonon") is False
+
+
+def test_strix_ssrf_guard_and_firewall_guardrail():
+    # Critical OPNsense firewall 192.168.3.1 must always be blocked
+    ok, msg = SSRFGuard.validate_target("192.168.3.1")
+    assert ok is False
+    assert "192.168.3.1" in msg
+
+    # Loopback, Cloud Metadata & RFC1918 private IPs must be blocked
+    for forbidden_target in (
+        "127.0.0.1",
+        "localhost",
+        "http://169.254.169.254/latest/meta-data/",
+        "10.0.0.15",
+        "172.16.5.4",
+        "file:///etc/passwd",
+        "internal.service.local",
+    ):
+        allowed, _ = SSRFGuard.validate_target(forbidden_target)
+        assert allowed is False, f"Expected SSRFGuard to block {forbidden_target}"
+
+    # Valid external public domain / IP must be allowed
+    allowed_pub, host_pub = SSRFGuard.validate_target("https://eriktonon.com/about", resolve_dns=False)
+    assert allowed_pub is True
+    assert host_pub == "eriktonon.com"
+
+
+def test_strix_login_rate_limiter_and_csrf_shield():
+    limiter = LoginRateLimiter(max_attempts=3, window_seconds=60, lockout_seconds=120)
+    ip = "203.0.113.50"
+    assert limiter.is_locked(ip)[0] is False
+
+    locked1, rem1 = limiter.record_failure(ip, "erik")
+    assert locked1 is False and rem1 == 2
+    locked2, rem2 = limiter.record_failure(ip, "erik")
+    assert locked2 is False and rem2 == 1
+    locked3, lockout_secs = limiter.record_failure(ip, "erik")
+    assert locked3 is True and lockout_secs == 120
+    assert limiter.is_locked(ip)[0] is True
+
+    limiter.reset(ip)
+    assert limiter.is_locked(ip)[0] is False
+
+    # CSRF constant-time token verification
+    fake_session = {}
+    tok = CSRFShield.get_or_create_token(fake_session)
+    assert len(tok) > 20
+    assert CSRFShield.verify_token(fake_session, tok) is True
+    assert CSRFShield.verify_token(fake_session, "invalid_csrf") is False
 
 
 def test_dao_user_keys_projects_and_scans(temp_db):
@@ -100,26 +156,32 @@ def test_cnpj_and_whois_utilities():
     assert c.treat("00.000.000/0001-91") == "00000000000191"
     assert c.format_cnpj("00000000000191") == "00.000.000/0001-91"
     assert Whois.normalize_domain("https://www.Petrobras.com.br/path?a=1") == "petrobras.com.br"
+    assert len(StrixSecurityAuditor.get_internal_prevention_matrix()) >= 6
 
 
-def test_flask_routes_and_auth_guard(temp_db, monkeypatch):
+def test_flask_routes_security_headers_and_author_wallets(temp_db, monkeypatch):
     monkeypatch.setenv("SPO_DB_PATH", temp_db)
     import main
     main.dao = SpoDAO(db_path=temp_db)
+    main.rate_limiter.reset("127.0.0.1")
     main.spo.config["TESTING"] = True
 
     with main.spo.test_client() as client:
-        # Health check is public
+        # Health check is public & includes OWASP defensive headers
         res = client.get("/health")
         assert res.status_code == 200
         assert res.get_json()["status"] == "ok"
+        assert res.headers.get("X-Frame-Options") == "DENY"
+        assert res.headers.get("X-Content-Type-Options") == "nosniff"
+        assert "default-src 'self'" in res.headers.get("Content-Security-Policy", "")
+        assert "max-age=31536000" in res.headers.get("Strict-Transport-Security", "")
 
         # First access redirects / to /wellcome
         res = client.get("/")
         assert res.status_code == 302
         assert "/wellcome" in res.headers["Location"]
 
-        # Unauthenticated access to /dashboard redirects to / instead of 500 KeyError
+        # Unauthenticated access to /dashboard redirects to /
         res = client.get("/dashboard")
         assert res.status_code == 302
 
@@ -133,7 +195,30 @@ def test_flask_routes_and_auth_guard(temp_db, monkeypatch):
         assert res.status_code == 302
         assert "/dashboard" in res.headers["Location"]
 
-        # Access protected routes
-        for route in ("/dashboard", "/companyInvestigation", "/searchServers", "/personalInvestigation", "/projects", "/insertKeys", "/aboutOSINT", "/manual", "/about"):
+        # Access protected routes including /securityAudit
+        for route in (
+            "/dashboard",
+            "/companyInvestigation",
+            "/searchServers",
+            "/personalInvestigation",
+            "/securityAudit",
+            "/projects",
+            "/insertKeys",
+            "/aboutOSINT",
+            "/manual",
+            "/about",
+        ):
             r = client.get(route)
             assert r.status_code == 200, f"Route {route} failed with {r.status_code}"
+
+        # Verify Erik Tonon profile & crypto wallets on /about
+        about_html = client.get("/about").data.decode("utf-8")
+        assert "Erik Tonon" in about_html
+        assert "bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza" in about_html
+        assert "0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92" in about_html
+        assert "3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq" in about_html
+
+        # Verify SSRFGuard blocks 192.168.3.1 on /securityAudit
+        ssrf_res = client.post("/securityAudit", data={"target": "192.168.3.1"})
+        assert ssrf_res.status_code == 200
+        assert b"192.168.3.1" in ssrf_res.data

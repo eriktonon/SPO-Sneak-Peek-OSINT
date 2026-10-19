@@ -50,57 +50,57 @@ class Facebook:
 
     @classmethod
     def _check_platform(cls, platform: Dict[str, Any], username: str) -> Dict[str, Any]:
-        profile_url = platform["url"].format(u=username)
-        api_url = platform.get("api")
+        profile_link = platform["url"].format(u=username)
+        api_endpoint = platform.get("api")
         exists = False
         details = ""
 
         try:
-            if platform["name"] == "GitHub" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            if platform["name"] == "GitHub" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200:
                     d = r.json()
                     exists = True
                     details = f"{d.get('name') or username} • {d.get('public_repos', 0)} repos • {d.get('followers', 0)} followers"
-            elif platform["name"] == "GitLab" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            elif platform["name"] == "GitLab" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200 and isinstance(r.json(), list) and len(r.json()) > 0:
                     d = r.json()[0]
                     exists = True
                     details = f"{d.get('name') or username} ({d.get('state', 'active')})"
-            elif platform["name"] == "Dev.to" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            elif platform["name"] == "Dev.to" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200:
                     d = r.json()
                     exists = True
                     details = d.get("summary") or d.get("name") or "Profile active"
-            elif platform["name"] == "HackerNews" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            elif platform["name"] == "HackerNews" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200 and r.json() and isinstance(r.json(), dict) and r.json().get("id"):
                     d = r.json()
                     exists = True
                     details = f"Karma: {d.get('karma', 0)}"
-            elif platform["name"] == "Keybase" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            elif platform["name"] == "Keybase" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200:
                     them = r.json().get("them") or []
                     if them and them[0]:
                         exists = True
                         details = "Keybase cryptographic identity found"
-            elif platform["name"] == "TabNews" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            elif platform["name"] == "TabNews" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200 and r.json().get("username"):
                     d = r.json()
                     exists = True
                     details = f"TabCoins: {d.get('tabcoins', 0)}"
-            elif platform["name"] == "Reddit" and api_url:
-                r = requests.get(api_url.format(u=username), headers=cls.HEADERS, timeout=6)
+            elif platform["name"] == "Reddit" and api_endpoint:
+                r = requests.get(api_endpoint.format(u=username), headers=cls.HEADERS, timeout=6)
                 if r.status_code == 200 and r.json().get("data", {}).get("name"):
                     d = r.json()["data"]
                     exists = True
                     details = f"Karma: {d.get('total_karma', 0)}"
             else:
-                r = requests.get(profile_url, headers=cls.HEADERS, timeout=6, allow_redirects=True)
+                r = requests.get(profile_link, headers=cls.HEADERS, timeout=6, allow_redirects=True)
                 if r.status_code == 200 and "page not found" not in r.text.lower()[:1500]:
                     exists = True
                     details = "HTTP 200 Public Profile"
@@ -109,7 +109,7 @@ class Facebook:
 
         return {
             "platform": platform["name"],
-            "url": profile_url,
+            "url": profile_link,
             "icon": platform.get("icon", "public"),
             "exists": exists,
             "details": str(details)[:140],
@@ -202,12 +202,11 @@ class Facebook:
         clean = (query or "").strip().lower()
         if not clean:
             return {"avatar_url": "", "found": False, "hash": ""}
-        md5_hash = hashlib.md5(clean.encode("utf-8")).hexdigest()
-        avatar_url = f"https://www.gravatar.com/avatar/{md5_hash}?d=404&s=200"
+        sha256_hash = hashlib.sha256(clean.encode("utf-8")).hexdigest()
         found = False
         display_name = ""
         try:
-            r = requests.get(f"https://en.gravatar.com/{md5_hash}.json", headers=cls.HEADERS, timeout=5)
+            r = requests.get(f"https://en.gravatar.com/{sha256_hash}.json", headers=cls.HEADERS, timeout=5)
             if r.status_code == 200:
                 found = True
                 entry = (r.json().get("entry") or [{}])[0]
@@ -216,9 +215,9 @@ class Facebook:
             pass
         return {
             "found": found,
-            "hash": md5_hash,
+            "hash": sha256_hash,
             "display_name": display_name,
-            "avatar_url": f"https://www.gravatar.com/avatar/{md5_hash}?d=identicon&s=200",
+            "avatar_url": f"https://www.gravatar.com/avatar/{sha256_hash}?d=identicon&s=200",
         }
 
     @classmethod

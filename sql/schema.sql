@@ -1,6 +1,6 @@
 -- SPO SNEAK PEEK OSINT v2.0 — Database Schema (SQLite / ANSI SQL Compatible)
--- Original Author: Victor de Queiroz
--- Modernized by: Erik Tonon (2026)
+-- Lead Architect & Maintainer: Erik Tonon (@eriktonon | https://eriktonon.com)
+-- Security Engine: PE-AGENTS-IBM Security & Strix Shift-Left Hardening
 
 CREATE TABLE IF NOT EXISTS user_spo (
     id_user INTEGER PRIMARY KEY AUTOINCREMENT,
