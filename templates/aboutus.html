@@ -1,147 +1,158 @@
 {% extends "base.html" %}
-{% block title %}SPO — Maintainer Profile &amp; Crypto Support // IBM Carbon v11{% endblock %}
-{% block header_title %}03.3 // MAINTAINER PROFILE (ERIK TONON) &amp; CRYPTO SPONSORSHIP{% endblock %}
+{% block title %}SPO Cloud SIEM — Maintainer Profile (Erik Tonon) &amp; Crypto Sponsorship{% endblock %}
+{% block breadcrumb %}GOVERNANCE // MAINTAINER PROFILE (ERIK TONON) &amp; CRYPTO SPONSORSHIP{% endblock %}
 
 {% block content %}
-<!-- Hero Split: Lead Architect Profile + Key Credentials -->
-<section class="cds-hero-split" aria-labelledby="about-h1">
-  <div class="cds-hero-main">
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
-        <span class="cds-tag cds-tag-blue">LEAD ARCHITECT &amp; MAINTAINER</span>
-        <span class="cds-tag cds-tag-outline">PE-AGENTS-IBM SECURITY &amp; STRIX ENGINE</span>
-        <span class="cds-tag cds-tag-green">GPLV2 OPEN SOURCE</span>
+<!-- ======================================================================
+     ROW 1: MAINTAINER PROFILE (8 COLS) + TELEMETRY SCORECARDS (4 COLS)
+     ====================================================================== -->
+<section class="cds-grid-12 mb-4" aria-labelledby="maintainer-h1">
+  <div class="cds-panel cds-col-8 cds-accent-purple">
+    <div class="cds-panel-header">
+      <span class="cds-panel-header-title">
+        <i data-lucide="award" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+        <span>LEAD ARCHITECT &amp; MAINTAINER // ERIK TONON (@ERIKTONON)</span>
+      </span>
+      <div class="flex items-center gap-2">
+        <span class="cds-tag cds-tag-purple">role:lead-architect</span>
+        <span class="cds-tag cds-tag-green">license:GPLv2</span>
       </div>
-      <h1 id="about-h1" class="cds-page-h1"><strong>Erik Tonon</strong> (<span class="mono" style="color:var(--cds-link);">@eriktonon</span>)</h1>
-      <p class="cds-lead">
-        Head of Platform Engineering &amp; Generative AI at <strong>IBM Consulting</strong> &bull; Ex-Associate Director at <strong>BTG Pactual</strong> &bull; Founder at <strong>EdgeSearch Labs</strong>. Specialist in Mission-Critical SRE, Build to Manage (BTM), Distributed Systems, Offensive-Defensive AppSec, and Autonomous Multi-Agent Architectures.
-      </p>
-      <p class="cds-lead">
-        <strong>Sneak Peek OSINT (SPO v2.0)</strong> is engineered under the <strong>Build to Manage</strong> and <strong>Shift-Left Security</strong> methodology to give Security Researchers, Red/Blue Teams, Threat Intelligence Analysts, Compliance &amp; Legal teams, and Investigative Journalists a deterministic, zero-friction reconnaissance control plane.
-      </p>
     </div>
+    <div class="cds-panel-body">
+      <h1 id="maintainer-h1" class="cds-page-h1"><strong>Erik Tonon</strong> (@eriktonon)</h1>
+      <p class="text-sm text-secondary" style="max-width:74ch;">
+        Platform Engineering, SRE Observability &amp; Generative AI Architect &bull; Ex-Associate Director at <strong>BTG Pactual</strong> &bull; Founder at <strong>EdgeSearch Labs</strong>. Specialist in Mission-Critical SRE, Build to Manage (BTM), Distributed Systems, Offensive-Defensive AppSec, and Autonomous Multi-Agent Architectures.
+      </p>
+      <p class="text-sm text-secondary" style="max-width:74ch;">
+        <strong>SPO Cloud SIEM &amp; Sneak Peek OSINT (v2.0)</strong> unifies zero-key reconnaissance (<code class="mono">crt.sh</code>, <code class="mono">RDAP</code>, <code class="mono">Shodan InternetDB</code>, <code class="mono">NIST NVD</code>, <code class="mono">BrasilAPI</code>), <code class="mono">Strix OWASP Top 10 DAST</code>, and local uncensored LLM triage (<code class="mono">eriktonon/granite4.2-uncensored</code>).
+      </p>
 
-    <div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:6px;">
-      <a href="https://eriktonon.com" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-primary">
-        <span>eriktonon.com</span>
-        <i data-lucide="globe" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
-      <a href="https://github.com/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-secondary">
-        <span>github.com/eriktonon</span>
-        <i data-lucide="github" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.linkedin.com/in/eriktonon/" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost">
-        <span>linkedin.com/in/eriktonon</span>
-        <i data-lucide="linkedin" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
-      <a href="https://score.eriktonon.com" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-ghost">
-        <span>score.eriktonon.com (BTM)</span>
-        <i data-lucide="shield-check" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
-      <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-danger">
-        <span>GitHub Sponsors (@eriktonon)</span>
-        <i data-lucide="heart" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
+      <div class="flex items-center gap-2 flex-wrap mt-2">
+        <a href="https://eriktonon.com/" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-primary">
+          <span>eriktonon.com</span>
+          <i data-lucide="globe" style="width:14px;height:14px;" aria-hidden="true"></i>
+        </a>
+        <a href="https://github.com/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-secondary">
+          <span>github.com/eriktonon</span>
+          <i data-lucide="git-branch" style="width:14px;height:14px;" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-secondary">
+          <span>linkedin.com/in/eriktonon</span>
+          <i data-lucide="briefcase" style="width:14px;height:14px;" aria-hidden="true"></i>
+        </a>
+        <a href="https://score.eriktonon.com/" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-secondary">
+          <span>score.eriktonon.com (BTM)</span>
+          <i data-lucide="compass" style="width:14px;height:14px;" aria-hidden="true"></i>
+        </a>
+        <a href="https://github.com/sponsors/eriktonon" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-danger">
+          <span>GitHub Sponsors (@eriktonon)</span>
+          <i data-lucide="heart" style="width:14px;height:14px;" aria-hidden="true"></i>
+        </a>
+      </div>
     </div>
   </div>
 
-  <div class="cds-kpi-grid-2x2" role="region" aria-label="Platform Architecture Specifications">
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>RELEASE VERSION</span>
-        <i data-lucide="tag" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="color:var(--cds-link);">v2.0.0</div>
-      <div class="cds-kpi-sub">2026 CARBON v11 EDITION</div>
-    </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>SECURITY POSTURE</span>
-        <i data-lucide="shield" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="color:var(--cds-success-text);">100 / 100</div>
-      <div class="cds-kpi-sub">STRIX WHITEBOX SAST GRADE A</div>
-    </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>NEURAL SECOPS MODEL</span>
-        <i data-lucide="cpu" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
+  <div class="cds-col-4 cds-grid-2">
+    <article class="cds-tile cds-accent-purple">
+      <div class="cds-kpi-label"><span>RELEASE</span><span class="cds-tag cds-tag-purple">DRUIDS</span></div>
+      <div class="cds-kpi-value text-blue">v2.0.0</div>
+      <div class="cds-kpi-sub">Datadog SIEM UI</div>
+    </article>
+    <article class="cds-tile cds-accent-green">
+      <div class="cds-kpi-label"><span>STRIX POSTURE</span><span class="cds-tag cds-tag-green">OK</span></div>
+      <div class="cds-kpi-value text-success">100/100</div>
+      <div class="cds-kpi-sub">Grade A Whitebox</div>
+    </article>
+    <article class="cds-tile cds-accent-blue">
+      <div class="cds-kpi-label"><span>WATCHDOG LLM</span></div>
       <div class="cds-kpi-value" style="font-size:20px;">GRANITE 4.2</div>
-      <div class="cds-kpi-sub">8B ABLITERATED + SECOPS LORA</div>
-    </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>STORAGE ENGINE</span>
-        <i data-lucide="database" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
+      <div class="cds-kpi-sub">8B Abliterated LoRA</div>
+    </article>
+    <article class="cds-tile cds-accent-amber">
+      <div class="cds-kpi-label"><span>STORAGE VAULT</span></div>
       <div class="cds-kpi-value" style="font-size:20px;">SQLITE WAL</div>
-      <div class="cds-kpi-sub">ZERO-CONFIG LOCAL VAULT</div>
-    </div>
+      <div class="cds-kpi-sub">Zero-Config Local</div>
+    </article>
   </div>
 </section>
 
-<!-- Official Crypto Wallets (3-Column 1px Hairline Grid with Copy Actions) -->
-<section class="cds-panel" aria-labelledby="crypto-heading">
+<!-- ======================================================================
+     ROW 2: OFFICIAL CRYPTO SPONSORSHIP WALLETS (BTC / ETH / SOL)
+     ====================================================================== -->
+<section class="cds-panel cds-accent-green" aria-labelledby="crypto-heading">
   <div class="cds-panel-header">
-    <div class="cds-panel-header-title">
-      <i data-lucide="wallet" style="width:15px;height:15px;color:#f1c21b;" aria-hidden="true"></i>
-      <h2 id="crypto-heading">SUPPORT OPEN-SOURCE RESEARCH // OFFICIAL CRYPTO WALLETS</h2>
+    <div class="flex items-center gap-2">
+      <i data-lucide="wallet" style="width:15px;height:15px;color:var(--dd-ok);" aria-hidden="true"></i>
+      <h2 id="crypto-heading" class="cds-panel-header-title">SUPPORT OPEN-SOURCE RESEARCH // OFFICIAL CRYPTO WALLETS</h2>
     </div>
-    <span class="cds-tag cds-tag-outline">DIRECT PEER-TO-PEER SPONSORSHIP</span>
+    <span class="cds-tag cds-tag-green">PEER-TO-PEER SPONSORSHIP</span>
   </div>
 
-  <div class="cds-grid-3" style="border:none;">
-    <!-- BTC -->
-    <article class="cds-grid-cell" style="gap:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
+  <div class="cds-panel-body">
+    <div class="cds-grid-3">
+      <!-- BTC -->
+      <article class="cds-tile cds-accent-amber" style="background:var(--dd-bg-surface-alt);">
         <div>
-          <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);text-transform:uppercase;">NETWORK // BITCOIN</div>
-          <h3 style="font-size:16px;font-weight:600;margin-top:2px;">Bitcoin (BTC &mdash; Native SegWit)</h3>
+          <div class="flex items-center justify-between">
+            <span class="cds-kpi-label">NETWORK // BITCOIN</span>
+            <span class="cds-tag cds-tag-amber">BTC</span>
+          </div>
+          <h3 class="font-bold text-sm mt-1">Bitcoin (BTC — Native SegWit)</h3>
+          <div class="cds-terminal mt-2" style="padding:10px;font-size:11.5px;border-left-color:var(--dd-warn);">bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza</div>
         </div>
-        <span class="cds-tag cds-tag-amber">BTC</span>
-      </div>
-      <div class="cds-terminal" style="font-size:12px;user-select:all;">bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza</div>
-      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" style="width:100%;" data-copy-text="bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza" aria-label="Copy Bitcoin wallet address">
-        <span>COPY BTC ADDRESS</span>
-        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
-      </button>
-    </article>
+        <button
+          type="button"
+          class="cds-btn cds-btn-secondary w-full mt-3"
+          data-copy-text="bc1q0hr95ay33rtazfepg64yddf52q3yqh7ud83cza"
+          aria-label="Copy Bitcoin wallet address"
+        >
+          <span data-copy-label class="mono">COPY BTC ADDRESS</span>
+          <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+        </button>
+      </article>
 
-    <!-- ETH -->
-    <article class="cds-grid-cell" style="gap:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
+      <!-- ETH -->
+      <article class="cds-tile cds-accent-purple" style="background:var(--dd-bg-surface-alt);">
         <div>
-          <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);text-transform:uppercase;">NETWORK // EVM L1/L2</div>
-          <h3 style="font-size:16px;font-weight:600;margin-top:2px;">Ethereum (ETH / ERC-20 / Base)</h3>
+          <div class="flex items-center justify-between">
+            <span class="cds-kpi-label">NETWORK // EVM L1/L2</span>
+            <span class="cds-tag cds-tag-purple">ETH</span>
+          </div>
+          <h3 class="font-bold text-sm mt-1">Ethereum (ETH / ERC-20 / Base)</h3>
+          <div class="cds-terminal mt-2" style="padding:10px;font-size:11.5px;border-left-color:var(--dd-purple);">0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92</div>
         </div>
-        <span class="cds-tag cds-tag-blue">ETH</span>
-      </div>
-      <div class="cds-terminal" style="font-size:12px;user-select:all;">0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92</div>
-      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" style="width:100%;" data-copy-text="0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92" aria-label="Copy Ethereum wallet address">
-        <span>COPY ETH ADDRESS</span>
-        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
-      </button>
-    </article>
+        <button
+          type="button"
+          class="cds-btn cds-btn-secondary w-full mt-3"
+          data-copy-text="0xE69FCE4Fa35CF3bd98F496337b1eA223270b2c92"
+          aria-label="Copy Ethereum wallet address"
+        >
+          <span data-copy-label class="mono">COPY ETH ADDRESS</span>
+          <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+        </button>
+      </article>
 
-    <!-- SOL -->
-    <article class="cds-grid-cell" style="gap:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
+      <!-- SOL -->
+      <article class="cds-tile cds-accent-green" style="background:var(--dd-bg-surface-alt);">
         <div>
-          <div class="mono" style="font-size:11px;color:var(--cds-text-secondary);text-transform:uppercase;">NETWORK // SOLANA</div>
-          <h3 style="font-size:16px;font-weight:600;margin-top:2px;">Solana (SOL / SPL)</h3>
+          <div class="flex items-center justify-between">
+            <span class="cds-kpi-label">NETWORK // SOLANA</span>
+            <span class="cds-tag cds-tag-green">SOL</span>
+          </div>
+          <h3 class="font-bold text-sm mt-1">Solana (SOL / SPL)</h3>
+          <div class="cds-terminal mt-2" style="padding:10px;font-size:11.5px;border-left-color:var(--dd-ok);">3E8L1Hdqe7Xk6GCzZHbtY5sReAfLfC9CdwgZxP7qaoHq</div>
         </div>
-        <span class="cds-tag cds-tag-green">SOL</span>
-      </div>
-      <div class="cds-terminal" style="font-size:12px;user-select:all;">3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq</div>
-      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" style="width:100%;" data-copy-text="3E8L1Hdqe7Xk6GCrzHbtY5sReAfLFc9CdwgZxP7qaoHq" aria-label="Copy Solana wallet address">
-        <span>COPY SOL ADDRESS</span>
-        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
-      </button>
-    </article>
+        <button
+          type="button"
+          class="cds-btn cds-btn-secondary w-full mt-3"
+          data-copy-text="3E8L1Hdqe7Xk6GCzZHbtY5sReAfLfC9CdwgZxP7qaoHq"
+          aria-label="Copy Solana wallet address"
+        >
+          <span data-copy-label class="mono">COPY SOL ADDRESS</span>
+          <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
+        </button>
+      </article>
+    </div>
   </div>
 </section>
 {% endblock %}

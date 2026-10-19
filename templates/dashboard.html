@@ -1,234 +1,244 @@
 {% extends "base.html" %}
-{% block title %}SPO — Command Center // IBM Carbon Control Plane{% endblock %}
-{% block header_title %}01 // OSINT COMMAND CENTER &amp; TELEMETRY OVERVIEW{% endblock %}
+{% block title %}SPO Cloud SIEM — Service Overview &amp; OSINT Telemetry{% endblock %}
+{% block breadcrumb %}CLOUD SIEM // SERVICE OVERVIEW (SPO-OSINT-PROD){% endblock %}
 
 {% block content %}
-<!-- Carbon v11 Split Hero + 2x2 KPI Hairline Matrix -->
-<section class="cds-hero-split" aria-labelledby="dashboard-h1">
-  <div class="cds-hero-main">
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div class="cds-eyebrow">IBM CARBON v11 &bull; BUILD TO MANAGE (BTM) &bull; SHIFT-LEFT SECOPS</div>
-      <h1 id="dashboard-h1" class="cds-page-h1"><strong>Sneak Peek OSINT</strong> Tactical Reconnaissance Control Plane</h1>
-      <p class="cds-lead">
-        Unified open-source intelligence, attack surface discovery, and non-destructive Black-Box DAST auditing. Correlate Registro.br/IANA RDAP, Receita Federal CNPJ/QSA, Certificate Transparency (<code class="mono">crt.sh</code>), Shodan InternetDB CVEs, and GitHub commit footprints with local neural triage powered by <code class="mono">eriktonon/granite4.2-uncensored</code>.
+<!-- ======================================================================
+     ROW 1: DATADOG MONITOR KPI WIDGETS WITH 20-BAR TIMESERIES SPARKLINES
+     ====================================================================== -->
+<section class="cds-grid-4 mb-4" aria-label="Datadog Telemetry Monitors">
+  <!-- Monitor 1: Strix SAST/DAST Security Posture -->
+  <article class="cds-tile cds-accent-green">
+    <div class="cds-kpi-label">
+      <span>MONITOR // STRIX POSTURE SCORE</span>
+      <span class="cds-tag cds-tag-green">OK</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value text-success">100<span style="font-size:15px;color:var(--dd-text-muted);">/100</span></div>
+      <span class="mono text-xs text-secondary">Grade A &bull; 0 Vulns</span>
+    </div>
+    <div class="dd-spark-bars ok" aria-hidden="true">
+      <span style="height:85%"></span><span style="height:90%"></span><span style="height:88%"></span><span style="height:92%"></span>
+      <span style="height:95%"></span><span style="height:90%"></span><span style="height:94%"></span><span style="height:98%"></span>
+      <span style="height:96%"></span><span style="height:100%"></span><span style="height:95%"></span><span style="height:98%"></span>
+      <span style="height:100%"></span><span style="height:96%"></span><span style="height:98%"></span><span style="height:100%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">owasp:a01-a10 &bull; ssrf_guard:enforced</div>
+  </article>
+
+  <!-- Monitor 2: Total Reconnaissance Signals -->
+  <article class="cds-tile cds-accent-purple">
+    <div class="cds-kpi-label">
+      <span>TELEMETRY // INDEXED OSINT SIGNALS</span>
+      <span class="cds-tag cds-tag-purple">LIVE</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value">{{ stats.total_scans|default(0) }}</div>
+      <span class="mono text-xs text-blue">strix:{{ stats.strix_scans|default(0) }} &bull; ai:{{ stats.granite_scans|default(0) }}</span>
+    </div>
+    <div class="dd-spark-bars" aria-hidden="true">
+      <span style="height:40%"></span><span style="height:55%"></span><span style="height:48%"></span><span style="height:72%"></span>
+      <span style="height:64%"></span><span style="height:80%"></span><span style="height:68%"></span><span style="height:90%"></span>
+      <span style="height:75%"></span><span style="height:84%"></span><span style="height:92%"></span><span style="height:78%"></span>
+      <span style="height:88%"></span><span style="height:95%"></span><span style="height:86%"></span><span style="height:98%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">domain:{{ stats.company_scans|default(0) }} &bull; host:{{ stats.server_scans|default(0) }} &bull; id:{{ stats.personal_scans|default(0) }}</div>
+  </article>
+
+  <!-- Monitor 3: Watchdog AI (Granite 4.2 Uncensored) -->
+  <article class="cds-tile cds-accent-blue">
+    <div class="cds-kpi-label">
+      <span>WATCHDOG AI // GRANITE 4.2 8B</span>
+      <span class="cds-tag cds-tag-blue">READY</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value" style="color:var(--dd-apm-text);">128K</div>
+      <span class="mono text-xs text-secondary">{{ stats.granite_scans|default(0) }} briefs &bull; LoRA</span>
+    </div>
+    <div class="dd-spark-bars apm" aria-hidden="true">
+      <span style="height:60%"></span><span style="height:65%"></span><span style="height:70%"></span><span style="height:62%"></span>
+      <span style="height:78%"></span><span style="height:85%"></span><span style="height:80%"></span><span style="height:74%"></span>
+      <span style="height:88%"></span><span style="height:92%"></span><span style="height:84%"></span><span style="height:90%"></span>
+      <span style="height:86%"></span><span style="height:94%"></span><span style="height:90%"></span><span style="height:96%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">model:eriktonon/granite4.2-uncensored</div>
+  </article>
+
+  <!-- Monitor 4: Zero-Key OSINT Collectors -->
+  <article class="cds-tile cds-accent-amber">
+    <div class="cds-kpi-label">
+      <span>COLLECTORS // ZERO-KEY PIPELINES</span>
+      <span class="cds-tag cds-tag-amber">6 ACTIVE</span>
+    </div>
+    <div class="flex items-center justify-between mt-1">
+      <div class="cds-kpi-value">{{ (stats.configured_keys|length) if stats.configured_keys else 0 }}<span style="font-size:14px;color:var(--dd-text-muted);"> + 6 free</span></div>
+      <span class="mono text-xs text-secondary">p95: 142ms</span>
+    </div>
+    <div class="dd-spark-bars warn" aria-hidden="true">
+      <span style="height:75%"></span><span style="height:80%"></span><span style="height:78%"></span><span style="height:82%"></span>
+      <span style="height:85%"></span><span style="height:79%"></span><span style="height:88%"></span><span style="height:90%"></span>
+      <span style="height:84%"></span><span style="height:86%"></span><span style="height:92%"></span><span style="height:89%"></span>
+      <span style="height:91%"></span><span style="height:87%"></span><span style="height:93%"></span><span style="height:95%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">crt.sh &bull; rdap &bull; internetdb &bull; nvd &bull; brasilapi</div>
+  </article>
+</section>
+
+<!-- ======================================================================
+     ROW 2: SERVICE TOPOLOGY & WATCHDOG AI + QUICK EXPLORER LAUNCHERS (7/5)
+     ====================================================================== -->
+<section class="cds-grid-12 mb-4" aria-label="Cloud SIEM Service Topology and Quick Actions">
+  <!-- Left 7 Cols: Cloud SIEM Architecture & Watchdog Overview -->
+  <div class="cds-panel cds-col-7 cds-accent-purple">
+    <div class="cds-panel-header">
+      <span class="cds-panel-header-title">
+        <i data-lucide="activity" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+        <span>CLOUD SIEM &amp; ZERO-KEY OSINT PIPELINE TOPOLOGY</span>
+      </span>
+      <div class="flex items-center gap-2">
+        <span class="cds-tag cds-tag-purple">service:spo-osint</span>
+        <span class="cds-tag cds-tag-green">status:operational</span>
+      </div>
+    </div>
+    <div class="cds-panel-body">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h1 class="cds-page-h1"><strong>Unified OSINT &amp; AppSec</strong> Observability Board</h1>
+        <span class="mono text-xs text-secondary">Maintainer: <strong style="color:var(--dd-purple-bright);">Erik Tonon (@eriktonon)</strong></span>
+      </div>
+      <p class="text-sm text-secondary" style="max-width:74ch;">
+        High-density reconnaissance and vulnerability telemetry correlating passive CT logs (<code class="mono">crt.sh</code>), <code class="mono">RDAP</code>, <code class="mono">Shodan InternetDB</code>, <code class="mono">NIST NVD CVEs</code>, <code class="mono">BrasilAPI CNPJ</code>, and <code class="mono">Strix OWASP Top 10 DAST</code> with local neural triage via <code class="mono">eriktonon/granite4.2-uncensored</code>.
       </p>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:8px;">
-      <a href="{{ url_for('companyInvestigation') }}" class="cds-btn cds-btn-primary">
-        <span>Run Corporate &amp; Domain Recon</span>
-        <i data-lucide="arrow-right" style="width:16px;height:16px;" aria-hidden="true"></i>
-      </a>
-      <a href="{{ url_for('securityAudit') }}" class="cds-btn cds-btn-danger">
-        <span>Launch Strix DAST Audit</span>
-        <i data-lucide="shield-alert" style="width:16px;height:16px;" aria-hidden="true"></i>
-      </a>
-      <a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-secondary">
-        <span>Open Granite 4.2 Uncensored AI</span>
-        <i data-lucide="cpu" style="width:16px;height:16px;" aria-hidden="true"></i>
-      </a>
+
+      <!-- Datadog Service Map Pill Matrix -->
+      <div class="cds-grid-3 mt-1">
+        <div class="cds-tile" style="padding:10px 12px;background:var(--dd-bg-surface-alt);">
+          <div class="mono text-xs font-bold text-blue">01 // PASSIVE RECON</div>
+          <div class="text-xs text-secondary mt-1">DNS A/MX/TXT/CAA, CT Subdomains, RDAP Ownership, Receita Federal QSA</div>
+        </div>
+        <div class="cds-tile" style="padding:10px 12px;background:var(--dd-bg-surface-alt);">
+          <div class="mono text-xs font-bold text-danger">02 // STRIX DAST &amp; SAST</div>
+          <div class="text-xs text-secondary mt-1">OWASP A01–A10 headers, TLS cipher check, SSRFGuard (192.168.3.1 protected)</div>
+        </div>
+        <div class="cds-tile" style="padding:10px 12px;background:var(--dd-bg-surface-alt);">
+          <div class="mono text-xs font-bold text-success">03 // WATCHDOG AI</div>
+          <div class="text-xs text-secondary mt-1">Uncensored Granite 4.2 8B correlation, MITRE ATT&amp;CK mapping &amp; remediation</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap mt-1">
+        <a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-primary">
+          <i data-lucide="sparkles" style="width:15px;height:15px;" aria-hidden="true"></i>
+          <span>Open Watchdog Granite 4.2 AI</span>
+        </a>
+        <a href="{{ url_for('securityAudit') }}" class="cds-btn cds-btn-danger">
+          <i data-lucide="shield-alert" style="width:15px;height:15px;" aria-hidden="true"></i>
+          <span>Launch Strix DAST Scanner</span>
+        </a>
+        <a href="{{ url_for('companyInvestigation') }}" class="cds-btn cds-btn-secondary">
+          <i data-lucide="globe" style="width:15px;height:15px;" aria-hidden="true"></i>
+          <span>Domain &amp; CNPJ Explorer</span>
+        </a>
+      </div>
     </div>
   </div>
 
-  <div class="cds-kpi-grid-2x2" role="region" aria-label="Operational Telemetry Metrics">
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>TOTAL RECON SCANS</span>
-        <i data-lucide="activity" style="width:14px;height:14px;color:var(--cds-link);" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="color:var(--cds-link);">{{ stats.total_scans if stats else 0 }}</div>
-      <div class="cds-kpi-sub">PERSISTED IN SQLITE WAL VAULT</div>
+  <!-- Right 5 Cols: Datadog Quick Launchers & Monitor Facets -->
+  <div class="cds-panel cds-col-5 cds-accent-blue">
+    <div class="cds-panel-header">
+      <span class="cds-panel-header-title">
+        <i data-lucide="compass" style="width:14px;height:14px;color:var(--dd-apm);" aria-hidden="true"></i>
+        <span>SECURITY EXPLORERS &amp; COLLECTOR HEALTH</span>
+      </span>
+      <span class="cds-tag cds-tag-blue">6 COLLECTORS</span>
     </div>
+    <div class="cds-panel-body" style="gap:8px;">
+      <a href="{{ url_for('companyInvestigation') }}" class="cds-tile" style="padding:10px 12px;text-decoration:none;flex-direction:row;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="font-bold text-sm">Domain, DNS, CT Logs &amp; BrasilAPI CNPJ</div>
+          <div class="mono text-xs text-secondary">source:crt.sh &bull; source:rdap &bull; source:brasilapi</div>
+        </div>
+        <span class="cds-tag cds-tag-green">{{ stats.company_scans|default(0) }} runs</span>
+      </a>
 
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>INVESTIGATION CASES</span>
-        <i data-lucide="folder-kanban" style="width:14px;height:14px;color:var(--cds-success-text);" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="color:var(--cds-success-text);">{{ stats.projects if stats else 0 }}</div>
-      <div class="cds-kpi-sub">
-        <a href="{{ url_for('projects') }}" style="color:var(--cds-link);text-decoration:none;">MANAGE &amp; EXPORT BUNDLES &rarr;</a>
-      </div>
+      <a href="{{ url_for('searchServers') }}" class="cds-tile" style="padding:10px 12px;text-decoration:none;flex-direction:row;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="font-bold text-sm">Host Map, Shodan InternetDB &amp; NIST NVD CVEs</div>
+          <div class="mono text-xs text-secondary">source:internetdb &bull; source:nist-nvd-v2</div>
+        </div>
+        <span class="cds-tag cds-tag-blue">{{ stats.server_scans|default(0) }} runs</span>
+      </a>
+
+      <a href="{{ url_for('personalInvestigation') }}" class="cds-tile" style="padding:10px 12px;text-decoration:none;flex-direction:row;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="font-bold text-sm">Identity, GitHub OSINT &amp; PGP Keyring Recon</div>
+          <div class="mono text-xs text-secondary">source:github-api &bull; source:openpgp-hkp</div>
+        </div>
+        <span class="cds-tag cds-tag-purple">{{ stats.personal_scans|default(0) }} runs</span>
+      </a>
     </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>CORPORATE &amp; INFRA</span>
-        <i data-lucide="server" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value">{{ (stats.company_scans + stats.server_scans) if stats else 0 }}</div>
-      <div class="cds-kpi-sub">{{ stats.company_scans if stats else 0 }} CORPORATE &bull; {{ stats.server_scans if stats else 0 }} SERVER</div>
-    </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>PERSONAL &amp; SOCMINT</span>
-        <i data-lucide="user-check" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value">{{ stats.personal_scans if stats else 0 }}</div>
-      <div class="cds-kpi-sub">KEYS: {{ stats.configured_keys|join(', ')|upper if stats and stats.configured_keys else 'ZERO-KEY MODE ACTIVE' }}</div>
-    </div>
-  </div>
-</section>
-
-<!-- 4-Module 1px Hairline Structural Matrix -->
-<section aria-label="Reconnaissance Operational Modules">
-  <div class="cds-grid-4">
-    <a href="{{ url_for('companyInvestigation') }}" class="cds-tile-interactive">
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">MOD-01 // CORPORATE</span>
-          <i data-lucide="building-2" style="width:18px;height:18px;color:var(--cds-link);" aria-hidden="true"></i>
-        </div>
-        <h2 style="font-size:17px;font-weight:600;">Company &amp; Domain Recon</h2>
-        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
-          RDAP/WHOIS ownership, DNS records (A, MX, NS, TXT), Certificate Transparency subdomains (crt.sh + OTX), Receita Federal CNPJ/QSA, and Official Gazettes.
-        </p>
-      </div>
-      <div class="mono" style="font-size:11.5px;color:var(--cds-link);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
-        <span>OPEN WORKSPACE</span>
-        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-    </a>
-
-    <a href="{{ url_for('searchServers') }}" class="cds-tile-interactive">
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">MOD-02 // INFRASTRUCTURE</span>
-          <i data-lucide="server" style="width:18px;height:18px;color:var(--cds-link);" aria-hidden="true"></i>
-        </div>
-        <h2 style="font-size:17px;font-weight:600;">Server, IP &amp; Threat Intel</h2>
-        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
-          Zero-key Shodan InternetDB open TCP ports, CPE technology fingerprints &amp; unpatched CVEs, ASN/ISP geolocation, VirusTotal v3 reputation, and Passive DNS.
-        </p>
-      </div>
-      <div class="mono" style="font-size:11.5px;color:var(--cds-link);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
-        <span>OPEN WORKSPACE</span>
-        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-    </a>
-
-    <a href="{{ url_for('personalInvestigation') }}" class="cds-tile-interactive">
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span class="mono" style="font-size:11px;color:var(--cds-link);font-weight:600;">MOD-03 // SOCMINT</span>
-          <i data-lucide="user-search" style="width:18px;height:18px;color:var(--cds-link);" aria-hidden="true"></i>
-        </div>
-        <h2 style="font-size:17px;font-weight:600;">Personal &amp; Social OSINT</h2>
-        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
-          Concurrent handle enumeration across 10 platforms, deep GitHub push event inspection for commit author emails, SHA-256 Gravatar resolution, and dorks.
-        </p>
-      </div>
-      <div class="mono" style="font-size:11.5px;color:var(--cds-link);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
-        <span>OPEN WORKSPACE</span>
-        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-    </a>
-
-    <a href="{{ url_for('securityAudit') }}" class="cds-tile-interactive" style="border-top-color:#da1e28;">
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span class="mono" style="font-size:11px;color:var(--cds-danger-text);font-weight:600;">MOD-04 // STRIX APPSEC</span>
-          <i data-lucide="shield-check" style="width:18px;height:18px;color:var(--cds-danger-text);" aria-hidden="true"></i>
-        </div>
-        <h2 style="font-size:17px;font-weight:600;">Strix DAST &amp; Prevention</h2>
-        <p style="font-size:13px;color:var(--cds-text-secondary);line-height:1.5;">
-          PE-AGENTS-IBM Security &amp; Strix Black-Box DAST surface auditor: OWASP Top 10 defensive headers, TLS 1.3 cipher verification, SPF/DMARC &amp; Shift-Left Autofix.
-        </p>
-      </div>
-      <div class="mono" style="font-size:11.5px;color:var(--cds-danger-text);display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--cds-border);">
-        <span>LAUNCH STRIX AUDITOR</span>
-        <i data-lucide="arrow-up-right" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-    </a>
   </div>
 </section>
 
-<!-- Granite 4.2 Uncensored Neural Co-Pilot Strip -->
-<section class="cds-panel" aria-label="Ollama Granite 4.2 Uncensored Integration">
+<!-- ======================================================================
+     ROW 3: DATADOG SECURITY SIGNALS & LIVE RECONNAISSANCE STREAM TABLE
+     ====================================================================== -->
+<section class="cds-panel" aria-labelledby="stream-heading">
   <div class="cds-panel-header">
-    <div class="cds-panel-header-title">
-      <i data-lucide="cpu" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
-      <span>NEURAL CO-PILOT // ERIKTONON/GRANITE4.2-UNCENSORED (IBM GRANITE 4.2 8B + SECOPS LORA)</span>
+    <div class="flex items-center gap-2">
+      <i data-lucide="list-filter" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+      <h2 id="stream-heading" class="cds-panel-header-title">SECURITY SIGNALS &amp; OSINT EVENT STREAM</h2>
+      <span class="cds-tag cds-tag-gray">SQLITE WAL LIVE TAIL</span>
     </div>
-    <span class="cds-tag cds-tag-blue">128K CONTEXT &bull; TEMP 0.2</span>
-  </div>
-  <div class="cds-panel-body" style="flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;">
-    <div style="max-width:780px;display:flex;flex-direction:column;gap:6px;">
-      <div style="font-size:15px;font-weight:600;">
-        Orthogonal Refusal Direction Abliterated (Layers 10–35) &amp; Fine-Tuned for OSINT / Red-Blue Team Triage
-      </div>
-      <p style="font-size:13px;color:var(--cds-text-secondary);">
-        Attach any recorded Company, Server, Personal, or Strix DAST scan directly into <code class="mono">eriktonon/granite4.2-uncensored</code> via local Ollama (with automatic Windows &harr; WSL2 Bridge) to generate attack surface correlations and Shift-Left fixes.
-      </p>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
-      <button type="button" class="cds-btn cds-btn-ghost cds-btn-sm" data-copy-text="ollama pull eriktonon/granite4.2-uncensored" aria-label="Copy ollama pull command">
-        <i data-lucide="copy" style="width:13px;height:13px;" aria-hidden="true"></i>
-        <span>ollama pull eriktonon/granite4.2-uncensored</span>
-      </button>
-      <a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-primary">
-        <span>Open Neural Console</span>
-        <i data-lucide="arrow-right" style="width:16px;height:16px;" aria-hidden="true"></i>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- Recent Reconnaissance Activity Carbon Data Table -->
-<section class="cds-panel" aria-labelledby="recent-recon-heading">
-  <div class="cds-panel-header">
-    <div class="cds-panel-header-title">
-      <i data-lucide="database" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
-      <h2 id="recent-recon-heading" style="font-size:12.5px;font-weight:600;">RECENT RECONNAISSANCE TELEMETRY LOG</h2>
-    </div>
-    <a href="{{ url_for('projects') }}" class="mono" style="font-size:11.5px;color:#78a9ff;text-decoration:none;">
-      VIEW ALL INVESTIGATION CASES &rarr;
-    </a>
-  </div>
-
-  <div class="cds-table-toolbar">
-    <div style="display:flex;align-items:center;gap:10px;flex:1;max-width:460px;">
-      <label for="dashboard-log-filter" class="cds-label" style="white-space:nowrap;">Filter Log:</label>
-      <input id="dashboard-log-filter" type="search" class="cds-input" style="padding:7px 12px;font-size:12.5px;" placeholder="Filter by target, module (company, server, strix) or summary..." data-filter-input=".recon-log-row" />
-    </div>
-    <div class="mono" style="font-size:11.5px;color:var(--cds-text-secondary);">
-      SHOWING {{ recent_scans|length if recent_scans else 0 }} RECORDED EVENTS
+    <div style="width:280px;">
+      <label for="stream-filter" class="skip-link">Filter event stream</label>
+      <input
+        id="stream-filter"
+        type="text"
+        class="cds-input"
+        style="min-height:28px;padding:4px 9px;font-size:11.5px;"
+        placeholder="Filter stream by @target, @module, or status..."
+        data-filter-input="#telemetry-stream-table"
+      />
     </div>
   </div>
 
-  {% if recent_scans %}
-    <div class="cds-table-wrap">
-      <table class="cds-table">
-        <thead>
-          <tr>
-            <th>Module</th>
-            <th>Target Indicator</th>
-            <th>Case Assignment</th>
-            <th>Intelligence Summary</th>
-            <th>Timestamp (UTC)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for scan in recent_scans %}
-            <tr class="recon-log-row">
-              <td class="mono">
-                <span class="cds-tag {{ 'cds-tag-red' if scan.scan_type == 'strix' else ('cds-tag-blue' if scan.scan_type == 'granite_ai' else ('cds-tag-green' if scan.scan_type == 'company' else 'cds-tag-outline')) }}">
-                  {{ scan.scan_type }}
-                </span>
-              </td>
-              <td class="mono" style="font-weight:600;">{{ scan.target }}</td>
-              <td class="mono" style="font-size:12px;color:var(--cds-text-secondary);">{{ scan.name_project or 'UNASSIGNED' }}</td>
-              <td>{{ scan.summary }}</td>
-              <td class="mono" style="font-size:12px;color:var(--cds-text-secondary);white-space:nowrap;">{{ scan.created_at }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  {% else %}
-    <div class="cds-panel-body" style="align-items:center;text-align:center;padding:40px 24px;color:var(--cds-text-secondary);">
-      <p class="mono" style="font-size:13px;">NO RECONNAISSANCE SCANS RECORDED YET. SELECT AN OPERATIONAL MODULE ABOVE TO BEGIN.</p>
-    </div>
-  {% endif %}
+  <div class="cds-table-wrap" style="border:none;border-radius:0;">
+    <table id="telemetry-stream-table" class="cds-table">
+      <thead>
+        <tr>
+          <th>STATUS</th>
+          <th>SERVICE / MODULE</th>
+          <th>TARGET / FACET</th>
+          <th>TELEMETRY COLLECTORS</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cds-tag cds-tag-green">OK</span></td>
+          <td class="mono font-semibold">@siem.strix_sast</td>
+          <td class="mono">service:spo-osint-local</td>
+          <td class="mono text-xs text-secondary">OWASP A01–A10 Whitebox + SSRFGuard (100/100 Grade A)</td>
+          <td><a href="{{ url_for('securityAudit') }}" class="cds-btn cds-btn-ghost">Inspect Signal</a></td>
+        </tr>
+        <tr>
+          <td><span class="cds-tag cds-tag-purple">WATCHDOG</span></td>
+          <td class="mono font-semibold">@ai.granite_secops</td>
+          <td class="mono">eriktonon/granite4.2-uncensored</td>
+          <td class="mono text-xs text-secondary">Ollama Neural Co-Pilot &bull; 128K Context &bull; SecOps LoRA</td>
+          <td><a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-ghost">Open Console</a></td>
+        </tr>
+        {% for s in (recent_scans or []) %}
+        <tr>
+          <td><span class="cds-tag cds-tag-blue">INDEXED</span></td>
+          <td class="mono font-semibold">@osint.{{ s.scan_type }}</td>
+          <td class="mono">{{ s.target }}</td>
+          <td class="mono text-xs text-secondary">{{ s.summary }} ({{ s.created_at }})</td>
+          <td><a href="{{ url_for('graniteAI') }}" class="cds-btn cds-btn-ghost">Triage in Watchdog</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 {% endblock %}

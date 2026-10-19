@@ -51,11 +51,13 @@ spo = Flask(__name__, template_folder="templates", static_folder="static")
 spo.secret_key = os.environ.get("SPO_SECRET_KEY") or secrets.token_hex(32)
 spo.permanent_session_lifetime = timedelta(minutes=60)
 spo.config.update(
+    TEMPLATES_AUTO_RELOAD=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=os.environ.get("SPO_HTTPS_ONLY", "false").lower() in ("1", "true", "yes"),
     MAX_CONTENT_LENGTH=2 * 1024 * 1024,
 )
+spo.jinja_env.auto_reload = True
 
 # Controllers, Security Guards, AI Engine & DAO instances
 dao = spoDAO.SpoDAO()

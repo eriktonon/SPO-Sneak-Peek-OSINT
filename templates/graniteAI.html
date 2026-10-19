@@ -1,193 +1,219 @@
 {% extends "base.html" %}
-{% block title %}SPO — Granite 4.2 Uncensored SecOps AI (Ollama) // IBM Carbon v11{% endblock %}
-{% block header_title %}01.6 // GRANITE 4.2 UNCENSORED SECOPS &amp; OSINT AI (ERIKTONON/GRANITE4.2-UNCENSORED){% endblock %}
+{% block title %}SPO Watchdog AI — Granite 4.2 Uncensored SecOps Investigator{% endblock %}
+{% block breadcrumb %}WATCHDOG AI // GRANITE 4.2 UNCENSORED SECOPS INVESTIGATOR (OLLAMA){% endblock %}
 
 {% block content %}
-<!-- Hero Split Banner: Model Identity + Live Ollama Telemetry -->
-<section class="cds-hero-split" aria-labelledby="granite-h1">
-  <div class="cds-hero-main">
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
-        <span class="cds-tag cds-tag-blue">IBM GRANITE 4.2 8B &bull; ABLITERATED + SECOPS LORA</span>
-        <span class="cds-tag cds-tag-outline">128K CONTEXT &bull; TEMP 0.2 &bull; TOP_P 0.92</span>
-        {% if ollama_status.online %}
-          <span class="cds-tag cds-tag-green">OLLAMA ONLINE ({{ ollama_status.host }})</span>
-        {% else %}
-          <span class="cds-tag cds-tag-red">OLLAMA OFFLINE ({{ ollama_status.host }})</span>
-        {% endif %}
-      </div>
-      <h1 id="granite-h1" class="cds-page-h1"><strong class="mono">{{ model_meta.name }}</strong> Neural SecOps Console</h1>
-      <p class="cds-lead">
-        Uncensored technical intelligence and cybersecurity LLM based on <strong>IBM Granite 4.2 8B</strong> (40 layers, 128K context), abliterated across 26 intermediate layers (10–35) and fine-tuned with <strong>SecOps LoRA</strong> by <strong>Erik Tonon</strong>. Engineered for multi-source OSINT evidence correlation, attack surface modeling, CVE &amp; exploit triage, and Shift-Left remediation without synthetic refusal lectures.
-      </p>
+<!-- ======================================================================
+     ROW 1: DATADOG WATCHDOG AI TELEMETRY STRIP (4 MONITOR WIDGETS)
+     ====================================================================== -->
+<section class="cds-grid-4 mb-4" aria-label="Watchdog Granite 4.2 Telemetry Monitors">
+  <article class="cds-tile {% if ollama_status.online %}cds-accent-green{% else %}cds-accent-red{% endif %}">
+    <div class="cds-kpi-label">
+      <span>OLLAMA DAEMON // STATUS</span>
+      {% if ollama_status.online %}
+      <span class="cds-tag cds-tag-green">ONLINE</span>
+      {% else %}
+      <span class="cds-tag cds-tag-red">OFFLINE</span>
+      {% endif %}
     </div>
+    <div class="cds-kpi-value {% if ollama_status.online %}text-success{% else %}text-danger{% endif %}">
+      {% if ollama_status.online %}CONNECTED{% else %}UNREACHABLE{% endif %}
+    </div>
+    <div class="dd-spark-bars ok" aria-hidden="true">
+      <span style="height:82%"></span><span style="height:88%"></span><span style="height:90%"></span><span style="height:86%"></span>
+      <span style="height:94%"></span><span style="height:92%"></span><span style="height:96%"></span><span style="height:98%"></span>
+      <span style="height:95%"></span><span style="height:92%"></span><span style="height:97%"></span><span style="height:100%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">{{ ollama_status.host }}</div>
+  </article>
 
-    <div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:6px;">
-      <a href="{{ model_meta.hub_url }}" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-primary">
-        <span>Ollama Hub: eriktonon/granite4.2-uncensored</span>
-        <i data-lucide="external-link" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
-      <a href="{{ url_for('insertKeys') }}" class="cds-btn cds-btn-ghost">
-        <span>Configure Ollama Endpoint / Model</span>
-        <i data-lucide="sliders" style="width:15px;height:15px;" aria-hidden="true"></i>
-      </a>
-      <button type="button" class="cds-btn cds-btn-ghost" data-copy-text="{{ ollama_status.pull_cmd }}" aria-label="Copy ollama pull command">
-        <span class="mono" style="font-size:12.5px;">{{ ollama_status.pull_cmd }}</span>
-        <i data-lucide="copy" style="width:14px;height:14px;" aria-hidden="true"></i>
+  <article class="cds-tile cds-accent-purple">
+    <div class="cds-kpi-label">
+      <span>WATCHDOG MODEL // IMAGE</span>
+      <span class="cds-tag cds-tag-purple">ABLITERATED</span>
+    </div>
+    <div class="cds-kpi-value text-blue" style="font-size:21px;">
+      {% if ollama_status.model_installed %}INSTALLED (5.7 GB){% else %}PULL REQUIRED{% endif %}
+    </div>
+    <div class="dd-spark-bars" aria-hidden="true">
+      <span style="height:70%"></span><span style="height:75%"></span><span style="height:82%"></span><span style="height:78%"></span>
+      <span style="height:85%"></span><span style="height:90%"></span><span style="height:88%"></span><span style="height:94%"></span>
+      <span style="height:91%"></span><span style="height:96%"></span><span style="height:92%"></span><span style="height:98%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">{{ ollama_status.configured_model }}</div>
+  </article>
+
+  <article class="cds-tile cds-accent-blue">
+    <div class="cds-kpi-label">
+      <span>CONTEXT WINDOW // LAYERS</span>
+      <span class="cds-tag cds-tag-blue">40 LAYERS</span>
+    </div>
+    <div class="cds-kpi-value">128,000</div>
+    <div class="dd-spark-bars apm" aria-hidden="true">
+      <span style="height:60%"></span><span style="height:68%"></span><span style="height:74%"></span><span style="height:70%"></span>
+      <span style="height:80%"></span><span style="height:84%"></span><span style="height:82%"></span><span style="height:88%"></span>
+      <span style="height:86%"></span><span style="height:90%"></span><span style="height:92%"></span><span style="height:95%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">num_ctx:8192 &bull; temp:0.2 &bull; top_p:0.92</div>
+  </article>
+
+  <article class="cds-tile cds-accent-amber">
+    <div class="cds-kpi-label">
+      <span>LOCAL REGISTRY // MODELS</span>
+      <span class="cds-tag cds-tag-amber">INDEXED</span>
+    </div>
+    <div class="cds-kpi-value">{{ (ollama_status.available_models|length) if ollama_status.available_models else 0 }}</div>
+    <div class="dd-spark-bars warn" aria-hidden="true">
+      <span style="height:75%"></span><span style="height:78%"></span><span style="height:80%"></span><span style="height:85%"></span>
+      <span style="height:82%"></span><span style="height:88%"></span><span style="height:90%"></span><span style="height:86%"></span>
+      <span style="height:92%"></span><span style="height:89%"></span><span style="height:94%"></span><span style="height:96%"></span>
+    </div>
+    <div class="cds-kpi-sub mt-2">SecOps LoRA &bull; DeepEvil Fine-Tune</div>
+  </article>
+</section>
+
+<!-- ======================================================================
+     ROW 2: WATCHDOG AI HEADER BANNER
+     ====================================================================== -->
+<section class="cds-panel cds-accent-purple mb-4" aria-labelledby="watchdog-h1">
+  <div class="cds-panel-header">
+    <span class="cds-panel-header-title">
+      <i data-lucide="sparkles" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+      <span>DATADOG WATCHDOG SECOPS CO-PILOT // ERIKTONON/GRANITE4.2-UNCENSORED</span>
+    </span>
+    <div class="flex items-center gap-2">
+      <button type="button" class="cds-btn cds-btn-ghost mono" data-copy-text="ollama pull eriktonon/granite4.2-uncensored">
+        <span data-copy-label>ollama pull eriktonon/granite4.2-uncensored</span>
+        <i data-lucide="copy" style="width:12px;height:12px;" aria-hidden="true"></i>
       </button>
+      <a href="https://ollama.com/eriktonon/granite4.2-uncensored" target="_blank" rel="noopener noreferrer" class="cds-btn cds-btn-secondary" style="min-height:30px;padding:4px 10px;font-size:11.5px;">
+        <span>Ollama Registry</span>
+        <i data-lucide="external-link" style="width:12px;height:12px;" aria-hidden="true"></i>
+      </a>
     </div>
   </div>
-
-  <div class="cds-kpi-grid-2x2" role="region" aria-label="Ollama Engine Telemetry">
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>DAEMON STATUS</span>
-        <i data-lucide="radio" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="font-size:22px;color:{{ 'var(--cds-success-text)' if ollama_status.online else 'var(--cds-danger-text)' }};">
-        {{ 'ONLINE' if ollama_status.online else 'OFFLINE' }}
-      </div>
-      <div class="cds-kpi-sub">{{ ollama_status.host }}</div>
+  <div class="cds-panel-body" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+    <div style="max-width:78ch;">
+      <h1 id="watchdog-h1" class="cds-page-h1"><strong>eriktonon/granite4.2-uncensored</strong> Watchdog Investigator</h1>
+      <p class="text-sm text-secondary mt-1">
+        Uncensored 8B cybersecurity &amp; OSINT model abliterated across 26 intermediate layers (10–35) and fine-tuned with <strong>SecOps LoRA</strong> by <strong>Erik Tonon</strong>. Correlates passive DNS/RDAP, Shodan InternetDB ports, NIST CVEs, and Strix OWASP findings without synthetic refusal lectures.
+      </p>
     </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>IMAGE INSTALLED</span>
-        <i data-lucide="hard-drive" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="font-size:22px;color:{{ 'var(--cds-success-text)' if ollama_status.model_installed else 'var(--cds-warning-text)' }};">
-        {{ 'YES (READY)' if ollama_status.model_installed else 'PULL REQUIRED' }}
-      </div>
-      <div class="cds-kpi-sub">{{ model_meta.size }} &bull; GGUF QUANTIZED</div>
-    </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>CONTEXT WINDOW</span>
-        <i data-lucide="layers" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="font-size:22px;color:var(--cds-link);">128,000</div>
-      <div class="cds-kpi-sub">40 LAYERS &bull; NUM_CTX 8192</div>
-    </div>
-
-    <div class="cds-kpi-tile">
-      <div class="cds-kpi-label">
-        <span>INDEXED LOCAL MODELS</span>
-        <i data-lucide="cpu" style="width:14px;height:14px;" aria-hidden="true"></i>
-      </div>
-      <div class="cds-kpi-value" style="font-size:22px;">{{ ollama_status.available_models|length }}</div>
-      <div class="cds-kpi-sub">AVAILABLE IN OLLAMA REGISTRY</div>
+    <div class="flex items-center gap-2">
+      <a href="{{ url_for('insertKeys') }}" class="cds-btn cds-btn-secondary">
+        <i data-lucide="sliders" style="width:14px;height:14px;" aria-hidden="true"></i>
+        <span>Configure Endpoint</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- 2-Column Carbon Control Plane: Tasking Form (Left) + Terminal Output (Right) -->
-<section class="cds-split-sidebar" style="grid-template-columns: 460px 1fr;" aria-label="Granite 4.2 Tasking and Output">
-  <!-- Left Panel: Tasking Form -->
-  <div class="cds-panel" style="border:none;">
+<!-- ======================================================================
+     ROW 3: TASKING WORKBENCH (5 COLS) + WATCHDOG LIVE TRACE OUTPUT (7 COLS)
+     ====================================================================== -->
+<section class="cds-grid-12" aria-label="Watchdog Tasking and Intelligence Output">
+  <!-- Left 5 Cols: Tasking Form -->
+  <div class="cds-panel cds-col-5 cds-accent-blue">
     <div class="cds-panel-header">
-      <div class="cds-panel-header-title">
-        <i data-lucide="sliders" style="width:15px;height:15px;color:#78a9ff;" aria-hidden="true"></i>
-        <h2>SECOPS &amp; OSINT NEURAL TASKING</h2>
+      <span class="cds-panel-header-title">
+        <i data-lucide="terminal" style="width:14px;height:14px;color:var(--dd-apm);" aria-hidden="true"></i>
+        <span>SECOPS &amp; OSINT TASKING FACETS</span>
+      </span>
+      <span class="cds-tag cds-tag-gray">POST /api/chat</span>
+    </div>
+
+    <form action="{{ url_for('graniteAI') }}" method="POST" class="cds-panel-body">
+      <div class="cds-form-group">
+        <label for="analysis-mode" class="cds-label">01 // INVESTIGATION PLAYBOOK</label>
+        <select id="analysis-mode" name="mode" class="cds-select">
+          <option value="osint_correlation" {% if selected_mode == 'osint_correlation' %}selected{% endif %}>OSINT Multi-Source Threat Correlation</option>
+          <option value="pentest_triage" {% if selected_mode == 'pentest_triage' %}selected{% endif %}>Offensive / Defensive Pentest &amp; CVE Triage</option>
+          <option value="executive_dossier" {% if selected_mode == 'executive_dossier' %}selected{% endif %}>Executive Threat Intelligence Dossier (BTM)</option>
+          <option value="custom" {% if selected_mode == 'custom' %}selected{% endif %}>Custom Uncensored SecOps Prompt</option>
+        </select>
       </div>
-      <span class="cds-tag cds-tag-outline">POST /API/CHAT</span>
-    </div>
 
-    <div class="cds-panel-body">
-      <form method="POST" action="{{ url_for('graniteAI') }}" style="display:flex;flex-direction:column;gap:16px;">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <div class="cds-form-group">
+        <label for="scan-context" class="cds-label">02 // ATTACH RECORDED TELEMETRY SCAN</label>
+        <select id="scan-context" name="scan_id" class="cds-select">
+          <option value="">-- Custom Prompt Only (No Scan Attached) --</option>
+          {% for s in (recent_scans or []) %}
+          <option value="{{ s.id_scan }}" {% if selected_scan_id == s.id_scan %}selected{% endif %}>
+            [{{ s.scan_type|upper }}] #{{ s.id_scan }} — {{ s.target }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
 
-        <div class="cds-field-group">
-          <label for="granite-mode" class="cds-label">01 // Tactical Analysis Mode</label>
-          <select id="granite-mode" name="mode" class="cds-select">
-            <option value="osint_correlation" {% if selected_mode == 'osint_correlation' %}selected{% endif %}>OSINT Multi-Source Threat Correlation</option>
-            <option value="redteam_surface" {% if selected_mode == 'redteam_surface' %}selected{% endif %}>Red Team Attack Surface &amp; Dork Generation</option>
-            <option value="vuln_exploit_analysis" {% if selected_mode == 'vuln_exploit_analysis' %}selected{% endif %}>CVE / Exploit Analysis &amp; Shift-Left Fix</option>
-            <option value="due_diligence" {% if selected_mode == 'due_diligence' %}selected{% endif %}>Corporate Due Diligence &amp; Legal/QSA Risk</option>
-          </select>
-        </div>
+      <div class="cds-form-group">
+        <label for="operator-prompt" class="cds-label">03 // OPERATOR HYPOTHESIS / PROMPT</label>
+        <textarea
+          id="operator-prompt"
+          name="prompt"
+          class="cds-textarea"
+          placeholder="Correlate exposed CT subdomains, open ports, and CNPJ partners to identify high-risk entry points and verification commands..."
+        >{{ prompt_input or '' }}</textarea>
+      </div>
 
-        <div class="cds-field-group">
-          <label for="granite-scan-id" class="cds-label">02 // Attach Recorded OSINT / Strix Scan (Optional)</label>
-          <select id="granite-scan-id" name="scan_id" class="cds-select">
-            <option value="">-- Custom Prompt Only (No Scan Attached) --</option>
-            {% for s in recent_scans %}
-              <option value="{{ s.id_scan }}" {% if selected_scan_id == s.id_scan %}selected{% endif %}>
-                [#{{ s.id_scan }} | {{ s.scan_type|upper }}] {{ s.target }} — {{ (s.summary or '')[:42] }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="cds-field-group">
-          <label for="granite-project-id" class="cds-label">03 // Persist Brief to Investigation Case</label>
-          <select id="granite-project-id" name="project_id" class="cds-select">
-            <option value="">-- Standalone Intelligence Brief --</option>
-            {% for p in user_projects %}
-              <option value="{{ p.id_project }}" {% if selected_project_id == p.id_project %}selected{% endif %}>{{ p.name_project }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="cds-field-group">
-          <label for="granite-prompt" class="cds-label">04 // Operator Prompt / Target Hypothesis</label>
-          <textarea id="granite-prompt" name="prompt" rows="6" class="cds-textarea" placeholder="Correlate the exposed subdomains, open ports, and CNPJ partners to identify the highest-risk entry points and provide verification commands...">{{ prompt_input or '' }}</textarea>
-        </div>
-
-        <button type="submit" class="cds-btn cds-btn-primary" style="width:100%;">
-          <span>Execute Granite 4.2 Uncensored Analysis</span>
-          <i data-lucide="zap" style="width:16px;height:16px;" aria-hidden="true"></i>
-        </button>
-      </form>
-    </div>
+      <button type="submit" class="cds-btn cds-btn-primary w-full">
+        <i data-lucide="sparkles" style="width:15px;height:15px;" aria-hidden="true"></i>
+        <span>Run Watchdog Granite 4.2 Investigation</span>
+      </button>
+    </form>
   </div>
 
-  <!-- Right Panel: Output Console & Architecture Spec -->
-  <div class="cds-panel" style="border:none;justify-content:space-between;">
-    <div style="display:flex;flex-direction:column;flex:1;">
-      <div class="cds-panel-header">
-        <div class="cds-panel-header-title">
-          <i data-lucide="terminal" style="width:15px;height:15px;color:#42be65;" aria-hidden="true"></i>
-          <h2>GRANITE 4.2 SECOPS INTELLIGENCE OUTPUT</h2>
-        </div>
-        {% if ai_result %}
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="cds-tag {{ 'cds-tag-green' if ai_result.live_ollama else 'cds-tag-amber' }}">
-              {{ 'LIVE OLLAMA' if ai_result.live_ollama else 'HEURISTIC FALLBACK' }} &bull; {{ ai_result.elapsed_ms }}MS
-            </span>
-            <button type="button" class="cds-btn cds-btn-secondary cds-btn-sm" data-copy-text="{{ ai_result.response }}" aria-label="Copy intelligence output">
-              <i data-lucide="copy" style="width:12px;height:12px;" aria-hidden="true"></i>
-              <span>COPY</span>
-            </button>
-          </div>
-        {% else %}
-          <span class="cds-tag cds-tag-outline">READY FOR TASKING</span>
-        {% endif %}
+  <!-- Right 7 Cols: Live Watchdog Trace Output -->
+  <div class="cds-panel cds-col-7 cds-accent-purple">
+    <div class="cds-panel-header">
+      <div class="flex items-center gap-2">
+        <i data-lucide="cpu" style="width:14px;height:14px;color:var(--dd-purple-bright);" aria-hidden="true"></i>
+        <h2 class="cds-panel-header-title">WATCHDOG NEURAL TRACE OUTPUT</h2>
       </div>
-
-      <div class="cds-panel-body" style="flex:1;">
+      <div class="flex items-center gap-2">
         {% if ai_result %}
-          <pre class="cds-terminal" style="flex:1;min-height:340px;">{{ ai_result.response }}</pre>
+          {% if ai_result.live_ollama %}
+          <span class="cds-tag cds-tag-green">LIVE OLLAMA &bull; {{ ai_result.elapsed_ms }}ms</span>
+          {% else %}
+          <span class="cds-tag cds-tag-amber">OFFLINE DETERMINISTIC BRIEF</span>
+          {% endif %}
+          <button type="button" class="cds-btn cds-btn-ghost" data-copy-text="{{ ai_result.analysis }}">
+            <span data-copy-label>Copy Trace</span>
+          </button>
         {% else %}
-          <div class="cds-terminal" style="flex:1;min-height:340px;display:flex;flex-direction:column;justify-content:center;gap:10px;color:#c6c6c6;">
-            <div style="color:#78a9ff;font-weight:600;">[GRANITE 4.2 UNCENSORED CO-PILOT READY]</div>
-            <div>&gt; Model: {{ model_meta.name }} ({{ model_meta.base_architecture }})</div>
-            <div>&gt; Endpoint: {{ ollama_status.host }}</div>
-            <div>&gt; Instructions: Select a recorded reconnaissance scan (Company, Server, Personal, or Strix DAST) or enter a custom SecOps hypothesis on the left to generate an uncensored technical dossier.</div>
-          </div>
+          <span class="cds-tag cds-tag-purple">READY FOR TASKING</span>
         {% endif %}
       </div>
     </div>
 
-    <!-- Bottom Architecture Spec Strip -->
-    <div class="cds-kv-list" style="border-left:none;border-right:none;border-bottom:none;">
-      <div class="cds-kv-item">
-        <div class="cds-kv-dt">Base Architecture &amp; Abliteration</div>
-        <div class="cds-kv-dd mono" style="font-size:12px;">{{ model_meta.base_architecture }} &mdash; {{ model_meta.abliteration }}</div>
-      </div>
-      <div class="cds-kv-item">
-        <div class="cds-kv-dt">SecOps LoRA Fine-Tuning</div>
-        <div class="cds-kv-dd mono" style="font-size:12px;">{{ model_meta.fine_tuning }}</div>
+    <div class="cds-panel-body" style="flex:1;justify-content:space-between;">
+      {% if ai_result %}
+        {% if ai_result.error %}
+        <div class="cds-alert cds-alert-warning">
+          <div>
+            <div class="font-bold text-xs uppercase text-warning">OLLAMA CONNECTION NOTICE</div>
+            <div class="mono text-xs text-secondary mt-1">{{ ai_result.error }}</div>
+          </div>
+          <span class="cds-tag cds-tag-amber">FALLBACK</span>
+        </div>
+        {% endif %}
+        <div class="cds-terminal" style="min-height:390px;max-height:560px;">{{ ai_result.analysis }}</div>
+      {% else %}
+        <div class="cds-terminal" style="min-height:390px;display:flex;flex-direction:column;justify-content:center;">
+<span style="color:#a78bfa;font-weight:700;">[DATADOG WATCHDOG // GRANITE 4.2 UNCENSORED READY]</span>
+&gt; @model: {{ ollama_status.configured_model }} (40 layers, 128K context, SecOps LoRA)
+&gt; @endpoint: {{ ollama_status.host }}
+&gt; @status: Select a recorded OSINT / Strix scan on the left or enter a custom SecOps hypothesis to generate an uncensored technical dossier.</div>
+      {% endif %}
+
+      <div class="cds-grid-2 mt-2">
+        <div class="cds-tile" style="padding:9px 12px;background:var(--dd-bg-surface-alt);">
+          <span class="cds-kpi-label">MODEL ABLITERATION</span>
+          <span class="mono text-xs text-secondary mt-1">Orthogonal Refusal Direction Abliteration across layers 10–35</span>
+        </div>
+        <div class="cds-tile" style="padding:9px 12px;background:var(--dd-bg-surface-alt);">
+          <span class="cds-kpi-label">SECOPS LORA ADAPTER</span>
+          <span class="mono text-xs text-secondary mt-1">OSINT Correlation, Reverse Engineering, Exploit PoCs &amp; Shift-Left Patching</span>
+        </div>
       </div>
     </div>
   </div>
